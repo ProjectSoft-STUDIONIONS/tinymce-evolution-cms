@@ -1,0 +1,17 @@
+{
+	"name": "tinymce-evolution-cms",
+	"description": "Сборка плагина TinyMCE под различные версии TinyMCE",
+	"main": "Grintfile.js",
+	"authors": [
+		"ProjectSoft <projectsoft2009@yandex.ru>"
+	],
+	"license": "GPL-3.0",
+	"homepage": "",
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"test",
+		"tests"
+	]
+}

@@ -1,0 +1,28 @@
+{
+	"folders":
+	[
+		{
+			"name": "TinyMCE EvolutionCMS",
+			"path": "."
+		}
+	],
+	"settings":  {
+		"font_size": 16,
+		"tab_size": 4
+	},
+	"build_systems": [
+		{
+			"name": "Build Project",
+			"working_dir": "${project_path}",
+			"cmd": [
+				"start",
+				"/wait",
+				"grunt",
+				"speed",
+				"-v",
+				"-hashed=false"
+			],
+			"shell": true
+		}
+	]
+}

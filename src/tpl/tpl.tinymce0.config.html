@@ -1,0 +1,39 @@
+<script>
+    var config_[+editorKey+]_[+themeKey+] = {
+        license_key: 'gpl',
+[+configString+],
+        file_browser_callback: function (field, url, type, win) {
+            if (type == 'image') {
+                type = 'images';
+            }
+            if (type == 'file') {
+                type = 'files';
+            }
+            if (type == 'media') {
+                type = 'media';
+            }
+			var path = String(url).split('/'),
+                dir = "";
+            path.shift();
+            path.pop();
+            path = path.join('/');
+            if(path!=''){
+                dir += '&dir='+path;
+            }
+            var browseURL = '[+site_manager_url+]media/browser/[+which_browser+]/browse.php?opener=%lowercase%&field=' + field + '&type=' + type + dir;
+            tinyMCE.activeEditor.windowManager.open({
+                file: browseURL,
+                title: 'KCFinder',
+                width: 840,
+                height: 600,
+                inline: true,
+                close_previous: false
+            }, {
+                window: win,
+                input: field
+            });
+            return false;
+        }
+        [+pp.customParams+]
+    }
+</script>
