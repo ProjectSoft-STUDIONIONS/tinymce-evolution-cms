@@ -1,7 +1,8 @@
 module.exports = function(grunt) {
 	const fs = require('node:fs');
 	const path = require('node:path');
-	let PACK = grunt.file.readJSON('package.json');
+	const chalk = require('chalk');
+	const PACK = grunt.file.readJSON('package.json');
 	// По самой последней основной версии
 	const VERSIONS = [
 		"4.9.11",
@@ -43,7 +44,30 @@ module.exports = function(grunt) {
 						dest: 'src/tinymce/plugins',
 						filter: 'isFile',
 						rename: function (dst, src) {
-							return dst + '/' + src.replace('.js', '.min.js');
+							let nFile = dst + '/' + src.replace('.js', '.min.js');
+							return nFile;
+						},
+					},
+					{
+						expand: true,
+						cwd: 'plugins4',
+						src: '**/plugin.js',
+						dest: 'plugins4',
+						filter: 'isFile',
+						rename: function (dst, src) {
+							let nFile = dst + '/' + src.replace('.js', '.min.js');
+							return nFile;
+						},
+					},
+					{
+						expand: true,
+						cwd: 'plugins5',
+						src: '**/plugin.js',
+						dest: 'plugins5',
+						filter: 'isFile',
+						rename: function (dst, src) {
+							let nFile = dst + '/' + src.replace('.js', '.min.js');
+							return nFile;
 						},
 					},
 				],
@@ -54,6 +78,9 @@ module.exports = function(grunt) {
 				versions: VERSIONS,
 				directory: "assets/plugins",
 				src: 'src',
+				plugins: 'plugins',
+				plugins4: 'plugins4',
+				plugins5: 'plugins5',
 				repository: PACK.homepage,
 				install: "install",
 				issues: PACK.bugs.url
@@ -188,6 +215,6 @@ module.exports = function(grunt) {
 			},
 		},
 	});
-	grunt.registerTask('default',	['clean', 'uglify', 'tinymce-install', 'compress']);
-	grunt.registerTask('speed',	['clean', 'uglify', 'tinymce-install', 'compress']);
+	grunt.registerTask('default',	['clean', 'uglify', 'tinymce-install'/*, 'compress'*/]);
+	grunt.registerTask('speed',	['clean', 'uglify', 'tinymce-install'/*, 'compress'*/]);
 }

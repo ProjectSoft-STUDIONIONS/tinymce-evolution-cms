@@ -5,12 +5,10 @@ dist/*
 
 /*.zip
 
-src/tinymce/plugins
-src/theme/*
-
-!src/theme/theme.tinymce0.inline.inc.php
-
 /tinymce*
-!/tinymce-evolution
 
 *.sublime-workspace
+
+# Потом разблокировать
+/theme*
+/plugins*

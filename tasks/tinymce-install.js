@@ -17,7 +17,7 @@ module.exports = function(grunt) {
 
 		// Проверяем, существует ли исходная директория
 		if (!fs.existsSync(source)) {
-			console.log(chalk.redBright("Директория не существует: ") + source);
+			grunt.log.writeln(chalk.redBright("Директория не существует: ") + source);
 			return;
 		}
 
@@ -46,6 +46,7 @@ module.exports = function(grunt) {
 			} else {
 				let outFile = file.replace(/tinymce\d+/g, lowercase);
 				fs.copyFileSync(source + '/' + file, target + '/' + outFile);
+				grunt.verbose.ok(['Copy: ' + chalk.cyan(source + '/' + file) + " -> " + chalk.cyan(target + '/' + outFile)]);
 				// Перезапись данных в файле
 				// ...
 				// Открыть файл, перезаписать по глобальным переменным
@@ -56,17 +57,28 @@ module.exports = function(grunt) {
 					".tpl"
 				];
 				let ext = path.extname(outFile).toLowerCase();
+				let skinsDirectory = 'tinymce/skins';
 				if(extArr.includes(ext)) {
 					let content = fs.readFileSync(target + '/' + outFile, {encoding: 'utf8'});
-					//console.log(content);
-					content = content
-						.replace(/%lowercase%/g, lowercase)
-						.replace(/%uppercase%/g, uppercase)
-						.replace(/%biguppercase%/g, biguppercase)
-						.replace(/%version%/g, version)
-						.replace(/%repository%/g, repository)
-						.replace(/%issues%/g, issues);
-					fs.writeFileSync(target + '/' + outFile, content, {encoding: 'utf8'});
+					//console.log(version);
+					if(typeof version != 'undefined') {
+						let num = version.split(".")[0];
+						//console.log(content);
+						if (num > 4){
+							skinsDirectory = 'tinymce/skins/ui';
+						}
+
+						content = content
+							.replace(/%lowercase%/g, lowercase)
+							.replace(/%uppercase%/g, uppercase)
+							.replace(/%biguppercase%/g, biguppercase)
+							.replace(/%version%/g, version)
+							.replace(/%repository%/g, repository)
+							.replace(/%issues%/g, issues)
+							.replace(/%skinsDirectory%/g, skinsDirectory);
+						fs.writeFileSync(target + '/' + outFile, content, {encoding: 'utf8'});
+						grunt.verbose.ok(['Data replaced: ' + chalk.cyan(target + '/' + outFile)]);
+					}
 				}
 			}
 		});
@@ -79,7 +91,10 @@ module.exports = function(grunt) {
 			src: 'src',
 			repository: 'https://github.com/',
 			issues: 'https://github.com/',
-			install: 'install'
+			install: 'install',
+			plugins: 'plugins',
+			plugins4: 'plugins4',
+			plugins5: 'plugins5'
 		});
 		var done = this.async();
 		var val;
@@ -90,8 +105,8 @@ module.exports = function(grunt) {
 				uppercase = `TinyMCE${num}`,
 				biguppercase = `TINYMCE${num}`,
 				// Полный путь директории вывода
-				dirOut = path.join('dist', options.directory, lowercase),
-				installOut = path.join('dist', 'install', options.directory);
+				dirOut = 'dist/' + options.directory + '/' + lowercase,
+				installOut = 'dist/install/' + options.directory;
 			//if(!fs.existsSync(installOut)) {
 			//	fs.mkdirSync(installOut, {recursive: true});
 			//}
@@ -105,19 +120,83 @@ module.exports = function(grunt) {
 				// Удачная загрузка
 				grunt.log.ok([chalk.magentaBright('Success Download') + ' -> ' + dirOut]);
 				// Исходная директория языка
-				let lngIn = path.join('node_modules', 'tinymce-lang', 'langs');
+				let lngIn = 'node_modules/tinymce-lang/langs';
 				// Конечная директория языка
-				let lngOut = path.join(dirOut, 'tinymce', 'langs');
+				let lngOut = dirOut + '/tinymce/langs';
 				// Копируем с рекурсией языки
 				fs.cpSync(lngIn, lngOut, {
 					recursive: true,
 					force: true
 				});
-				// Копирование файлов из src директории
-				let pathFiles = path.join(options.src, "**", "*");
+				let dirInpPlgs = options.plugins,
+					dirOutPlgs = dirOut + '/tinymce/plugins';
 
+				// Копирование общих плагинов
 				copyFolderRecursiveSync(
-					options.src,
+					dirInpPlgs,
+					dirOutPlgs,
+					lowercase,
+					uppercase,
+					biguppercase,
+					val,
+					options.repository,
+					options.issues
+				);
+
+				if(num > 4) {
+					// Копирование плагинов tinymce 5 и выше
+					dirInpPlgs = options.plugins5;
+					copyFolderRecursiveSync(
+						dirInpPlgs,
+						dirOutPlgs,
+						lowercase,
+						uppercase,
+						biguppercase,
+						val,
+						options.repository,
+						options.issues
+					);
+					// Копирование тем
+					copyFolderRecursiveSync(
+						'theme5',
+						dirOut,
+						lowercase,
+						uppercase,
+						biguppercase,
+						val,
+						options.repository,
+						options.issues
+					);
+				} else {
+					// Копирование плагинов tinymce 4
+					dirInpPlgs = options.plugins4;
+					copyFolderRecursiveSync(
+						dirInpPlgs,
+						dirOutPlgs,
+						lowercase,
+						uppercase,
+						biguppercase,
+						val,
+						options.repository,
+						options.issues
+					);
+					// Копирование тем
+					copyFolderRecursiveSync(
+						'theme4',
+						dirOut,
+						lowercase,
+						uppercase,
+						biguppercase,
+						val,
+						options.repository,
+						options.issues
+					);
+				}
+
+				// Копирование файлов из src директории
+				let pathFiles = options.src;
+				copyFolderRecursiveSync(
+					pathFiles,
 					dirOut,
 					lowercase,
 					uppercase,
@@ -138,6 +217,7 @@ module.exports = function(grunt) {
 					options.repository,
 					options.issues
 				);
+
 				// Завершение загрузки
 				grunt.log.ok([chalk.yellowBright('Done ' + lowercase) + '    -> ' + lngOut]);
 			}).catch((err) => {
@@ -147,7 +227,7 @@ module.exports = function(grunt) {
 			});
 		}
 		// Копирование класса в lib
-		copyFolderRecursiveSync('lib', path.join('dist', 'assets', 'lib'));
+		copyFolderRecursiveSync('lib', 'dist/assets/lib');
 
 		// Окончание работы плагина
 		done();
