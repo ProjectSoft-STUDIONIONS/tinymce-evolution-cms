@@ -17,10 +17,21 @@
 			"cmd": [
 				"start",
 				"/wait",
-				"grunt",
-				"speed",
-				"-v",
-				"-hashed=false"
+				"npm",
+				"run",
+				"build"
+			],
+			"shell": true
+		},
+		{
+			"name": "Получить версии TinyMCE",
+			"working_dir": "${project_path}",
+			"cmd": [
+				"start",
+				"/wait",
+				"npm",
+				"run",
+				"start"
 			],
 			"shell": true
 		}

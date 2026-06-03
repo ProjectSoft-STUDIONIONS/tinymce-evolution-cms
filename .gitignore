@@ -1,11 +1,13 @@
 node_modules
 bower_components
 dist/*
+cache
 !dist/.*
 
 *.zip
 
 /tinymce*
+!/tinymce.json
 
 *.sublime-workspace
 

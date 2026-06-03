@@ -8,7 +8,9 @@
 	"main": "Grintfile.js",
 	"scripts": {
 		"inst": "npm i",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "npm view tinymce dist-tags --json > tinymce.json",
+		"build": "grunt"
 	},
 	"repository": {
 		"type": "git",

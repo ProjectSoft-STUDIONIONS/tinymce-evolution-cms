@@ -3,14 +3,14 @@ module.exports = function(grunt) {
 	const path = require('node:path');
 	const chalk = require('chalk');
 	const PACK = grunt.file.readJSON('package.json');
-	// По самой последней основной версии
-	const VERSIONS = [
-		"4.9.11",
-		"5.10.9",
-		"6.8.6",
-		"7.9.2",
-		"8.5.0",
-	];
+	// Старт начинается с запуска в командной строке старта - npm run start
+	// Только после получения последних версий можно запускать grunt
+	const tinymcePack = grunt.file.readJSON('tinymce.json');
+
+	delete tinymcePack.latest;
+
+	const VERSIONS = Object.values(tinymcePack);
+
 	require('time-grunt')(grunt);
 	require('load-grunt-tasks')(grunt);
 	grunt.loadTasks('tasks');
@@ -22,7 +22,8 @@ module.exports = function(grunt) {
 				'./*.zip',
 				'dist/assets',
 				'dist/install',
-				'dist/lib'
+				'dist/lib',
+				/*'cache/*',*/
 			]
 		},
 		uglify: {
@@ -73,7 +74,7 @@ module.exports = function(grunt) {
 				],
 			},
 		},
-		'tinymce-install': {
+		'tinymce-evolution': {
 			options: {
 				versions: VERSIONS,
 				directory: "assets/plugins",
@@ -90,131 +91,130 @@ module.exports = function(grunt) {
 		compress: {
 			tinymce4: {
 				options: {
-					archive: `tinymce4-plugin.zip`,
+					archive: `tinymce4-evocms.zip`,
 				},
 				files: [
 					{
 						expand: true,
 						cwd: 'dist/assets/plugins/tinymce4',
 						src: ['**'],
-						dest: 'tinymce4-plugin/assets/plugins/tinymce4/'
+						dest: 'tinymce4-evocms/assets/plugins/tinymce4/'
 					},
 					{
 						expand: true,
 						cwd: 'dist/install/assets/plugins',
 						src: ['tinymce4.tpl'],
-						dest: 'tinymce4-plugin/install/assets/plugins/'
+						dest: 'tinymce4-evocms/install/assets/plugins/'
 					},
 					{
 						expand: true,
 						cwd: 'dist/assets/lib',
 						src: ['**'],
-						dest: 'tinymce4-plugin/assets/lib/'
+						dest: 'tinymce4-evocms/assets/lib/'
 					},
 				],
 			},
 			tinymce5: {
 				options: {
-					archive: `tinymce5-plugin.zip`,
+					archive: `tinymce5-evocms.zip`,
 				},
 				files: [
 					{
 						expand: true,
 						cwd: 'dist/assets/plugins/tinymce5',
 						src: ['**'],
-						dest: 'tinymce5-plugin/assets/plugins/tinymce5/'
+						dest: 'tinymce5-evocms/assets/plugins/tinymce5/'
 					},
 					{
 						expand: true,
 						cwd: 'dist/install/assets/plugins',
 						src: ['tinymce5.tpl'],
-						dest: 'tinymce5-plugin/install/assets/plugins/'
+						dest: 'tinymce5-evocms/install/assets/plugins/'
 					},
 					{
 						expand: true,
 						cwd: 'dist/assets/lib',
 						src: ['**'],
-						dest: 'tinymce5-plugin/assets/lib/'
+						dest: 'tinymce5-evocms/assets/lib/'
 					},
 				],
 			},
 			tinymce6: {
 				options: {
-					archive: `tinymce6-plugin.zip`,
+					archive: `tinymce6-evocms.zip`,
 				},
 				files: [
 					{
 						expand: true,
 						cwd: 'dist/assets/plugins/tinymce6',
 						src: ['**'],
-						dest: 'tinymce6-plugin/assets/plugins/tinymce6/'
+						dest: 'tinymce6-evocms/assets/plugins/tinymce6/'
 					},
 					{
 						expand: true,
 						cwd: 'dist/install/assets/plugins',
 						src: ['tinymce6.tpl'],
-						dest: 'tinymce6-plugin/install/assets/plugins/'
+						dest: 'tinymce6-evocms/install/assets/plugins/'
 					},
 					{
 						expand: true,
 						cwd: 'dist/assets/lib',
 						src: ['**'],
-						dest: 'tinymce6-plugin/assets/lib/'
+						dest: 'tinymce6-evocms/assets/lib/'
 					},
 				],
 			},
 			tinymce7: {
 				options: {
-					archive: `tinymce7-plugin.zip`,
+					archive: `tinymce7-evocms.zip`,
 				},
 				files: [
 					{
 						expand: true,
 						cwd: 'dist/assets/plugins/tinymce7',
 						src: ['**'],
-						dest: 'tinymce7-plugin/assets/plugins/tinymce7/'
+						dest: 'tinymce7-evocms/assets/plugins/tinymce7/'
 					},
 					{
 						expand: true,
 						cwd: 'dist/install/assets/plugins',
 						src: ['tinymce7.tpl'],
-						dest: 'tinymce7-plugin/install/assets/plugins/'
+						dest: 'tinymce7-evocms/install/assets/plugins/'
 					},
 					{
 						expand: true,
 						cwd: 'dist/assets/lib',
 						src: ['**'],
-						dest: 'tinymce7-plugin/assets/lib/'
+						dest: 'tinymce7-evocms/assets/lib/'
 					},
 				],
 			},
 			tinymce8: {
 				options: {
-					archive: `tinymce8-plugin.zip`,
+					archive: `tinymce8-evocms.zip`,
 				},
 				files: [
 					{
 						expand: true,
 						cwd: 'dist/assets/plugins/tinymce8',
 						src: ['**'],
-						dest: 'tinymce8-plugin/assets/plugins/tinymce8/'
+						dest: 'tinymce8-evocms/assets/plugins/tinymce8/'
 					},
 					{
 						expand: true,
 						cwd: 'dist/install/assets/plugins',
 						src: ['tinymce8.tpl'],
-						dest: 'tinymce8-plugin/install/assets/plugins/'
+						dest: 'tinymce8-evocms/install/assets/plugins/'
 					},
 					{
 						expand: true,
 						cwd: 'dist/assets/lib',
 						src: ['**'],
-						dest: 'tinymce8-plugin/assets/lib/'
+						dest: 'tinymce8-evocms/assets/lib/'
 					},
 				],
 			},
 		},
 	});
-	grunt.registerTask('default',	['clean', 'uglify', 'tinymce-install'/*, 'compress'*/]);
-	grunt.registerTask('speed',	['clean', 'uglify', 'tinymce-install'/*, 'compress'*/]);
+	grunt.registerTask('default',	['clean', 'uglify', 'tinymce-evolution', 'compress']);
 }
