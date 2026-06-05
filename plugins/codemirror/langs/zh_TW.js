@@ -1,0 +1,1 @@
+tinymce.addI18n("zh_TW",{"The source HTML code of the CodeMirror plugin":"The source HTML code\nof the CodeMirror plugin","Start search":"\u958b\u59cb\u641c\u5c0b","Find next":"\u641c\u5c0b\u4e0b\u4e00\u500b.","Find previous":"\u641c\u5c0b\u4e0a\u4e00\u500b.",Replace:"\u53d6\u4ee3","Replace all":"\u5168\u90e8\u53d6\u4ee3"});

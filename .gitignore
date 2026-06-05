@@ -12,5 +12,5 @@ cache
 *.sublime-workspace
 
 # Потом разблокировать
-/theme*
-/plugins*
+/theme
+dev-*

@@ -4,6 +4,9 @@ module.exports = function(grunt) {
 	const path = require('path');
 	const downloadNpmPackage = require('download-npm-package');
 	const lineWidth = 29;
+	const copyReplceFiles = function(directory, mask) {
+		//
+	};
 	const copyFolderRecursiveSync = function (
 			source,
 			target,
@@ -61,10 +64,8 @@ module.exports = function(grunt) {
 				let skinsDirectory = 'tinymce/skins';
 				if(extArr.includes(ext)) {
 					let content = fs.readFileSync(target + '/' + outFile, {encoding: 'utf8'});
-					//console.log(version);
 					if(typeof version != 'undefined') {
 						let num = version.split(".")[0];
-						//console.log(content);
 						if (num > 4){
 							skinsDirectory = 'tinymce/skins/ui';
 						}
@@ -93,9 +94,6 @@ module.exports = function(grunt) {
 			repository: 'https://github.com/',
 			issues: 'https://github.com/',
 			install: 'install',
-			plugins: 'plugins',
-			plugins4: 'plugins4',
-			plugins5: 'plugins5'
 		});
 		var done = this.async();
 		var val;
@@ -111,40 +109,57 @@ module.exports = function(grunt) {
 				installOut = 'dist/install/' + options.directory,
 				cacheOut = 'cache/' + lowercase;
 			// Исходная директория языка
-			let lngIn = 'node_modules/tinymce-lang/langs';
+			let vn = Number(num) == 4 ? '' : num;
+			let lngIn = 'node_modules/tinymce-i18n/langs' + vn;
 			// Конечная директория языка
 			let lngOut = cacheOut + '/tinymce/langs';
-			//if(!grunt.file.exists(cacheOut)) {
-				// grunt.file.mkdir(cacheOut, 0777);
-				// Стартуем загрузку
-				strWidth = lineWidth - String('Start Download').length;
-				grunt.log.ok([chalk.cyanBright('Start Download') + String('-> ').padStart(strWidth) + chalk.greenBright(val)]);
-				// Скачать пакет, скопировать языки
-				await downloadNpmPackage({
-					// Тег версии tinymce
-					arg: `tinymce@${val}`,
-					dir: cacheOut
-				}).then((rel) => {
-					// Удачная загрузка
-					strWidth = lineWidth - String('Success Download').length;
-					grunt.log.ok([chalk.magentaBright('Success Download') + String('-> ').padStart(strWidth) + chalk.greenBright(val)]);
-					strWidth = lineWidth - String('Unzipped').length;
-					grunt.log.ok([chalk.magentaBright('Unzipped') + String('-> ').padStart(strWidth) + chalk.greenBright(cacheOut)]);
-				}).catch((err) => {
-					// Ошибка загрузки
-					// И сразу выходим
-					strWidth = lineWidth - String('Error Download').length;
-					grunt.fail.warn(chalk.redBright('Error Download') + String('-> ').padStart(strWidth) + chalk.redBright(err));
-				});
-				// Копируем с рекурсией языки
-				fs.cpSync(lngIn, lngOut, {
-					recursive: true,
-					force: true
-				});
-				strWidth = lineWidth - String('Copy languages ' + lowercase).length;
-				grunt.log.ok([chalk.cyan('Copy languages ' + lowercase) + String('-> ').padStart(strWidth) + chalk.greenBright(lngOut)]);
-			//}
-			// И вот здесь уже копирование всего в исходники плагинов
+
+			// Стартуем загрузку
+			strWidth = lineWidth - String('Start Download').length;
+			grunt.log.ok([chalk.cyanBright('Start Download') + String('-> ').padStart(strWidth) + chalk.greenBright(val)]);
+
+			// Подготовим плагины
+			grunt.file.expandMapping(
+				[`plugins${num}/**/plugin.js`],
+				`plugins${num}`,
+				{
+					flatten: false,
+					rename: function(destBase, destPath) {
+						let inF = destPath;
+						let outF = destPath.replace('plugin.js', 'plugin.min.js');
+						fs.copyFileSync(inF, outF);
+						return destPath.replace('plugin.js', 'plugin.min.js');
+					}
+				}
+			);
+
+			// Скачать пакет, скопировать языки
+			await downloadNpmPackage({
+				// Тег версии tinymce
+				arg: `tinymce@${val}`,
+				dir: cacheOut
+			}).then((rel) => {
+				// Удачная загрузка
+				strWidth = lineWidth - String('Success Download').length;
+				grunt.log.ok([chalk.magentaBright('Success Download') + String('-> ').padStart(strWidth) + chalk.greenBright(val)]);
+				strWidth = lineWidth - String('Unzipped').length;
+				grunt.log.ok([chalk.magentaBright('Unzipped') + String('-> ').padStart(strWidth) + chalk.greenBright(cacheOut)]);
+			}).catch((err) => {
+				// Ошибка загрузки
+				// И сразу выходим
+				strWidth = lineWidth - String('Error Download').length;
+				grunt.fail.warn(chalk.redBright('Error Download') + String('-> ').padStart(strWidth) + chalk.redBright(err));
+			});
+
+			// Копируем с рекурсией языки
+			fs.cpSync(lngIn, lngOut, {
+				recursive: true,
+				force: true
+			});
+			strWidth = lineWidth - String('Copy languages ' + lowercase).length;
+			grunt.log.ok([chalk.cyan('Copy languages ' + lowercase) + String('-> ').padStart(strWidth) + chalk.greenBright(lngOut)]);
+
+			// Вот здесь уже копирование всего в исходники плагинов
 			// Копируем с рекурсией TinyMCE
 			fs.cpSync(cacheOut, dirOut, {
 				recursive: true,
@@ -162,14 +177,16 @@ module.exports = function(grunt) {
 				path.join(dirOut, 'tinymce', "package.json"),
 				path.join(dirOut, 'tinymce', "readme.md"),
 			];
-
-			var tmpFile;
-			for(tmpFile of tempFiles) {
+			//var tmpFile;
+			for(var tmpFile of tempFiles) {
 				if(grunt.file.exists(tmpFile)) {
 					grunt.file.delete(tmpFile, {});
 				}
 			}
-
+			// Подготовка плагинов
+			if(num > 7) {
+				copyReplceFiles();
+			}
 			// Далее
 			// Копирование общих плагинов
 			let dirOutPlgs = dirOut + '/tinymce/plugins';
@@ -185,6 +202,20 @@ module.exports = function(grunt) {
 			);
 			strWidth = lineWidth - String('Copy plugins').length;
 			grunt.log.ok([chalk.cyan('Copy plugins') + String('-> ').padStart(strWidth) + chalk.greenBright(dirOutPlgs)]);
+
+			// Копирование плагинов
+			copyFolderRecursiveSync(
+				`plugins${num}`,
+				dirOutPlgs,
+				lowercase,
+				uppercase,
+				biguppercase,
+				val,
+				options.repository,
+				options.issues
+			);
+			strWidth = lineWidth - String('Copy plugins ' + lowercase).length;
+			grunt.log.ok([chalk.cyan('Copy plugins ' + lowercase) + String('-> ').padStart(strWidth) + chalk.greenBright(dirOutPlgs)]);
 
 			// Копирование файлов из src директории
 			let pathFiles = options.src;
@@ -202,19 +233,6 @@ module.exports = function(grunt) {
 			grunt.log.ok([chalk.cyan('Copy src ' + lowercase) + String('-> ').padStart(strWidth) + chalk.greenBright(dirOut)]);
 
 			if(num > 4) {
-				// Копирование плагинов tinymce 5 и выше
-				copyFolderRecursiveSync(
-					'plugins5',
-					dirOutPlgs,
-					lowercase,
-					uppercase,
-					biguppercase,
-					val,
-					options.repository,
-					options.issues
-				);
-				strWidth = lineWidth - String('Copy plugins ' + lowercase).length;
-				grunt.log.ok([chalk.cyan('Copy plugins ' + lowercase) + String('-> ').padStart(strWidth) + chalk.greenBright(dirOutPlgs)]);
 				// Копирование тем
 				copyFolderRecursiveSync(
 					'theme5',
@@ -242,20 +260,6 @@ module.exports = function(grunt) {
 					options.issues
 				);
 			} else {
-				// Копирование плагинов tinymce 4
-				copyFolderRecursiveSync(
-					'plugins4',
-					dirOutPlgs,
-					lowercase,
-					uppercase,
-					biguppercase,
-					val,
-					options.repository,
-					options.issues
-				);
-				strWidth = lineWidth - String('Copy plugins ' + lowercase).length;
-				grunt.log.ok([chalk.cyan('Copy plugins ' + lowercase) + String('-> ').padStart(strWidth) + chalk.greenBright(dirOutPlgs)]);
-				// Копирование тем
 				copyFolderRecursiveSync(
 					'theme4',
 					dirOut,
@@ -282,7 +286,6 @@ module.exports = function(grunt) {
 					options.issues
 				);
 			}
-
 			// Копирование инсталяционного файла плагина
 			copyFolderRecursiveSync(
 				options.install,

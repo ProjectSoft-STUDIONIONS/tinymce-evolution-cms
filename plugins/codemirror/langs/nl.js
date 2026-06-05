@@ -1,0 +1,1 @@
+tinymce.addI18n("nl",{"The source HTML code of the CodeMirror plugin":"The source HTML code\nof the CodeMirror plugin","Start search":"Start zoeken","Find next":"Zoek volgende","Find previous":"Zoek vorige",Replace:"Vervang","Replace all":"Vervang alle"});

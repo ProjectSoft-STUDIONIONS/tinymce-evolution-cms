@@ -2,10 +2,26 @@ module.exports = function(grunt) {
 	const fs = require('node:fs');
 	const path = require('node:path');
 	const chalk = require('chalk');
+
+	// const { string: PluginString } = require('rollup-plugin-string');
+	// const FilesAsStrings = PluginString({
+	// 	include: '**/*.svg'
+	// });
+
+	// let gruntUtils = require('./tools/modules/grunt-utils');
+	// let swag = require('@ephox/swag');
+	// const nodeResolve = require('@rollup/plugin-node-resolve');
+	// const alias = require('@rollup/plugin-alias');
+
 	const PACK = grunt.file.readJSON('package.json');
 	// Старт начинается с запуска в командной строке старта - npm run start
 	// Только после получения последних версий можно запускать grunt
 	const tinymcePack = grunt.file.readJSON('tinymce.json');
+
+	let plugins = [
+		'imagetools',
+		'modxlink'
+	];
 
 	delete tinymcePack.latest;
 
@@ -23,71 +39,23 @@ module.exports = function(grunt) {
 				'dist/assets',
 				'dist/install',
 				'dist/lib',
-				/*'cache/*',*/
+				'cache/*',
 			]
-		},
-		uglify: {
-			options: {
-				sourceMap: false,
-				compress: {
-					drop_console: false,
-				},
-				output: {
-					ascii_only: true,
-				},
-			},
-			main: {
-				files: [
-					{
-						expand: true,
-						cwd: 'src/tinymce/plugins',
-						src: '**/plugin.js',
-						dest: 'src/tinymce/plugins',
-						filter: 'isFile',
-						rename: function (dst, src) {
-							let nFile = dst + '/' + src.replace('.js', '.min.js');
-							return nFile;
-						},
-					},
-					{
-						expand: true,
-						cwd: 'plugins4',
-						src: '**/plugin.js',
-						dest: 'plugins4',
-						filter: 'isFile',
-						rename: function (dst, src) {
-							let nFile = dst + '/' + src.replace('.js', '.min.js');
-							return nFile;
-						},
-					},
-					{
-						expand: true,
-						cwd: 'plugins5',
-						src: '**/plugin.js',
-						dest: 'plugins5',
-						filter: 'isFile',
-						rename: function (dst, src) {
-							let nFile = dst + '/' + src.replace('.js', '.min.js');
-							return nFile;
-						},
-					},
-				],
-			},
 		},
 		'tinymce-evolution': {
 			options: {
 				versions: VERSIONS,
 				directory: "assets/plugins",
 				src: 'src',
-				plugins: 'plugins',
-				plugins4: 'plugins4',
-				plugins5: 'plugins5',
 				repository: PACK.homepage,
-				install: "install",
-				issues: PACK.bugs.url
+				issues: PACK.bugs.url,
+				install: "install"
 			},
 			main: {},
 		},
+		rollup: Object.assign(
+			{}
+		),
 		compress: {
 			tinymce4: {
 				options: {
@@ -216,5 +184,5 @@ module.exports = function(grunt) {
 			},
 		},
 	});
-	grunt.registerTask('default',	['clean', 'uglify', 'tinymce-evolution', 'compress']);
+	grunt.registerTask('default',	['clean', 'tinymce-evolution', /* 'compress'*/]);
 }

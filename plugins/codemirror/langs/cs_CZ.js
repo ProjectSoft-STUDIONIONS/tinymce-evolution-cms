@@ -1,0 +1,1 @@
+tinymce.addI18n("cs_CZ",{"The source HTML code of the CodeMirror plugin":"The source HTML code\nof the CodeMirror plugin","Start search":"Hledat","Find next":"Naj\xedt dal\u0161\xed","Find previous":"Naj\xedt p\u0159edchoz\xed",Replace:"Nahradit","Replace all":"Nahradit v\u0161e"});

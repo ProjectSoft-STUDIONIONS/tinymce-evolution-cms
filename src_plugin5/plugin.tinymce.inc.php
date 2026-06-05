@@ -5,62 +5,66 @@ if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 
 // Init
 if(!class_exists('modxRTEbridge')) {
-    if( !file_exists(MODX_BASE_PATH."assets/lib/class.modxRTEbridge.php")) { // Add Fall-Back for now
-        require_once(MODX_BASE_PATH."assets/plugins/tinymce8/class.modxRTEbridge.php");
-    } else {
-        require_once(MODX_BASE_PATH."assets/lib/class.modxRTEbridge.php");
-    }
+	if( file_exists(MODX_BASE_PATH."assets/lib/class.modxRTEbridge.php")) {
+		require_once(MODX_BASE_PATH."assets/lib/class.modxRTEbridge.php");
+	} else {
+		// Здесь то, что должно остановить процесс evo
+	}
 }
 
-require_once(MODX_BASE_PATH."assets/plugins/tinymce8/bridge.tinymce8.inc.php");
+require_once(MODX_BASE_PATH."assets/plugins/%lowercase%/bridge.%lowercase%.inc.php");
 
 $e = &$modx->event;
 
 if (!isset($inlineMode)) {
-    $inlineMode = '';
+	$inlineMode = '';
 }
 
 if($e->name == 'OnWebPagePrerender' && $inlineMode == 'enabled') {
-    $options = array('editable'=>array(
-        'theme'=>isset($inlineTheme) ? $inlineTheme : 'inline'
-    ));
+	$options = array('editable'=>array(
+		'theme'=>isset($inlineTheme) ? $inlineTheme : 'inline'
+	));
 } else {
-    $options = isset($options) && is_array($options) ? $options : array();
+	$options = isset($options) && is_array($options) ? $options : array();
 }
 
-$rte = new tinymce8bridge($options);
-$rte->setDebug(false);  // true or 'full' for Debug-Infos in HTML-comments
+$rte = new %lowercase%bridge($options);
+
+// true or 'full' for Debug-Infos in HTML-comments
+$rte->setDebug(false);
 
 $rte->pluginParams['customParams'] = !empty($rte->pluginParams['customParams']) ? ','. trim($rte->pluginParams['customParams'], ',') : '';
 
 file_put_contents(dirname(__FILE__) . "/rte.txt", print_r($rte, true));
 
 // Internal Stuff - Don´t touch!
-$showSettingsInterface = true;  // Show/Hide interface in Modx- / user-configuration
+// Show/Hide interface in Modx- / user-configuration
+$showSettingsInterface = true;
 $editorLabel = $rte->pluginParams['editorLabel'];
 
 switch ($e->name) {
-    // register for manager
-    case "OnRichTextEditorRegister":
-        $e->output($editorLabel);
-        break;
+	// register for manager
+	case "OnRichTextEditorRegister":
+		$e->output($editorLabel);
+		break;
 
-    // render script for JS-initialization
-    case "OnRichTextEditorInit":
-        if ($editor === $editorLabel) {
-            // Handle introtext-RTE
-            if($introtextRte == 'enabled' && isset($rte->pluginParams['elements']) && !defined($editor . '_INIT_INTROTEXT')) {
-                define($editor . '_INIT_INTROTEXT', 1);
-                if(!in_array('introtext',$rte->pluginParams['elements'])) {
-                    $rte->pluginParams['elements'][]      = 'introtext';
-                    $rte->tvOptions['introtext']['theme'] = 'introtext';
-                };
-            }
-            $script = $rte->getEditorScript() . "<script type=\"text/javascript\">
+	// render script for JS-initialization
+	case "OnRichTextEditorInit":
+		if ($editor === $editorLabel) {
+			// Handle introtext-RTE
+			if($introtextRte == 'enabled' && isset($rte->pluginParams['elements']) && !defined($editor . '_INIT_INTROTEXT')) {
+				define($editor . '_INIT_INTROTEXT', 1);
+				if(!in_array('introtext',$rte->pluginParams['elements'])) {
+					$rte->pluginParams['elements'][]      = 'introtext';
+					$rte->tvOptions['introtext']['theme'] = 'introtext';
+				};
+			}
+			// Функция для открытия файл менеджера для TinyMCE-5.x-8.x
+			$script = $rte->getEditorScript() . "<script type=\"text/javascript\">
 	let editorCallback = null;
 	let currentFieldId = null;
 	const icon_header = \"fa fa-folder-open\";
-	function openFileManagerForTinyMCE(field_type, callback) {
+	function openFileManagerForTinyMCE(field_type, callback, directory = '') {
 		let evoMod = window.modx || window.parent.modx || window.parent.parent.modx;
 		let popup;
 		let pWidth;
@@ -78,7 +82,7 @@ switch ($e->name) {
 
 		const fieldId = currentFieldId || 'default_field_id';
 
-		const url = '/manager/media/browser/" . $modx->getConfig('which_browser'). "/browse.php?opener=tinymce4&type='+field_type+'&field_id=' + encodeURIComponent(fieldId);
+		const url = '/manager/media/browser/" . $modx->getConfig('which_browser'). "/browse.php?opener=%lowercase%&type='+field_type+'&field_id=' + encodeURIComponent(fieldId) + directory;
 		const eventHandler = (event) => {
 			//
 			let data = typeof event.data == \"string\" ? JSON.parse(event.data) : event.data;
@@ -107,27 +111,29 @@ switch ($e->name) {
 			}
 		}
 		// Ресайз попапа с kcfinder
+		// По ресайзу есть идея переделать.
+		// Пока оставим как есть
 		const eventResizeHandler = function() {
 			if ( popup ) {
 				let w,
 					h,
-					cw = Cookies.get('KCFINDER_tinymce" . $num . "_popup_width') || '99%',
-					ch = Cookies.get('KCFINDER_tinymce" . $num . "_popup_height') || '99%';
+					cw = Cookies.get('KCFINDER_%lowercase%_popup_width') || '99%',
+					ch = Cookies.get('KCFINDER_%lowercase%_popup_height') || '99%';
 				w = parseInt(100 * popup.el.offsetWidth / window.innerWidth) + '%';
 				h = parseInt(100 * popup.el.offsetHeight / window.innerHeight) + '%';
 				if ( w != parseInt(cw) + '%' ) {
-					Cookies.set('KCFINDER_tinymce" . $num . "_popup_width', parseInt(w), { expires: 7, path: '' });
+					Cookies.set('KCFINDER_%lowercase%_popup_width', parseInt(w), { expires: 7, path: '' });
 				}
 				if ( h != parseInt(ch) + '%' ) {
-					Cookies.set('KCFINDER_tinymce" . $num . "_popup_height', parseInt(h), { expires: 7, path: '' });
+					Cookies.set('KCFINDER_%lowercase%_popup_height', parseInt(h), { expires: 7, path: '' });
 				}
 				myReq = requestAnimationFrame(eventResizeHandler);
 			} else {
 				cancelAnimationFrame(myReq);
 			}
 		};
-		pWidth = Cookies.get('KCFINDER_tinymce" . $num . "_popup_width') || '99%';
-		pHeight = Cookies.get('KCFINDER_tinymce" . $num . "_popup_height') || '99%';
+		pWidth = Cookies.get('KCFINDER_%lowercase%_popup_width') || '99%';
+		pHeight = Cookies.get('KCFINDER_%lowercase%_popup_height') || '99%';
 		pWidth = parseInt(pWidth) > 99 ? '99%' : pWidth;
 		pHeight = parseInt(pHeight) > 99 ? '99%' : pHeight;
 		// Открываем через API modx
@@ -172,7 +178,7 @@ switch ($e->name) {
 						popupIframe = obj.querySelector('iframe');
 						// Подписываемся на события
 						window.addEventListener('message', eventHandler);
-						// старт ресайза.
+						// Старт ресайза.
 						myReq = requestAnimationFrame(eventResizeHandler);
 						popupIframe && popupIframe.addEventListener('load', iframeLoad);
 					},
@@ -181,53 +187,57 @@ switch ($e->name) {
 			);
 		}
 	}
-/*
+
 	function SetUrl(url) {
 		if (editorCallback) {
 			editorCallback(url);
 			editorCallback = null;
 		}
-	}*/
+	}
 	</script>";
 			$e->output($script);
-        };
-        break;
+		};
+		break;
 
-    // Inline-Mode
-    case "OnLoadWebPageCache":
-    case "OnLoadWebDocument":
-        if($inlineMode == 'enabled' && isset($_SESSION['mgrValidated'])) {
-            $output = &$modx->documentContent;
-            $output = $rte->parseEditableIds($output);
-            $rte->protectModxPhs(); // Avoid breaking content / parsing of Modx-placeholders when editing (Inline-Mode)
-        }
-        break;
-    
-    case "OnParseDocument":
-        if($inlineMode == 'enabled' && isset($_SESSION['mgrValidated'])) {
-            $output = &$modx->documentOutput;
-            $output = $rte->parseEditableIds($output);
-            $rte->protectModxPhs();
-        }
-        break;
+	// Inline-Mode
+	case "OnLoadWebPageCache":
+	case "OnLoadWebDocument":
+		if($inlineMode == 'enabled' && isset($_SESSION['mgrValidated'])) {
+			$output = &$modx->documentContent;
+			$output = $rte->parseEditableIds($output);
+			// Avoid breaking content / parsing of Modx-placeholders when editing (Inline-Mode)
+			$rte->protectModxPhs();
+		}
+		break;
 
-    case "OnWebPagePrerender":
-        if($inlineMode == 'enabled' && isset($_SESSION['mgrValidated'])) {
-            $rte->set('inline', true, 'bool'); // https://www.tinymce.com/docs/configure/editor-appearance/#inline
-            $rte->setPluginParam('elements', 'editable');  // Set missing plugin-parameter manually for Frontend
-            $rte->addEditorScriptToBody();
-        }
-        break;
+	case "OnParseDocument":
+		if($inlineMode == 'enabled' && isset($_SESSION['mgrValidated'])) {
+			$output = &$modx->documentOutput;
+			$output = $rte->parseEditableIds($output);
+			$rte->protectModxPhs();
+		}
+		break;
 
-    // render Modx- / User-configuration settings-list
-    case "OnInterfaceSettingsRender":
-        if( $showSettingsInterface === true ) {
-            $html = $rte->getModxSettings();
-            $e->output($html);
-        };
-        break;
+	case "OnWebPagePrerender":
+		if($inlineMode == 'enabled' && isset($_SESSION['mgrValidated'])) {
+			// https://www.tinymce.com/docs/configure/editor-appearance/#inline
+			$rte->set('inline', true, 'bool');
+			// Set missing plugin-parameter manually for Frontend
+			$rte->setPluginParam('elements', 'editable');
+			$rte->addEditorScriptToBody();
+		}
+		break;
 
-    default :
-        return; // important! stop here!
-        break;
+	// render Modx- / User-configuration settings-list
+	case "OnInterfaceSettingsRender":
+		if( $showSettingsInterface === true ) {
+			$html = $rte->getModxSettings();
+			$e->output($html);
+		};
+		break;
+
+	default :
+		// important! stop here!
+		return;
+		break;
 }
