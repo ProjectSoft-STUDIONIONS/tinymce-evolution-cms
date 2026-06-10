@@ -19,21 +19,75 @@
 // Устанавливаем язык TinyMCE
 $evo = evo();
 $lang = $evo->config['manager_language'];
+
+// Под EVO 1.4.x нужен проход по языкам
 $this->set('language', $lang, 'string', false);
 
-$this->set('plugins', 'autolink save image modxlink codemirror table visualblocks modxlink', 'string');
+// Отключим кеширование скриптов. Это тест.
+$this->set('cache_suffix', '?' . date("Ymd-Hi"), 'string');
 
-$this->set('toolbar1', 'undo redo | formatselect | bold strikethrough | alignleft aligncenter alignright | link unlink openlink image | codemirror', 'string');
+$this->set('plugins', 'autolink autoresize save image modxlink notocoloremoji codemirror table visualblocks media youtube', 'string');
+
+// Menu Bar
+$this->set('menubar', 'file edit view insert format tools table', 'string' );
+
+// Status Bar
+$this->set('statusbar', false, 'bool' );
+
+// Первая строка тулбара
+$this->set('toolbar1', 'undo redo | formatselect | bold strikethrough | alignleft aligncenter alignright | link unlink openlink | media image youtube | notocoloremoji | codemirror', 'string');
+
+// Вторая строка тулбара
 $this->set('toolbar2', NULL, 'string');
 
-// Hide bars
-$this->set('menubar', 'file edit view insert format tools table', 'string' ); // https://www.tinymce.com/docs/configure/editor-appearance/#menubar
-$this->set('statusbar', false, 'bool' ); // https://www.tinymce.com/docs/get-started/customize-ui/#hidingthestatusbar
+// Третья строка тулбара
+$this->set('toolbar3', NULL, 'string');
 
-// When using template-plugin/button, you can mark elements as noneditable via <div class="myclass mceNonEditable">Contents</div>
-// https://www.tinymce.com/docs/plugins/noneditable/
-// $this->appendSet('plugins', 'noneditable', ' ');
+// Четвёртая строка тулбара
+$this->set('toolbar4', NULL, 'string');
 
+// Ресайз редактора
+$this->set('autoresize_bottom_margin', 0, 'number');
+$this->set('autoresize_min_height', 100, 'number');
+
+// ifrme video (media plugin)
+$this->set('sandbox_iframes', false, 'bool');
+$this->set('iframe_template_callback', '(data) => `<iframe class="embed-responsive embed-responsive-16by9" src="${data.source}" allow="clipboard-write; autoplay" allowfullscreen="allowfullscreen"></iframe>`', 'object');
+
+// Ресайзер Таблицы отключаем
+$this->set('object_resizing', false, 'bool');
+$this->set('table_resize_bars', false, 'bool');
+
+// Заголовок таблицы
+$this->set('table_header_type', 'thead', 'string');
+
+// Настройки для изображений
+$this->set('image_dimensions', false, 'bool');
+$this->set('image_description', false, 'bool');
+
+//
+$this->set('allow_unsafe_link_target', false, 'bool');
+
+// По умолчанию новое окно
+$this->set('link_default_target', '_blank', 'string');
+
+// Rel list
+$this->set('link_rel_list', '[
+	{
+		"title": "Default Rel",
+		"value": "noopener"
+	},
+	{
+		"title": "Rel noreferrer",
+		"value": "noopener noreferrer nofollow"
+	},
+    {
+    	"title": "Rel external",
+    	"value": "noopener noreferrer nofollow external"
+    }
+]', 'json');
+
+// Codemirror Plugin
 $this->set('codemirror', '{
 	"cssFiles": [
 		"lib/codemirror.css",
@@ -54,11 +108,12 @@ $this->set('codemirror', '{
 		"lineNumbers": true,
 		"indentUnit": 4,
 		"tabSize": 4,
-		"theme": "mariana"
+		"theme": "cobalt"
 	}
-}', 'object');
+}', 'object'); // mariana
 
-$this->set('file_picker_callback', 'function (callback, value, meta) {
+// File Picker Callbaack
+$this->set('file_picker_callback', '(callback, value, meta) => {
 			let type = meta.filetype || "file";
 			let field = meta.fieldname || "";
 			let url = (typeof meta.original == "object") ? meta.original.value : "";
@@ -81,4 +136,39 @@ $this->set('file_picker_callback', 'function (callback, value, meta) {
 			}
 			openFileManagerForTinyMCE(type, callback, directory);
 		}', 'object');
+
+// File Picker Types
 $this->set('file_picker_types', 'image file media', 'string');
+
+// Показать блоки и символы
+$this->set('visualblocks_default_state', true, 'bool');
+$this->set('visualchars_default_state', true, 'bool');
+
+// Вставить как текст
+$this->set('paste_as_text', true, 'bool');
+
+// Старт и сохранение
+$this->set('setup', '(ed) => { ed.on("change", (e) => { documentDirty=true; }); }',  'object');
+$this->set('save_onsavecallback', '() => { documentDirty=false; document.getElementById("stay").value = 2; document.mutate.save.click(); }',  'object');
+
+// Забираем css файлы из настроек если они есть
+// Добавляем хэшь для отключения кэша скриптов
+try {
+	$css_conf = trim($modx_evo->config["editor_css_path"]);
+	$pattern = "/([|,;]+)/";
+	$css = preg_split($pattern, $css_conf, -1, PREG_SPLIT_NO_EMPTY);
+	$array_css = [];
+	foreach ($css as $key => $value):
+		$value = trim($value, "/");
+		if(is_file(MODX_BASE_PATH . $value)):
+			$hash = filemtime(MODX_BASE_PATH . $value);
+			$value .= '?hash=hash' . $hash;
+			$array_css[] = "/" . $value;
+		endif;
+	endforeach;
+	// Если файлы есть - добавляем
+	if(count($array_css)):
+		$files_css = json_encode($array_css, JSON_OBJECT_AS_ARRAY | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT);
+		$this->set('content_css', $files_css, 'json');
+	endif;
+} catch (Exception $e) {}

@@ -13,6 +13,7 @@ tinymce.PluginManager.requireLangPack('youtube');
 tinymce.PluginManager.add('youtube', function(editor) {
 
     function openmanager() {
+		let open = tinymce.majorVersion < 5 ? editor.windowManager.open : editor.windowManager.openUrl;
         win = editor.windowManager.open({
             title: 'Choose YouTube Video',
             file: tinyMCE.baseURL + '/plugins/youtube/youtube.html',

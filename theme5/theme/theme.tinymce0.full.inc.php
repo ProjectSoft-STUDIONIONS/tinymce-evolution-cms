@@ -16,16 +16,13 @@
  *
  * */
 
-// @todo: make "styleprops"-button work with "compat3x-plugin"?
-// http://archive.tinymce.com/forum/viewtopic.php?pid=115507#p115507
-
 // Устанавливаем язык TinyMCE
 $evo = evo();
 $lang = $evo->config['manager_language'];
 $this->set('language', $lang, 'string', false);
 
 // @todo: Is this list complete for a "full"-theme?
-$this->set('plugins', 'anchor autolink lists pagebreak table save hr customlink image notocoloremoji insertdatetime preview media searchreplace codemirror contextmenu directionality fullscreen visualchars nonbreaking autosave advlist visualblocks charmap wordcount codesample', 'string');
+$this->set('plugins', 'autoresize anchor autolink lists pagebreak table save hr customlink image notocoloremoji insertdatetime preview media searchreplace codemirror contextmenu directionality fullscreen visualchars nonbreaking autosave advlist visualblocks charmap wordcount codesample', 'string');
 $this->set('toolbar1', 'save print newdocument | undo redo | searchreplace | cut copy | visualchars | visualblocks codemirror | preview fullscreen', 'string');
 $this->set('toolbar2', 'styleselect formatselect fontselect fontsizeselect | forecolor backcolor', 'string');
 $this->set('toolbar3', 'bold italic underline strikethrough subscript superscript removeformat | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | ltr rtl', 'string');

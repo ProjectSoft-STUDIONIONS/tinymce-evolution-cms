@@ -6,6 +6,7 @@
 	'use strict';
 
 	var global$5 = tinymce.util.Tools.resolve('tinymce.PluginManager');
+	tinymce.PluginManager.requireLangPack('modxlink');
 
 	// MY CUSTOM HELPER START
 	const myPluginSearchHelper = {
@@ -53,7 +54,7 @@
 									resultsContainer.appendChild(resultItem);
 								});
 							} else {
-								resultsContainer.innerHTML = '<div style="padding:2px 5px; color: #777;">No results found.</div>';
+								resultsContainer.innerHTML = '<div style="padding:2px 5px; color: #777;">' + tinymce.translate('No results found.') + '</div>';
 							}
 						})
 						.catch(error => {
