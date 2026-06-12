@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = async function(grunt) {
 	const fs = require('node:fs');
 	const path = require('node:path');
 	const chalk = require('chalk');
@@ -20,34 +20,6 @@ module.exports = function(grunt) {
 		'modxlink'
 	];
 
-	function sortKeys(obj) {
-		let keys = Object.keys(obj).sort((a, b) => {
-				if (a < b) return -1;
-				if (a > b) return 1;
-				return 0;
-			}),
-			temp = {};
-		keys.forEach(key => {
-			temp[key] = obj[key];
-		});
-		return temp;
-	}
-
-	// Старт начинается с запуска в командной строке старта - npm run start
-	// Только после получения последних версий можно запускать grunt
-	let tinymcePack = {},
-		VERSIONS = [];
-
-	tinymcePack = grunt.file.readJSON('tinymce.json');
-	// Удаляем Последнюю версию (latest)
-	delete tinymcePack.latest;
-	// Сортируем
-	tinymcePack = sortKeys(tinymcePack);
-	// Перезапишем файл
-	fs.writeFileSync("tinymce.json", JSON.stringify(tinymcePack, null, "\t") + "\n");
-	// Получаем версии
-	VERSIONS = Object.values(tinymcePack);
-
 	require('time-grunt')(grunt);
 	require('load-grunt-tasks')(grunt);
 	grunt.loadTasks('tasks');
@@ -59,13 +31,11 @@ module.exports = function(grunt) {
 				'./*.zip',
 				'dist/assets',
 				'dist/install',
-				'dist/lib',
-				'cache/*',
+				'dist/lib'
 			]
 		},
 		'tinymce-evolution': {
 			options: {
-				versions: VERSIONS,
 				directory: "assets/plugins",
 				src: 'src',
 				repository: PACK.homepage,

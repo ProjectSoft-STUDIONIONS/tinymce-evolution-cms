@@ -86,9 +86,21 @@ module.exports = function(grunt) {
 		});
 	};
 
+	const sortKeys = function(obj) {
+		let keys = Object.keys(obj).sort((a, b) => {
+				if (a < b) return -1;
+				if (a > b) return 1;
+				return 0;
+			}),
+			temp = {};
+		keys.forEach(key => {
+			temp[key] = obj[key];
+		});
+		return temp;
+	}
+
 	grunt.registerMultiTask('tinymce-evolution', 'TinyMCE for Evolution CMS',async function() {
 		var options = this.options({
-			versions: ["4.9.11"],
 			directory: 'assets/plugins',
 			src: 'src',
 			repository: 'https://github.com/',
@@ -97,9 +109,38 @@ module.exports = function(grunt) {
 		});
 		var done = this.async();
 		var val;
+		var versions = {};
 		let strWidth = 0;
-		for (val of options.versions) {
-				// Директория вывода
+		try {
+			// Получаем свежие версии
+			const response = await fetch("https://registry.npmjs.org/tinymce?fields=dist-tags");
+			if (!response.ok) {
+				let errStr = "Выявлена ошибка при выполнении сетевого запроса";
+				grunt.fail.warn(chalk.redBright('Error Download') + String('-> ').padStart(lineWidth - 'Error Download'.length) + chalk.redBright(errStr));
+			}
+			let tempJson =  await response.json();
+			let tempDistTags = tempJson["dist-tags"];
+			delete tempDistTags.latest;
+			let distTags = Object.assign({}, sortKeys(tempDistTags));
+			// Пишем файл
+			grunt.file.write("tinymce.json", JSON.stringify(distTags, null, "\t") + "\n");
+			// Читаем файл
+			versions = Object.values(grunt.file.readJSON("tinymce.json"));
+			// Удаляем файл
+			grunt.file.delete("tinymce.json");
+		}catch(error) {
+			let errStr = "Выявлена ошибка при выполнении сетевого запроса";
+			grunt.fail.fatal("\n" + chalk.redBright('Error Download') + String('-> ').padStart(lineWidth - 'Error Download'.length) + chalk.redBright(errStr));
+		}
+
+		// Копирование основного класса в lib
+		copyFolderRecursiveSync('lib', 'dist/assets/lib');
+		strWidth = lineWidth - String('Copy lib').length;
+		grunt.log.ok([chalk.cyan('Copy lib') + String('-> ').padStart(strWidth) + chalk.greenBright('dist/assets/lib')]);
+
+		// Понеслась
+		for (val of versions) {
+			// Директория вывода
 			let num = val.split(".")[0],
 				lowercase = `tinymce${num}`,
 				uppercase = `TinyMCE${num}`,
@@ -119,6 +160,7 @@ module.exports = function(grunt) {
 			grunt.log.ok([chalk.cyanBright('Start Download') + String('-> ').padStart(strWidth) + chalk.greenBright(val)]);
 
 			// Подготовим плагины
+			// Перезапишем минификацию
 			grunt.file.expandMapping(
 				[`plugins${num}/**/plugin.js`],
 				`plugins${num}`,
@@ -146,7 +188,7 @@ module.exports = function(grunt) {
 				grunt.log.ok([chalk.magentaBright('Unzipped') + String('-> ').padStart(strWidth) + chalk.greenBright(cacheOut)]);
 			}).catch((err) => {
 				// Ошибка загрузки
-				// И сразу выходим
+				// Сразу выходим
 				strWidth = lineWidth - String('Error Download').length;
 				grunt.fail.warn(chalk.redBright('Error Download') + String('-> ').padStart(strWidth) + chalk.redBright(err));
 			});
@@ -299,12 +341,24 @@ module.exports = function(grunt) {
 			);
 			strWidth = lineWidth - String('Copy install ' + lowercase).length;
 			grunt.log.ok([chalk.cyan('Copy install ' + lowercase) + String('-> ').padStart(strWidth) + chalk.greenBright(installOut + '/' + lowercase + '.tpl')]);
+			// Удаляем cacheOut
+			grunt.file.delete(cacheOut, {force: true});
+			// Сделать архивирование
+			// dist/assets/lib/*
+			// dist/assets/plugins/tinymce${num}/*
+			// dist/install/assets/plugins/tinymce${num}.tpl
+
+			// Удалить dist/tinymce${num}/*
+			grunt.file.delete(`dist/assets/plugins/tinymce${num}`, {force: true});
+			// Удалить dist/install/assets/plugins/tinymce${num}.tpl
+			grunt.file.delete(`dist/install/assets/plugins/tinymce${num}.tpl`, {force: true});
 		}
 
-		// Копирование класса в lib
-		copyFolderRecursiveSync('lib', 'dist/assets/lib');
-		strWidth = lineWidth - String('Copy lib').length;
-		grunt.log.ok([chalk.cyan('Copy lib') + String('-> ').padStart(strWidth) + chalk.greenBright('dist/assets/lib')]);
+		// Удалить dist/assets
+		grunt.file.delete(`dist/assets`, {force: true});
+		// Удалить dist/install
+		grunt.file.delete(`dist/install`, {force: true});
+
 		// Окончание работы задач
 		done();
 	});
