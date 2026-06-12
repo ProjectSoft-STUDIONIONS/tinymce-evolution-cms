@@ -19,7 +19,7 @@
 // Устанавливаем язык TinyMCE
 $evo = evo();
 $lang = $evo->config['manager_language'];
-$this->set('language', $lang, 'string', false);
+$this->set('language', $lang, 'string', 'en');
 
 // @todo: make "styleprops"-button work with "compat3x-plugin"?
 // http://archive.tinymce.com/forum/viewtopic.php?pid=115507#p115507

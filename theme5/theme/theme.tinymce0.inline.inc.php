@@ -21,12 +21,12 @@ $evo = evo();
 $lang = $evo->config['manager_language'];
 
 // Под EVO 1.4.x нужен проход по языкам
-$this->set('language', $lang, 'string', false);
+$this->set('language', $lang, 'string', 'en');
 
 // Отключим кеширование скриптов. Это тест.
 $this->set('cache_suffix', '?' . date("Ymd-Hi"), 'string');
 
-$this->set('plugins', 'autolink autoresize save image modxlink notocoloremoji codemirror table visualblocks media youtube', 'string');
+$this->set('plugins', 'autolink autoresize save image modxlink codemirror table visualblocks media', 'string');
 
 // Menu Bar
 $this->set('menubar', 'file edit view insert format tools table', 'string' );
@@ -35,7 +35,7 @@ $this->set('menubar', 'file edit view insert format tools table', 'string' );
 $this->set('statusbar', false, 'bool' );
 
 // Первая строка тулбара
-$this->set('toolbar1', 'undo redo | formatselect | bold strikethrough | alignleft aligncenter alignright | link unlink openlink | media image youtube | notocoloremoji | codemirror', 'string');
+$this->set('toolbar1', 'undo redo | formatselect | bold strikethrough | alignleft aligncenter alignright | link unlink openlink | media image | codemirror', 'string');
 
 // Вторая строка тулбара
 $this->set('toolbar2', NULL, 'string');

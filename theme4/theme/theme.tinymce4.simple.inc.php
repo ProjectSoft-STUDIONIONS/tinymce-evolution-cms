@@ -19,7 +19,7 @@
 // Устанавливаем язык TinyMCE
 $evo = evo();
 $lang = $evo->config['manager_language'];
-$this->set('language', $lang, 'string', false);
+$this->set('language', $lang, 'string', 'en');
 
 $this->set('plugins', 'autolink save emoticons modxlink paste image imagetools contextmenu', 'string');
 $this->set('toolbar1', 'undo redo | bold strikethrough | alignleft aligncenter alignright | link unlink image emoticons | hr | help', 'string');

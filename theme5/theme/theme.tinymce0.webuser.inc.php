@@ -19,7 +19,7 @@
 // Устанавливаем язык TinyMCE
 $evo = evo();
 $lang = $evo->config['manager_language'];
-$this->set('language', $lang, 'string', false);
+$this->set('language', $lang, 'string', 'en');
 
 $this->set('menubar', true, 'bool' );    // https://www.tinymce.com/docs/configure/editor-appearance/#menubar
 $this->set('statusbar', false, 'bool' ); // https://www.tinymce.com/docs/get-started/customize-ui/#hidingthestatusbar

@@ -9,7 +9,6 @@
 	"scripts": {
 		"inst": "npm i",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "npm view tinymce dist-tags --json > tinymce.json",
 		"build": "grunt"
 	},
 	"repository": {
@@ -21,22 +20,14 @@
 	},
 	"homepage": "https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms#readme",
 	"dependencies": {
-		"@ephox/swag": "4.6.0",
-		"@rollup/plugin-alias": "6.0.0",
-		"@rollup/plugin-node-resolve": "16.0.3",
 		"chalk": "4.1.2",
 		"download-npm-package": "3.1.12",
 		"grunt": "^1.3.0",
 		"grunt-contrib-clean": "^2.0.1",
-		"grunt-contrib-compress": "2.0.0",
-		"grunt-contrib-requirejs": "1.0.0",
-		"grunt-contrib-uglify-es": "^3.3.0",
 		"grunt-replace": "^2.0.1",
-		"grunt-rollup": "12.0.0",
 		"load-grunt-tasks": "^5.1.0",
-		"rollup": "4.61.1",
-		"rollup-plugin-string": "3.0.0",
 		"time-grunt": "git+https://github.com/ProjectSoft-STUDIONIONS/time-grunt.git",
-		"tinymce-i18n": "latest"
+		"tinymce-i18n": "latest",
+		"zip-lib": "1.4.0"
 	}
 }

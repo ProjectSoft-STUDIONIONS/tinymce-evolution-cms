@@ -2,6 +2,7 @@ module.exports = function(grunt) {
 	const chalk = require('chalk');
 	const fs = require('fs');
 	const path = require('path');
+	const zl = require('zip-lib');
 	const downloadNpmPackage = require('download-npm-package');
 	const lineWidth = 29;
 	const copyReplceFiles = function(directory, mask) {
@@ -133,11 +134,6 @@ module.exports = function(grunt) {
 			grunt.fail.fatal("\n" + chalk.redBright('Error Download') + String('-> ').padStart(lineWidth - 'Error Download'.length) + chalk.redBright(errStr));
 		}
 
-		// Копирование основного класса в lib
-		copyFolderRecursiveSync('lib', 'dist/assets/lib');
-		strWidth = lineWidth - String('Copy lib').length;
-		grunt.log.ok([chalk.cyan('Copy lib') + String('-> ').padStart(strWidth) + chalk.greenBright('dist/assets/lib')]);
-
 		// Понеслась
 		for (val of versions) {
 			// Директория вывода
@@ -146,9 +142,14 @@ module.exports = function(grunt) {
 				uppercase = `TinyMCE${num}`,
 				biguppercase = `TINYMCE${num}`,
 				// Полный путь директории вывода
-				dirOut = 'dist/' + options.directory + '/' + lowercase,
-				installOut = 'dist/install/' + options.directory,
+				dirOut = `dist/${lowercase}/${lowercase}/${options.directory}/${lowercase}`,
+				installOut = `dist/${lowercase}/${lowercase}/install/` + options.directory,
 				cacheOut = 'cache/' + lowercase;
+			// Копирование основного класса в lib
+			copyFolderRecursiveSync('lib', `dist/${lowercase}/${lowercase}/assets/lib`);
+			strWidth = lineWidth - String('Copy lib').length;
+			grunt.log.ok([chalk.cyan('Copy lib') + String('-> ').padStart(strWidth) + chalk.greenBright(`${lowercase}/${lowercase}/dist/assets/lib`)]);
+
 			// Исходная директория языка
 			let vn = Number(num) == 4 ? '' : num;
 			let lngIn = 'node_modules/tinymce-i18n/langs' + vn;
@@ -347,17 +348,21 @@ module.exports = function(grunt) {
 			// dist/assets/lib/*
 			// dist/assets/plugins/tinymce${num}/*
 			// dist/install/assets/plugins/tinymce${num}.tpl
-
-			// Удалить dist/tinymce${num}/*
-			grunt.file.delete(`dist/assets/plugins/tinymce${num}`, {force: true});
-			// Удалить dist/install/assets/plugins/tinymce${num}.tpl
-			grunt.file.delete(`dist/install/assets/plugins/tinymce${num}.tpl`, {force: true});
+			strWidth = lineWidth - String('Archiving ').length;
+			grunt.log.ok([chalk.cyan(`Archiving `) + String('-> ').padStart(strWidth) + chalk.greenBright(`tinymce-${val}.zip`)]);
+			const zip = new zl.Zip();
+			zip.addFolder(`dist/${lowercase}`);
+			await zip.archive(`tinymce-${val}.zip`);
+			strWidth = lineWidth - String('End of Archiving ').length;
+			grunt.log.ok([chalk.cyan(`End of Archiving `) + String('-> ').padStart(strWidth) + chalk.greenBright(`tinymce-${val}.zip`)]);
+			strWidth = lineWidth - String('Archiving ').length;
+			grunt.log.ok([chalk.cyan(`Archiving `) + String('-> ').padStart(strWidth) + chalk.greenBright(`tinymce-${num}.zip`)]);
+			await zip.archive(`tinymce-${num}.zip`);
+			strWidth = lineWidth - String('End of Archiving ').length;
+			grunt.log.ok([chalk.cyan(`End of Archiving `) + String('-> ').padStart(strWidth) + chalk.greenBright(`tinymce-${num}.zip`)]);
+			// Удалить dist/${lowercase}
+			grunt.file.delete(`dist/${lowercase}`, {force: true});
 		}
-
-		// Удалить dist/assets
-		grunt.file.delete(`dist/assets`, {force: true});
-		// Удалить dist/install
-		grunt.file.delete(`dist/install`, {force: true});
 
 		// Окончание работы задач
 		done();

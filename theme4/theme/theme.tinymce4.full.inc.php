@@ -22,7 +22,7 @@
 // Устанавливаем язык TinyMCE
 $evo = evo();
 $lang = $evo->config['manager_language'];
-$this->set('language', $lang, 'string', false);
+$this->set('language', $lang, 'string', 'en');
 
 // @todo: Is this list complete for a "full"-theme?
 $this->set('plugins', 'anchor autolink lists spellchecker pagebreak layer table save hr modxlink image imagetools emoticons insertdatetime preview media searchreplace print code contextmenu paste directionality fullscreen noneditable visualchars textcolor nonbreaking template youtube autosave advlist visualblocks charmap wordcount codesample colorpicker', 'string');

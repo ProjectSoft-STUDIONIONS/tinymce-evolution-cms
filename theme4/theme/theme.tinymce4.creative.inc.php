@@ -24,7 +24,7 @@
 // Устанавливаем язык TinyMCE
 $evo = evo();
 $lang = $evo->config['manager_language'];
-$this->set('language', $lang, 'string', false);
+$this->set('language', $lang, 'string', 'en');
 
 $this->set('plugins', 'anchor save autolink autosave advlist layer fullscreen hr paste modxlink media contextmenu table youtube image imagetools code textcolor', 'string');
 $this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect styleselect fontsizeselect code', 'string');

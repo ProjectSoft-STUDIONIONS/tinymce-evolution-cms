@@ -19,7 +19,7 @@
 // Устанавливаем язык TinyMCE
 $evo = evo();
 $lang = $evo->config['manager_language'];
-$this->set('language', $lang, 'string', false);
+$this->set('language', $lang, 'string', 'en');
 
 if( !empty( $this->modxParams['custom_plugins'])) {
 	$this->set('plugins', $this->modxParams['custom_plugins'], 'string' );
