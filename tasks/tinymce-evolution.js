@@ -338,7 +338,7 @@ module.exports = function(grunt) {
 			grunt.log.ok([chalk.cyan(`Archiving `) + String('-> ').padStart(strWidth) + chalk.greenBright(`tinymce-${val}.zip`)]);
 			const zip = new zl.Zip();
 			zip.addFolder(`dist/${lowercase}`);
-			await zip.archive(`tinymce-${val}.zip`);
+			await zip.archive(`tinymce_${val}.zip`);
 			strWidth = lineWidth - String('End of Archiving ').length;
 			grunt.log.ok([chalk.cyan(`End of Archiving `) + String('-> ').padStart(strWidth) + chalk.greenBright(`tinymce-${val}.zip`)]);
 			strWidth = lineWidth - String('Archiving ').length;
