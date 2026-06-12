@@ -16,20 +16,26 @@
  *
  * */
 
-// @todo: make "styleprops"-button work with "compat3x-plugin"?
-// http://archive.tinymce.com/forum/viewtopic.php?pid=115507#p115507
-
-// @todo: layer-Plugin: Buttons broken
-
 // Устанавливаем язык TinyMCE
 $evo = evo();
 $lang = $evo->config['manager_language'];
 $this->set('language', $lang, 'string', 'en');
 
-$this->set('plugins', 'anchor save autolink autosave advlist layer fullscreen hr paste modxlink media contextmenu table youtube image imagetools code textcolor', 'string');
-$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect styleselect fontsizeselect code', 'string');
-$this->set('toolbar2', 'image media youtube link unlink anchor | bullist numlist | blockquote outdent indent | alignleft aligncenter alignright | hr | styleprops removeformat | pastetext', 'string');
-$this->set('toolbar3', 'insertlayer absolute moveforward movebackward | table | fullscreen help', 'string');
+// @todo: clean plugins for mini
+
+// $this->set('plugins', 'advlist autolink lists modxlink image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen spellchecker insertdatetime media nonbreaking save table contextmenu directionality emoticons template paste textcolor codesample colorpicker textpattern imagetools paste youtube', 'string');
+$this->set('toolbar1', 'bold italic underline strikethrough', 'string');
+$this->set('toolbar2', 'alignleft aligncenter alignright | undo redo', 'string');
+$this->set('toolbar3', NULL);
+$this->set('toolbar4', NULL);
+
+// Hide bars
+$this->set('menubar',               false,                           'bool' );       // https://www.tinymce.com/docs/configure/editor-appearance/#menubar
+$this->set('statusbar',             false,                           'bool' );       // https://www.tinymce.com/docs/get-started/customize-ui/#hidingthestatusbar
+
+// Will be overwritten by force() within plugin-code anyhow
+$this->set('height',            '200px',    'string' );
+$this->set('width',             '100%',    'string' );
 
 // Забираем css файлы из настроек если они есть
 // Добавляем хэшь для отключения кэша скриптов

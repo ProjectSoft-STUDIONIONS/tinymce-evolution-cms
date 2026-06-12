@@ -145,10 +145,11 @@ module.exports = function(grunt) {
 				dirOut = `dist/${lowercase}/${lowercase}/${options.directory}/${lowercase}`,
 				installOut = `dist/${lowercase}/${lowercase}/install/` + options.directory,
 				cacheOut = 'cache/' + lowercase;
+			grunt.file.delete(`dist/${lowercase}`, {force: true});
 			// Копирование основного класса в lib
 			copyFolderRecursiveSync('lib', `dist/${lowercase}/${lowercase}/assets/lib`);
 			strWidth = lineWidth - String('Copy lib').length;
-			grunt.log.ok([chalk.cyan('Copy lib') + String('-> ').padStart(strWidth) + chalk.greenBright(`${lowercase}/${lowercase}/dist/assets/lib`)]);
+			grunt.log.ok([chalk.cyan('Copy lib') + String('-> ').padStart(strWidth) + chalk.greenBright(`dist/${lowercase}/${lowercase}/assets/lib`)]);
 
 			// Исходная директория языка
 			let vn = Number(num) == 4 ? '' : num;
@@ -263,7 +264,7 @@ module.exports = function(grunt) {
 			// Копирование файлов из src директории
 			let pathFiles = options.src;
 			copyFolderRecursiveSync(
-				pathFiles,
+				options.src,
 				dirOut,
 				lowercase,
 				uppercase,
@@ -275,22 +276,21 @@ module.exports = function(grunt) {
 			strWidth = lineWidth - String('Copy src ' + lowercase).length;
 			grunt.log.ok([chalk.cyan('Copy src ' + lowercase) + String('-> ').padStart(strWidth) + chalk.greenBright(dirOut)]);
 
+			// Копирование тем
+			copyFolderRecursiveSync(
+				`theme${num}`,
+				dirOut,
+				lowercase,
+				uppercase,
+				biguppercase,
+				val,
+				options.repository,
+				options.issues
+			);
+			strWidth = lineWidth - String('Copy theme ' + lowercase).length;
+			grunt.log.ok([chalk.cyan('Copy theme ' + lowercase) + String('-> ').padStart(strWidth) + chalk.greenBright(dirOut)]);
+
 			if(num > 4) {
-				// Копирование тем
-				copyFolderRecursiveSync(
-					'theme5',
-					dirOut,
-					lowercase,
-					uppercase,
-					biguppercase,
-					val,
-					options.repository,
-					options.issues
-				);
-				strWidth = lineWidth - String('Copy theme ' + lowercase).length;
-				grunt.log.ok([chalk.cyan('Copy theme ' + lowercase) + String('-> ').padStart(strWidth) + chalk.greenBright(dirOut)]);
-				// Чуть-чуть тест
-				pathFiles = options.src;
 				// Файлы подключения плагина
 				copyFolderRecursiveSync(
 					'src_plugin5',
@@ -303,20 +303,6 @@ module.exports = function(grunt) {
 					options.issues
 				);
 			} else {
-				copyFolderRecursiveSync(
-					'theme4',
-					dirOut,
-					lowercase,
-					uppercase,
-					biguppercase,
-					val,
-					options.repository,
-					options.issues
-				);
-				strWidth = lineWidth - String('Copy theme ' + lowercase).length;
-				grunt.log.ok([chalk.cyan('Copy theme ' + lowercase) + String('-> ').padStart(strWidth) + chalk.greenBright(dirOut)]);
-				// Чуть-чуть тест
-				pathFiles = options.src;
 				// Файлы подключения плагина
 				copyFolderRecursiveSync(
 					'src_plugin4',
@@ -343,7 +329,7 @@ module.exports = function(grunt) {
 			strWidth = lineWidth - String('Copy install ' + lowercase).length;
 			grunt.log.ok([chalk.cyan('Copy install ' + lowercase) + String('-> ').padStart(strWidth) + chalk.greenBright(installOut + '/' + lowercase + '.tpl')]);
 			// Удаляем cacheOut
-			grunt.file.delete(cacheOut, {force: true});
+			//grunt.file.delete(cacheOut, {force: true});
 			// Сделать архивирование
 			// dist/assets/lib/*
 			// dist/assets/plugins/tinymce${num}/*
@@ -361,7 +347,6 @@ module.exports = function(grunt) {
 			strWidth = lineWidth - String('End of Archiving ').length;
 			grunt.log.ok([chalk.cyan(`End of Archiving `) + String('-> ').padStart(strWidth) + chalk.greenBright(`tinymce-${num}.zip`)]);
 			// Удалить dist/${lowercase}
-			grunt.file.delete(`dist/${lowercase}`, {force: true});
 		}
 
 		// Окончание работы задач

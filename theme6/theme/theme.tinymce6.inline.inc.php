@@ -26,6 +26,10 @@ $this->set('language', $lang, 'string', 'en');
 // Отключим кеширование скриптов. Это тест.
 $this->set('cache_suffix', '?' . date("Ymd-Hi"), 'string');
 
+// Базовый URL для документа
+$this->set('document_base_url', MODX_SITE_URL, 'string', '/');
+
+// Подключаем плагины
 $this->set('plugins', 'autolink autoresize save image modxlink codemirror table visualblocks media', 'string');
 
 // Menu Bar
@@ -54,8 +58,8 @@ $this->set('autoresize_min_height', 100, 'number');
 $this->set('sandbox_iframes', false, 'bool');
 $this->set('iframe_template_callback', '(data) => `<iframe class="embed-responsive embed-responsive-16by9" src="${data.source}" allow="clipboard-write; autoplay" allowfullscreen="allowfullscreen"></iframe>`', 'object');
 
+// $this->set('object_resizing', false, 'bool');
 // Ресайзер Таблицы отключаем
-$this->set('object_resizing', false, 'bool');
 $this->set('table_resize_bars', false, 'bool');
 
 // Заголовок таблицы
@@ -112,34 +116,6 @@ $this->set('codemirror', '{
 	}
 }', 'object'); // mariana
 
-// File Picker Callbaack
-$this->set('file_picker_callback', '(callback, value, meta) => {
-			let type = meta.filetype || "file";
-			let field = meta.fieldname || "";
-			let url = (typeof meta.original == "object") ? meta.original.value : "";
-			if (type == "image") {
-				type = "images";
-			}
-			if (type == "file") {
-				type = "files";
-			}
-			if (type == "media") {
-				type = "media";
-			}
-			var path = String(url).split("/"),
-				directory = "";
-			path.shift();
-			path.pop();
-			path = path.join("/");
-			if(path!=""){
-				directory += "&dir="+path;
-			}
-			openFileManagerForTinyMCE(type, callback, directory);
-		}', 'object');
-
-// File Picker Types
-$this->set('file_picker_types', 'image file media', 'string');
-
 // Показать блоки и символы
 $this->set('visualblocks_default_state', true, 'bool');
 $this->set('visualchars_default_state', true, 'bool');
@@ -154,7 +130,7 @@ $this->set('save_onsavecallback', '() => { documentDirty=false; document.getElem
 // Забираем css файлы из настроек если они есть
 // Добавляем хэшь для отключения кэша скриптов
 try {
-	$css_conf = trim($modx_evo->config["editor_css_path"]);
+	$css_conf = trim($evo->config["editor_css_path"]);
 	$pattern = "/([|,;]+)/";
 	$css = preg_split($pattern, $css_conf, -1, PREG_SPLIT_NO_EMPTY);
 	$array_css = [];

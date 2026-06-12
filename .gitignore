@@ -10,6 +10,8 @@ cache/*
 /tinymce*
 /tinymce.json
 
+/plugins*/.*
+
 *.sublime-workspace
 
 # Потом разблокировать

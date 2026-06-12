@@ -3,18 +3,20 @@
 
 if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 
+$e = &$modx->event;
+
 // Init
 if(!class_exists('modxRTEbridge')) {
 	if( file_exists(MODX_BASE_PATH."assets/lib/class.modxRTEbridge.php")) {
 		require_once(MODX_BASE_PATH."assets/lib/class.modxRTEbridge.php");
 	} else {
-		// Здесь то, что должно остановить процесс evo
+		// Здесь должно остановить процесс evo
+		echo "Не найден класс modxRTEbridge! " . __FILE__ . " Линия: " . __LINE__;
+		return;
 	}
 }
 
 require_once(MODX_BASE_PATH."assets/plugins/%lowercase%/bridge.%lowercase%.inc.php");
-
-$e = &$modx->event;
 
 if (!isset($inlineMode)) {
 	$inlineMode = '';
