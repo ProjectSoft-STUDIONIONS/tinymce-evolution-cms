@@ -1082,6 +1082,7 @@ var autoComplt = (function() {
 }());
 
 tinymce.PluginManager.add('modxlink', function(editor) {
+	var Tools = tinymce.util.Tools
 	function createLinkList(callback)
 	{
 		return function() {

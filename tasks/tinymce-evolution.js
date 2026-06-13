@@ -277,7 +277,17 @@ module.exports = function(grunt) {
 				options.issues
 			);
 			gruntLog('Copy plugins ' + lowercase, dirOutPlgs, 'ok');
-
+			// Копирование js-cookie
+			copyFolderRecursiveSync(
+				'node_modules/js-cookie/dist',
+				dirOut + "/js",
+				lowercase,
+				uppercase,
+				biguppercase,
+				val,
+				options.repository,
+				options.issues
+			);
 			// Копирование файлов из src директории
 			let pathFiles = options.src;
 			copyFolderRecursiveSync(

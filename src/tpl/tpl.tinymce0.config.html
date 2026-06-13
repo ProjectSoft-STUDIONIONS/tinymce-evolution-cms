@@ -1,3 +1,4 @@
+<script src="/assets/plugins/[+editorKey+]/js/js.cookie.js"></script>
 <script type="text/javascript">
 	let editorCallback = null;
 	let currentFieldId = null;
@@ -74,6 +75,8 @@
 		pHeight = Cookies.get('KCFINDER_[+editorKey+]_popup_height') || '99%';
 		pWidth = parseInt(pWidth) > 99 ? '99%' : pWidth;
 		pHeight = parseInt(pHeight) > 99 ? '99%' : pHeight;
+		// pWidth = '99%';
+		// pHeight = '99%';
 		// Открываем через API modx
 		if(typeof evoMod == 'object') {
 			window.KCFinder = {
@@ -86,7 +89,7 @@
 				{
 					addclass: 'kcfinder_popup',
 					url: url,
-					title: window.fmolang['kcfinder'],
+					title: "KCFinder",
 					icon: icon_header,
 					iframe: 'iframe',
 					position: 'center center',
@@ -97,6 +100,8 @@
 					resize: !0,
 					overlay: 1,
 					overlayclose: 1,
+					// Высокий z-index чтобы перекрыть диалоги TinyMCE
+					zIndex: 300000,
 					onclose: function(e, obj) {
 						if(typeof reloadElementsInTree == 'function'){
 							setTimeout(reloadElementsInTree, 400);
