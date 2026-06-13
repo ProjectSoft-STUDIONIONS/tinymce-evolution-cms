@@ -1,0 +1,27 @@
+## Markdown
+
+[![tinymce-4.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-4.zip?style=for-the-badge)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-4.zip)<br/>[![tinymce-5.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-5.zip?style=for-the-badge)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-5.zip)<br/>[![tinymce-6.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-6.zip?style=for-the-badge)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-6.zip)<br/>[![tinymce-7.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-7.zip?style=for-the-badge)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-7.zip)<br/>[![tinymce-8.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-8.zip?style=for-the-badge)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-8.zip)
+
+## Images
+
+https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-8.zip?style=for-the-badge
+
+https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-7.zip?style=for-the-badge
+
+https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-6.zip?style=for-the-badge
+
+https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-5.zip?style=for-the-badge
+
+https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-4.zip?style=for-the-badge
+
+# Links
+
+https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-8.zip
+
+https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-7.zip
+
+https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-6.zip
+
+https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-5.zip
+
+https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-4.zip
