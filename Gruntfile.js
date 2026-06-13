@@ -13,7 +13,9 @@ module.exports = async function(grunt) {
 		pkg : {},
 		clean: {
 			main: [
-				'./*.zip'
+				'./*.zip',
+				//'./cache/tinymce*',
+				'./dist/tinymce*',
 			]
 		},
 		'tinymce-evolution': {

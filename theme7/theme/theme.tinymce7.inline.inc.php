@@ -22,6 +22,7 @@ $lang = $evo->config['manager_language'];
 
 // Под EVO 1.4.x нужен проход по языкам
 $this->set('language', $lang, 'string', 'en');
+$this->set('language_test', '"' . $_lang['lang_code'] . '"', 'string', 'en');
 
 // Отключим кеширование скриптов. Это тест.
 $this->set('cache_suffix', '?' . date("Ymd-Hi"), 'string');
