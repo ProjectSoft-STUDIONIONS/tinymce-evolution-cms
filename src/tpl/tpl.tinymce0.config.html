@@ -141,13 +141,16 @@
 <script>
 	/**
 	 * file_browser_callback существует только у TinyMCE4 и, скорее всего, ниже
-	 * В TinyMCE5 и выше параметр file_browser_callback удалён. Поэтому даже его присутствие безопасно
-	 * Так же и с параметром file_picker_callback для TinyMCE5 и выше
+	 * В TinyMCE5 и выше параметр file_browser_callback удалён. Поэтому его присутствие безопасно
+	 * Тест. Оставляем только функцию file_picker_callback.
+	 * По сути file_picker_callback должен работать в TinyMCE-4
 	 */
-
 	var config_[+editorKey+]_[+themeKey+] = {
 		license_key: 'gpl',
 [+configString+],
+/**
+ * Отключаем для теста в TinyMCE-4 функцию file_browser_callback
+ *
 		file_browser_callback: function (field, url, type, win) {
 			if (type == 'image') {
 				type = 'images';
@@ -180,18 +183,21 @@
 			});
 			return false;
 		},
+ *
+ */
 		file_picker_callback: function (callback, value, meta) {
 			let type = meta.filetype || "file";
 			let field = meta.fieldname || "";
 			let url = (typeof meta.original == "object") ? meta.original.value : "";
-			if (type == "image") {
-				type = "images";
+			// meta.original - в 99% его нет
+			if(url == "") {
+				url = value;
 			}
-			if (type == "file") {
-				type = "files";
-			}
-			if (type == "media") {
-				type = "media";
+			switch(type) {
+				case "image":
+				case "file":
+					type = `${type}s`
+					break;
 			}
 			var path = String(url).split("/"),
 				directory = "";

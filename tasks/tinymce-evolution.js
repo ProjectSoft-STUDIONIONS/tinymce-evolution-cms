@@ -1,9 +1,18 @@
+/**
+ * Task tinymce-evolution
+ *
+ * Задача сборки плагинов TinyMCE для EvolutionCMS
+ *
+ * Author: Чернышёв Андрей aka ProjectSoft <projectsoft2009@yandex.ru>
+ *
+ */
 module.exports = function(grunt) {
 	const chalk = require('chalk');
 	const fs = require('fs');
 	const path = require('path');
 	const zl = require('zip-lib');
 	const downloadNpmPackage = require('download-npm-package');
+	// Длина левого сообщения ( Заголовок до знака -> )
 	const lineWidth = 29;
 	const copyReplceFiles = function(directory, mask) {
 		//
@@ -49,13 +58,13 @@ module.exports = function(grunt) {
 					issues
 				);
 			} else {
+				// Перезаписываем имена файлов тем
 				let outFile = file.replace(/tinymce\d+/g, lowercase);
 				fs.copyFileSync(source + '/' + file, target + '/' + outFile);
-				// grunt.verbose.ok(['Copy: ' + chalk.cyan(source + '/' + file) + " -> " + chalk.cyan(target + '/' + outFile)]);
 				// Перезапись данных в файле
 				// ...
-				// Открыть файл, перезаписать по глобальным переменным
-				// Определить расширение
+				// Открыть файл, перезаписать глобальные переменные
+				// Определяем обрабатываемые файлы по расширениям
 				let extArr = [
 					".html",
 					".php",
@@ -80,7 +89,6 @@ module.exports = function(grunt) {
 							.replace(/%issues%/g, issues)
 							.replace(/%skinsDirectory%/g, skinsDirectory);
 						fs.writeFileSync(target + '/' + outFile, content, {encoding: 'utf8'});
-						//grunt.verbose.ok(['Data replaced: ' + chalk.cyan(target + '/' + outFile)]);
 					}
 				}
 			}
@@ -111,8 +119,11 @@ module.exports = function(grunt) {
 				method = grunt.fail.fatal;
 				method("\n" + chalk.redBright(title) + String('-> ').padStart(width + 3) + chalk.redBright(description));
 				break;
+			case "start":
+				method([chalk.yellowBright(title) + String('-> ').padStart(width) + chalk.yellowBright(description)]);
+				break;
 			case "init":
-				method([chalk.cyanBright(title) + String('-> ').padStart(width) + chalk.greenBright(description)]);
+				method([chalk.cyanBright(title) + String('-> ').padStart(width) + chalk.cyanBright(description)]);
 				break;
 			case "success":
 				method([chalk.magentaBright(title) + String('-> ').padStart(width) + chalk.greenBright(description)]);
@@ -132,13 +143,15 @@ module.exports = function(grunt) {
 			issues: 'https://github.com/',
 			install: 'install',
 		});
+		var linkVers = "https://registry.npmjs.org/tinymce?fields=dist-tags";
 		var done = this.async();
 		var val;
 		var versions = {};
 		let strWidth = 0;
+		gruntLog('Download TinyMCE versions', linkVers, 'start');
 		try {
 			// Получаем свежие версии
-			const response = await fetch("https://registry.npmjs.org/tinymce?fields=dist-tags");
+			const response = await fetch(linkVers);
 			if (!response.ok) {
 				gruntLog('>> Error Download', 'Выявлена ошибка при выполнении сетевого запроса', 'warn');
 			}
@@ -146,34 +159,83 @@ module.exports = function(grunt) {
 			let tempDistTags = tempJson["dist-tags"];
 			delete tempDistTags.latest;
 			let distTags = Object.assign({}, sortKeys(tempDistTags));
-			// Пишем файл
-			grunt.file.write("tinymce.json", JSON.stringify(distTags, null, "\t") + "\n");
-			// Читаем файл
-			versions = Object.values(grunt.file.readJSON("tinymce.json"));
-			// Удаляем файл
-			grunt.file.delete("tinymce.json");
+			// Нам просто придётся клонировать объект.
+			distTags = JSON.parse(JSON.stringify(distTags));
+			grunt.log.ok([JSON.stringify(distTags, null, 10)]);
+			// Читаем данные
+			versions = Object.values(distTags);
 		}catch(error) {
 			gruntLog('>> Error Download', 'Выявлена ошибка при выполнении сетевого запроса', 'fatal');
 		}
-
 		// Понеслась
 		for (val of versions) {
 			// Директория вывода
 			let num = val.split(".")[0],
+				packge = `tinymce@${val}`,
 				lowercase = `tinymce${num}`,
 				uppercase = `TinyMCE${num}`,
 				biguppercase = `TINYMCE${num}`,
 				// Полный путь директории вывода
 				dirOut = `dist/${lowercase}/${lowercase}/${options.directory}/${lowercase}`,
 				installOut = `dist/${lowercase}/${lowercase}/install/` + options.directory,
-				cacheOut = `cache/${lowercase}`;
-			gruntLog('Initialize', val, 'init');
+				cacheOut = `cache/${packge}`;
+			gruntLog('Initialize', packge, 'init');
 
 			// Исходная директория языка
 			let vn = Number(num) == 4 ? '' : num;
 			let lngIn = 'node_modules/tinymce-i18n/langs' + vn;
 			// Конечная директория языка
 			let lngOut = cacheOut + '/tinymce/langs';
+
+			if(!fs.existsSync(cacheOut)){
+				// Скачать пакет, скопировать языки
+				// Стартуем загрузку
+
+				gruntLog('Start Download', `download npm package ${packge}`, 'init');
+				await downloadNpmPackage({
+					// Тег версии tinymce
+					arg: packge,
+					dir: cacheOut
+				}).then((rel) => {
+					// Удачная загрузка
+					gruntLog('Success Download', packge, 'success');
+					gruntLog('Unzipped', cacheOut, 'success');
+					// Копируем с рекурсией языки
+					fs.cpSync(lngIn, lngOut, {
+						recursive: true,
+						force: true
+					});
+					gruntLog('Copy languages ' + lowercase, lngOut, 'ok');
+				}).catch((err) => {
+					// Ошибка загрузки
+					// Сразу выходим
+					gruntLog('>> Error Download', err, 'warn');
+				});
+			}
+
+			// Вот здесь уже копирование всего в исходники плагинов
+			// Копируем с рекурсией TinyMCE
+			fs.cpSync(cacheOut, dirOut, {
+				recursive: true,
+				force: true
+			});
+			gruntLog('Copy source ' + lowercase, dirOut, 'ok');
+			// Удаляем ненужные файлы
+			let tempFiles = [
+				path.join(dirOut, 'tinymce', "bower.json"),
+				path.join(dirOut, 'tinymce', "changelog.txt"),
+				path.join(dirOut, 'tinymce', "CHANGELOG.md"),
+				path.join(dirOut, 'tinymce', "composer.json"),
+				path.join(dirOut, 'tinymce', "notices.txt"),
+				path.join(dirOut, 'tinymce', "package.json"),
+				path.join(dirOut, 'tinymce', "readme.md"),
+			];
+			//var tmpFile;
+			for(var tmpFile of tempFiles) {
+				if(grunt.file.exists(tmpFile)) {
+					grunt.file.delete(tmpFile, {});
+				}
+			}
 
 			// Подготовим плагины
 			// Перезапишем минификацию
@@ -191,65 +253,6 @@ module.exports = function(grunt) {
 				}
 			);
 
-			if(!fs.existsSync(cacheOut)){
-				// Скачать пакет, скопировать языки
-				// Стартуем загрузку
-
-				gruntLog('Start Download', val, 'init');
-				await downloadNpmPackage({
-					// Тег версии tinymce
-					arg: `tinymce@${val}`,
-					dir: cacheOut
-				}).then((rel) => {
-					// Удачная загрузка
-					gruntLog('Success Download', val, 'success');
-					gruntLog('Unzipped', cacheOut, 'success');
-					// Копируем с рекурсией языки
-					fs.cpSync(lngIn, lngOut, {
-						recursive: true,
-						force: true
-					});
-					gruntLog('Copy languages ' + lowercase, lngOut, 'ok');
-				}).catch((err) => {
-					// Ошибка загрузки
-					// Сразу выходим
-					gruntLog('>> Error Download', err, 'warn');
-				});
-			}
-			// Копируем с рекурсией языки
-			fs.cpSync(lngIn, lngOut, {
-				recursive: true,
-				force: true
-			});
-			gruntLog('Copy languages ' + lowercase, lngOut, 'ok');
-
-			// Вот здесь уже копирование всего в исходники плагинов
-			// Копируем с рекурсией TinyMCE
-			fs.cpSync(cacheOut, dirOut, {
-				recursive: true,
-				force: true
-			});
-			gruntLog('Copy ' + lowercase, dirOut, 'ok');
-			// Удаляем ненужные файлы
-			let tempFiles = [
-				path.join(dirOut, 'tinymce', "bower.json"),
-				path.join(dirOut, 'tinymce', "changelog.txt"),
-				path.join(dirOut, 'tinymce', "CHANGELOG.md"),
-				path.join(dirOut, 'tinymce', "composer.json"),
-				path.join(dirOut, 'tinymce', "notices.txt"),
-				path.join(dirOut, 'tinymce', "package.json"),
-				path.join(dirOut, 'tinymce', "readme.md"),
-			];
-			//var tmpFile;
-			for(var tmpFile of tempFiles) {
-				if(grunt.file.exists(tmpFile)) {
-					grunt.file.delete(tmpFile, {});
-				}
-			}
-			// Подготовка плагинов
-			if(num > 7) {
-				copyReplceFiles();
-			}
 			// Далее
 			// Копирование общих плагинов
 			let dirOutPlgs = dirOut + '/tinymce/plugins';
@@ -277,6 +280,7 @@ module.exports = function(grunt) {
 				options.issues
 			);
 			gruntLog('Copy plugins ' + lowercase, dirOutPlgs, 'ok');
+
 			// Копирование js-cookie
 			copyFolderRecursiveSync(
 				'node_modules/js-cookie/dist',
@@ -288,6 +292,8 @@ module.exports = function(grunt) {
 				options.repository,
 				options.issues
 			);
+			gruntLog('Copy js-cookie', dirOut + "/js", 'ok');
+
 			// Копирование файлов из src директории
 			let pathFiles = options.src;
 			copyFolderRecursiveSync(
@@ -357,17 +363,16 @@ module.exports = function(grunt) {
 				options.issues
 			);
 			gruntLog('Copy install ' + lowercase, installOut + '/' + lowercase + '.tpl', 'ok');
-			gruntLog('Archiving', `tinymce_${val}.zip`, 'ok');
+
+			// Архивирование
+			gruntLog('Archiving', `tinymce-${num}.zip`, 'ok');
 			const zip = new zl.Zip();
 			zip.addFolder(`dist/${lowercase}`);
-			await zip.archive(`tinymce_${val}.zip`);
-			gruntLog('End of Archiving', `tinymce_${val}.zip`, 'ok');
-			gruntLog('Archiving', `tinymce-${num}.zip`, 'ok');
 			await zip.archive(`tinymce-${num}.zip`);
 			gruntLog('End of Archiving', `tinymce-${num}.zip`, 'ok');
 		}
 
-		// Окончание работы задач
+		// Окончание работы задачи
 		done();
 	});
 }

@@ -1,23 +1,22 @@
 module.exports = async function(grunt) {
-	const fs = require('node:fs');
-	const path = require('node:path');
-	const chalk = require('chalk');
-
 	const PACK = grunt.file.readJSON('package.json');
 
 	require('time-grunt')(grunt);
+
 	require('load-grunt-tasks')(grunt);
 	grunt.loadTasks('tasks');
+
 	grunt.initConfig({
 		globalConfig : {},
 		pkg : {},
+		// Удаляем архивы и чистим директорию dist от TinyMCE
 		clean: {
 			main: [
 				'./*.zip',
-				//'./cache/tinymce*',
 				'./dist/tinymce*',
 			]
 		},
+		// Собираем плагины TinyMCE
 		'tinymce-evolution': {
 			options: {
 				src: 'src',
