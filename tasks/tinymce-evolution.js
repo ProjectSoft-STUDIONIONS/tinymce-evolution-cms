@@ -109,27 +109,33 @@ module.exports = function(grunt) {
 	}
 	const gruntLog = function(title = '', description = '', type = 'ok') {
 		let method = grunt.log.ok,
-			width = lineWidth - String(title).length;
+			width = lineWidth - String(title).length,
+			date = new Date(),
+			hours = String(date.getHours()).padStart(2, "0"),
+			minutes = String(date.getMinutes()).padStart(2, "0"),
+			seconds = String(date.getSeconds()).padStart(2, "0"),
+			milliseconds = String(date.getMilliseconds()).padStart(3, "0"),
+			out_date = `${hours}:${minutes}:${seconds}.${milliseconds}`;
 		switch (type) {
 			case "warn":
 				method = grunt.fail.warn;
-				method("\n" + chalk.yellow(title) + String('-> ').padStart(width + 3) + chalk.redBright(description));
+				method("\n" + chalk.yellow(title) + String('-> ').padStart(width + 3) + chalk.yellowBright(out_date) + " " + chalk.redBright(description));
 				break;
 			case "fatal":
 				method = grunt.fail.fatal;
-				method("\n" + chalk.redBright(title) + String('-> ').padStart(width + 3) + chalk.redBright(description));
+				method("\n" + chalk.redBright(title) + String('-> ').padStart(width + 3) + chalk.yellowBright(out_date) + " " + chalk.redBright(description));
 				break;
 			case "start":
-				method([chalk.yellowBright(title) + String('-> ').padStart(width) + chalk.yellowBright(description)]);
+				method([chalk.yellowBright(title) + String('-> ').padStart(width) + chalk.yellowBright(out_date) + " " + chalk.greenBright(description)]);
 				break;
 			case "init":
-				method([chalk.cyanBright(title) + String('-> ').padStart(width) + chalk.cyanBright(description)]);
+				method([chalk.cyanBright(title) + String('-> ').padStart(width) + chalk.yellowBright(out_date) + " " + chalk.greenBright(description)]);
 				break;
 			case "success":
-				method([chalk.magentaBright(title) + String('-> ').padStart(width) + chalk.greenBright(description)]);
+				method([chalk.magentaBright(title) + String('-> ').padStart(width) + chalk.yellowBright(out_date) + " " + chalk.greenBright(description)]);
 				break;
 			default:
-				method([chalk.cyan(title) + String('-> ').padStart(width) + chalk.greenBright(description)]);
+				method([chalk.cyan(title) + String('-> ').padStart(width) + chalk.yellowBright(out_date) + " " + chalk.greenBright(description)]);
 				break;
 		}
 
@@ -179,6 +185,7 @@ module.exports = function(grunt) {
 				dirOut = `dist/${lowercase}/${lowercase}/${options.directory}/${lowercase}`,
 				installOut = `dist/${lowercase}/${lowercase}/install/` + options.directory,
 				cacheOut = `cache/${packge}`;
+			grunt.log.ok([" "]);
 			gruntLog('Initialize', packge, 'init');
 
 			// Исходная директория языка
