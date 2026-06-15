@@ -13,7 +13,9 @@ if(!class_exists('modxRTEbridge')):
 	if( file_exists(MODX_BASE_PATH."assets/lib/class.modxRTEbridge.php")): // Add Fall-Back for now
 		require_once(MODX_BASE_PATH."assets/lib/class.modxRTEbridge.php");
 	else:
-		require_once(MODX_BASE_PATH."assets/plugins/%lowercase%/class.modxRTEbridge.php");
+		// Здесь должно остановить процесс evo
+		echo "Не найден класс modxRTEbridge! " . __FILE__ . " Линия: " . __LINE__;
+		return;
 	endif;
 endif;
 require_once(MODX_BASE_PATH."assets/plugins/%lowercase%/bridge.%lowercase%.inc.php");
