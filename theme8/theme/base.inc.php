@@ -51,8 +51,8 @@ $this->set('entity_encoding', $this->pluginParams['entityEncoding'],'string');  
 $this->set('entities',        isset($this->pluginParams['entities']) ? $this->pluginParams['entities'] : '',      'string');      // https://www.tinymce.com/docs/configure/content-filtering/#entities
 
 $this->set('language', $this->modx->config['manager_language'], 'string', 'en');      // https://www.tinymce.com/docs/configure/localization/#language
-//if($this->lang('lang_code') != 'en')
-//    $this->set('language_url',          $this->pluginParams['base_url'].'tinymce/langs/'. $this->lang('lang_code') .'.js', 'string');   // https://www.tinymce.com/docs/configure/localization/#language_url
+if($this->lang('lang_code') != 'en')
+    $this->set('language_url',          $this->pluginParams['base_url'].'tinymce/langs/'. $this->lang('lang_code') .'.js', 'string');   // https://www.tinymce.com/docs/configure/localization/#language_url
 
 $this->set('schema',                $this->modxParams['schema'],          'string' );     // https://www.tinymce.com/docs/configure/content-filtering/#schema
 $this->set('element_format',        $this->modxParams['element_format'],  'string' );     // https://www.tinymce.com/docs/configure/content-filtering/#element_format
@@ -83,9 +83,9 @@ if($this->pluginParams['paste_as_text'] == 'enabled') {
 }
 
 // @todo: final base-setup like tinymce3 "default"-theme?
-$this->set('plugins', 'anchor visualblocks autolink autosave save advlist fullscreen paste modxlink media contextmenu table youtube image imagetools code textcolor', 'string');    // https://www.tinymce.com/docs/get-started/basic-setup/#pluginconfiguration
+$this->set('plugins', 'anchor visualblocks autolink autosave save advlist fullscreen paste modxlink media contextmenu table image code textcolor', 'string');    // https://www.tinymce.com/docs/get-started/basic-setup/#pluginconfiguration
 $this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect fontsizeselect pastetext code | fullscreen help', 'string', false);
-$this->set('toolbar2', 'image media youtube link unlink anchor | alignleft aligncenter alignright | bullist numlist | blockquote outdent indent | table hr | visualblocks styleprops removeformat', 'string', true);
+$this->set('toolbar2', 'image media link unlink anchor | alignleft aligncenter alignright | bullist numlist | blockquote outdent indent | table hr | visualblocks styleprops removeformat', 'string', true);
 
 // Bridge does not return NULL, and does not use this->set() itself, so these parameters must be set at least once..
 // Params get translated by bridge because it does not return NULL, so the returned values will be used
