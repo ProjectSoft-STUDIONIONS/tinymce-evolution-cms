@@ -35,12 +35,15 @@
 									resultItem.textContent = item.pagetitle;
 									resultItem.style.padding = '2px 5px';
 									resultItem.style.cursor = 'pointer';
+									resultItem.style.color = '#333333';
 									resultItem.setAttribute('data-id', item.id);
 									resultItem.onmouseover = () => {
 										resultItem.style.backgroundColor = '#eeeeee';
+										resultItem.style.color = '#000000';
 									};
 									resultItem.onmouseout = () => {
-										resultItem.style.backgroundColor = 'transparent';
+										resultItem.style.backgroundColor = '#ffffff';
+										resultItem.style.color = '#333333';
 									};
 									resultItem.onclick = () => {
 										dialogApi.setData({

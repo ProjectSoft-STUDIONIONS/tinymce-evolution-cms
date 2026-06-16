@@ -50,9 +50,9 @@ $this->set('document_base_url',     MODX_SITE_URL,                  'string' ); 
 $this->set('entity_encoding', $this->pluginParams['entityEncoding'],'string');      // https://www.tinymce.com/docs/configure/content-filtering/#encodingtypes
 $this->set('entities',        isset($this->pluginParams['entities']) ? $this->pluginParams['entities'] : '',      'string');      // https://www.tinymce.com/docs/configure/content-filtering/#entities
 
-$this->set('language',              $this->lang('lang_code'),       'string', 'en');      // https://www.tinymce.com/docs/configure/localization/#language
-if($this->lang('lang_code') != 'en')
-    $this->set('language_url',          $this->pluginParams['base_url'].'tinymce/langs/'. $this->lang('lang_code') .'.js', 'string');   // https://www.tinymce.com/docs/configure/localization/#language_url
+$this->set('language', $this->modx->config['manager_language'], 'string', 'en');      // https://www.tinymce.com/docs/configure/localization/#language
+//if($this->lang('lang_code') != 'en')
+//    $this->set('language_url',          $this->pluginParams['base_url'].'tinymce/langs/'. $this->lang('lang_code') .'.js', 'string');   // https://www.tinymce.com/docs/configure/localization/#language_url
 
 $this->set('schema',                $this->modxParams['schema'],          'string' );     // https://www.tinymce.com/docs/configure/content-filtering/#schema
 $this->set('element_format',        $this->modxParams['element_format'],  'string' );     // https://www.tinymce.com/docs/configure/content-filtering/#element_format
