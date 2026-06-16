@@ -36,25 +36,3 @@ $this->set('statusbar',             false,                           'bool' );  
 // Will be overwritten by force() within plugin-code anyhow
 $this->set('height',            '200px',    'string' );
 $this->set('width',             '100%',    'string' );
-
-// Забираем css файлы из настроек если они есть
-// Добавляем хэшь для отключения кэша скриптов
-try {
-	$css_conf = trim($evo->config["editor_css_path"]);
-	$pattern = "/([|,;]+)/";
-	$css = preg_split($pattern, $css_conf, -1, PREG_SPLIT_NO_EMPTY);
-	$array_css = [];
-	foreach ($css as $key => $value):
-		$value = trim($value, "/");
-		if(is_file(MODX_BASE_PATH . $value)):
-			$hash = filemtime(MODX_BASE_PATH . $value);
-			$value .= '?hash=hash' . $hash;
-			$array_css[] = "/" . $value;
-		endif;
-	endforeach;
-	// Если файлы есть - добавляем
-	if(count($array_css)):
-		$files_css = json_encode($array_css, JSON_OBJECT_AS_ARRAY | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT);
-		$this->set('content_css', $files_css, 'json');
-	endif;
-} catch (Exception $e) {}
