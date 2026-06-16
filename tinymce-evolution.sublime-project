@@ -12,7 +12,19 @@
 	},
 	"build_systems": [
 		{
-			"name": "Build Project",
+			"name": "Установка проекта",
+			"working_dir": "${project_path}",
+			"cmd": [
+				"start",
+				"/wait",
+				"npm",
+				"run",
+				"inst"
+			],
+			"shell": true
+		},
+		{
+			"name": "Сборка проекта",
 			"working_dir": "${project_path}",
 			"cmd": [
 				"start",
@@ -20,18 +32,6 @@
 				"npm",
 				"run",
 				"build"
-			],
-			"shell": true
-		},
-		{
-			"name": "Получить версии TinyMCE",
-			"working_dir": "${project_path}",
-			"cmd": [
-				"start",
-				"/wait",
-				"npm",
-				"run",
-				"start"
 			],
 			"shell": true
 		}

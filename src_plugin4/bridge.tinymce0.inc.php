@@ -42,9 +42,9 @@ class %lowercase%bridge extends modxRTEbridge
 				'element_format' => 'xhtml',
 				'schema' => 'html5',
 				'blockFormats' => 'Paragraph=p;Header 1=h1;Header 2=h2;Header 3=h3',
-				'custom_plugins' => 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen spellchecker insertdatetime media nonbreaking save table contextmenu directionality emoticons template paste textcolor codesample colorpicker textpattern imagetools paste modxlink',
+				'custom_plugins' => 'advlist autolink lists image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen spellchecker insertdatetime media nonbreaking save table contextmenu directionality emoticons template paste textcolor codesample colorpicker textpattern imagetools paste modxlink codemirror',
 				'custom_buttons1' => 'undo redo | cut copy paste | searchreplace | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | styleselect',
-				'custom_buttons2' => 'link unlink anchor image media codesample table | hr removeformat | subscript superscript charmap | nonbreaking | visualchars visualblocks print preview fullscreen code formatselect',
+				'custom_buttons2' => 'link unlink anchor image media codesample table | hr removeformat | subscript superscript charmap | nonbreaking | visualchars visualblocks print preview fullscreen code formatselect | codemirror',
 				// Provide empty values for parseText() #989
 				'template_docs' => '',
 				'template_chunks' => '',
