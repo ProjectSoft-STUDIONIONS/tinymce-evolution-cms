@@ -1,3 +1,26 @@
+<style>
+	/**
+	 * Фиксируем шапку tiny 4.x
+	 */
+	.mce-container-body {
+		position: relative;
+	}
+	.mce-container-body .mce-top-part {
+		top: 0;
+		background-color: #ffffff;
+		position: sticky;
+		padding-top: 5em;
+	}
+	.darkness .mce-container-body .mce-top-part {
+		background-color: #202329;
+	}
+	/**
+	 * Скрываем кнопку рекламы
+	 */
+	.tox .tox-promotion {
+		display: none !important;
+	}
+</style>
 <script src="/assets/plugins/[+editorKey+]/js/js.cookie.js"></script>
 <script type="text/javascript">
 	let editorCallback = null;
@@ -186,6 +209,7 @@
  *
  */
 		file_picker_callback: function (callback, value, meta) {
+			console.log([...arguments]);
 			let type = meta.filetype || "file";
 			let field = meta.fieldname || "";
 			let url = (typeof meta.original == "object") ? meta.original.value : "";

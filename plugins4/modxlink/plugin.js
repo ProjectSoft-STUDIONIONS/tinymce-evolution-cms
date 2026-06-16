@@ -1588,9 +1588,7 @@ tinymce.PluginManager.add('modxlink', function(editor) {
 				if (fileBrowserCallback && (!fileBrowserCallbackTypes || fileBrowserCallbackTypes[settings.filetype])) {
 					actionCallback = function() {
 						var meta = self.fire('beforecall').meta;
-
-						meta = Tools.extend({filetype: settings.filetype}, meta);
-
+						meta = Tools.extend({filetype: self.settings.filetype}, meta);
 						// file_picker_callback(callback, currentValue, metaData)
 						fileBrowserCallback.call(
 							editor,
