@@ -1,4 +1,5 @@
 <?php
+if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 /*
  * All available config-params of %uppercase%
  * https://www.tinymce.com/docs/configure/
@@ -29,10 +30,8 @@
 // @todo: layer-Plugin: Buttons broken
 // @todo: selectall-Button broken
 
-// Устанавливаем язык TinyMCE
-$evo = evo();
-$lang = $evo->config['manager_language'];
-$this->set('language', $lang, 'string', 'en');
+// Отключим кеширование скриптов. Это тест.
+$this->set('cache_suffix', '?' . date("Ymd-Hi"), 'string');
 
 $this->set('skin',                  'lightgray',                    'string' );     // Set default skin (setting param first time sets its value also as default val)
 $this->set('skin',                  $this->modxParams['skin'] );                    // Overwrite with Modx-setting (if empty, default is used))
@@ -51,7 +50,7 @@ $this->set('document_base_url',     MODX_SITE_URL,                  'string' ); 
 $this->set('entity_encoding', $this->pluginParams['entityEncoding'],'string');      // https://www.tinymce.com/docs/configure/content-filtering/#encodingtypes
 $this->set('entities',        isset($this->pluginParams['entities']) ? $this->pluginParams['entities'] : '',      'string');      // https://www.tinymce.com/docs/configure/content-filtering/#entities
 
-$this->set('language',              $this->lang('lang_code'),       'string');      // https://www.tinymce.com/docs/configure/localization/#language
+$this->set('language',              $this->lang('lang_code'),       'string', 'en');      // https://www.tinymce.com/docs/configure/localization/#language
 if($this->lang('lang_code') != 'en')
     $this->set('language_url',          $this->pluginParams['base_url'].'tinymce/langs/'. $this->lang('lang_code') .'.js', 'string');   // https://www.tinymce.com/docs/configure/localization/#language_url
 
@@ -107,7 +106,7 @@ $this->set('mobile', '{
 // Забираем css файлы из настроек если они есть
 // Добавляем хэшь для отключения кэша скриптов
 try {
-	$css_conf = trim($evo->config["editor_css_path"]);
+	$css_conf = trim($this->modx->config["editor_css_path"]);
 	$pattern = "/([|,;]+)/";
 	$css = preg_split($pattern, $css_conf, -1, PREG_SPLIT_NO_EMPTY);
 	$array_css = [];

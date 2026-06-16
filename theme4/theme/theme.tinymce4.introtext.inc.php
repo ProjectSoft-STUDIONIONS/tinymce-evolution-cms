@@ -1,4 +1,5 @@
 <?php
+if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 /*
  * All available config-params of %uppercase%
  * https://www.tinymce.com/docs/configure/
@@ -17,11 +18,6 @@
  * */
 
 // @todo: clean plugins for mini
-
-// Устанавливаем язык TinyMCE
-$evo = evo();
-$lang = $evo->config['manager_language'];
-$this->set('language', $lang, 'string', 'en');
 
 // $this->set('plugins', 'advlist autolink lists modxlink image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen spellchecker insertdatetime media nonbreaking save table contextmenu directionality emoticons template paste textcolor codesample colorpicker textpattern imagetools paste youtube', 'string');
 $this->set('toolbar1', 'bold italic underline strikethrough | alignleft aligncenter alignright | formatselect | undo redo | code', 'string');

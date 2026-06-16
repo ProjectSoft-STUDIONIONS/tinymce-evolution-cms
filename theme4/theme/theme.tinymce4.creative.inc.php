@@ -1,4 +1,5 @@
 <?php
+if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 /*
  * All available config-params of %uppercase%
  * https://www.tinymce.com/docs/configure/
@@ -20,11 +21,6 @@
 // http://archive.tinymce.com/forum/viewtopic.php?pid=115507#p115507
 
 // @todo: layer-Plugin: Buttons broken
-
-// Устанавливаем язык TinyMCE
-$evo = evo();
-$lang = $evo->config['manager_language'];
-$this->set('language', $lang, 'string', 'en');
 
 $this->set('plugins', 'anchor save autolink autosave advlist layer fullscreen hr paste modxlink media contextmenu table youtube image imagetools code textcolor', 'string');
 $this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect styleselect fontsizeselect code', 'string');

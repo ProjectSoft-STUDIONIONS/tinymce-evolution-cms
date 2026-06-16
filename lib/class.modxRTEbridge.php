@@ -446,7 +446,9 @@ if(!class_exists('modxRTEbridge')){
 			if ($this->modx->isBackend() || ((int)$_GET['quickmanagertv'] == 1 || isset($_SESSION['mgrValidated']))) {
 				// User is logged into Manager
 				// Load base first to assure Modx settings like entermode, editor_css_path are given set, can be overwritten in custom theme
-				include("{$this->pluginParams['base_path']}theme/theme.{$this->editorKey}.base.inc.php");
+				// Конфигурация base не должна отображаться в конфигурации системы.
+				// Переименовать файл в base.inc.php
+				include("{$this->pluginParams['base_path']}theme/base.inc.php");
 				include("{$this->pluginParams['base_path']}theme/theme.{$this->editorKey}.{$this->theme}.inc.php");
 				$this->pluginParams['language'] = !isset($this->pluginParams['language']) ? $this->lang('lang_code') : $this->pluginParams['language'];
 			} else {

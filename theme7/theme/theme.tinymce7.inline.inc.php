@@ -1,4 +1,5 @@
 <?php
+if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 /*
  * All available config-params of %uppercase%
  * https://www.tinymce.com/docs/configure/
@@ -15,14 +16,6 @@
  * $this->modxParams holds an array of actual Modx- / user-settings
  *
  * */
-
-// Устанавливаем язык TinyMCE
-$evo = evo();
-$lang = $evo->config['manager_language'];
-
-// Под EVO 1.4.x нужен проход по языкам
-$this->set('language', $lang, 'string', 'en');
-$this->set('language_test', '"' . $_lang['lang_code'] . '"', 'string', 'en');
 
 // Отключим кеширование скриптов. Это тест.
 $this->set('cache_suffix', '?' . date("Ymd-Hi"), 'string');

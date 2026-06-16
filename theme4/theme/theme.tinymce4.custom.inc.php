@@ -1,4 +1,5 @@
 <?php
+if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 /*
  * All available config-params of %uppercase%
  * https://www.tinymce.com/docs/configure/
@@ -15,11 +16,6 @@
  * $this->modxParams holds an array of actual Modx- / user-settings
  *
  * */
-
-// Устанавливаем язык TinyMCE
-$evo = evo();
-$lang = $evo->config['manager_language'];
-$this->set('language', $lang, 'string', 'en');
 
 if( !empty( $this->modxParams['custom_plugins'])) {
 	$this->set('plugins', $this->modxParams['custom_plugins'], 'string' );
