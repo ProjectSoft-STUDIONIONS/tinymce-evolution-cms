@@ -8,7 +8,7 @@ module.exports = async function(grunt) {
 
 	grunt.initConfig({
 		globalConfig : {},
-		pkg : {},
+		pkg : PACK,
 		clean: {
 			// Удаляем архивы и чистим директорию dist от TinyMCE
 			main: [

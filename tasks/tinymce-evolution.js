@@ -26,7 +26,9 @@ module.exports = function(grunt) {
 			biguppercase,
 			version,
 			repository,
-			issues
+			issues,
+			pkgversion,
+			lastupdate
 	) {
 		let files = [];
 
@@ -56,7 +58,9 @@ module.exports = function(grunt) {
 					biguppercase,
 					version,
 					repository,
-					issues
+					issues,
+					pkgversion,
+					lastupdate
 				);
 			} else {
 				// Перезаписываем имена файлов тем
@@ -88,7 +92,9 @@ module.exports = function(grunt) {
 							.replace(/%version%/g, version)
 							.replace(/%repository%/g, repository)
 							.replace(/%issues%/g, issues)
-							.replace(/%skinsDirectory%/g, skinsDirectory);
+							.replace(/%skinsDirectory%/g, skinsDirectory)
+							.replace(/%pkgversion%/g, pkgversion)
+							.replace(/%lastupdate%/g, lastupdate);
 						fs.writeFileSync(target + '/' + outFile, content, {encoding: 'utf8'});
 					}
 				}
@@ -150,11 +156,17 @@ module.exports = function(grunt) {
 			issues: 'https://github.com/',
 			install: 'install',
 		});
+		var pkgVersion = grunt.config.data.pkg.version;
 		var linkVers = "https://registry.npmjs.org/tinymce?fields=dist-tags";
 		var done = this.async();
 		var val;
 		var versions = {};
 		let strWidth = 0;
+		var date = new Date(),
+			year = String(date.getFullYear()),
+			month = String(date.getMonth() + 1).padStart(2, "0"),
+			day = String(date.getDate()).padStart(2, "0"),
+			lastupdate = `${year}-${month}-${day}`;
 		gruntLog('Download TinyMCE versions', linkVers, 'start');
 		try {
 			// Получаем свежие версии
@@ -182,6 +194,7 @@ module.exports = function(grunt) {
 				lowercase = `tinymce${num}`,
 				uppercase = `TinyMCE${num}`,
 				biguppercase = `TINYMCE${num}`,
+				pkg_version = `${val}-${pkgVersion}`,
 				// Полный путь директории вывода
 				dirOut = `dist/${lowercase}/${lowercase}/${options.directory}/${lowercase}`,
 				installOut = `dist/${lowercase}/${lowercase}/install/` + options.directory,
@@ -250,22 +263,6 @@ module.exports = function(grunt) {
 				}
 			}
 
-			// Подготовим плагины
-			// Перезапишем минификацию
-			//grunt.file.expandMapping(
-			//	[`plugins${num}/**/plugin.js`],
-			//	`plugins${num}`,
-			//	{
-			//		flatten: false,
-			//		rename: function(destBase, destPath) {
-			//			let inF = destPath;
-			//			let outF = destPath.replace('plugin.js', 'plugin.min.js');
-			//			fs.copyFileSync(inF, outF);
-			//			return destPath.replace('plugin.js', 'plugin.min.js');
-			//		}
-			//	}
-			//);
-
 			// Далее
 			// Копирование общих плагинов
 			let dirOutPlgs = dirOut + '/tinymce/plugins';
@@ -277,7 +274,9 @@ module.exports = function(grunt) {
 				biguppercase,
 				val,
 				options.repository,
-				options.issues
+				options.issues,
+				pkg_version,
+				lastupdate
 			);
 			gruntLog('Copy plugins', dirOutPlgs, 'ok');
 
@@ -290,7 +289,9 @@ module.exports = function(grunt) {
 				biguppercase,
 				val,
 				options.repository,
-				options.issues
+				options.issues,
+				pkg_version,
+				lastupdate
 			);
 			gruntLog('Copy plugins ' + lowercase, dirOutPlgs, 'ok');
 
@@ -325,7 +326,9 @@ module.exports = function(grunt) {
 				biguppercase,
 				val,
 				options.repository,
-				options.issues
+				options.issues,
+				pkg_version,
+				lastupdate
 			);
 			gruntLog('Copy js-cookie', dirOut + "/js", 'ok');
 
@@ -339,7 +342,9 @@ module.exports = function(grunt) {
 				biguppercase,
 				val,
 				options.repository,
-				options.issues
+				options.issues,
+				pkg_version,
+				lastupdate
 			);
 			gruntLog('Copy src ' + lowercase, dirOut, 'ok');
 
@@ -352,7 +357,9 @@ module.exports = function(grunt) {
 				biguppercase,
 				val,
 				options.repository,
-				options.issues
+				options.issues,
+				pkg_version,
+				lastupdate
 			);
 			gruntLog('Copy theme ' + lowercase, dirOut, 'ok');
 
@@ -366,7 +373,9 @@ module.exports = function(grunt) {
 					biguppercase,
 					val,
 					options.repository,
-					options.issues
+					options.issues,
+					pkg_version,
+					lastupdate
 				);
 			} else {
 				// Файлы подключения плагина
@@ -378,7 +387,9 @@ module.exports = function(grunt) {
 					biguppercase,
 					val,
 					options.repository,
-					options.issues
+					options.issues,
+					pkg_version,
+					lastupdate
 				);
 			}
 
@@ -394,7 +405,9 @@ module.exports = function(grunt) {
 				biguppercase,
 				val,
 				options.repository,
-				options.issues
+				options.issues,
+				pkg_version,
+				lastupdate
 			);
 			gruntLog('Copy install ' + lowercase, installOut + '/' + lowercase + '.tpl', 'ok');
 
