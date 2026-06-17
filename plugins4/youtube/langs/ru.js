@@ -1,16 +1,1 @@
-tinymce.addI18n('en',{
-	'Choose YouTube Video'  : 'Поиск YouTube видео',
-	'Insert Youtube video'  : 'Вставить Youtube видео',
-	'width'					: 'Ширина',
-	'height'				: 'Высота',
-	'skin'					: 'Скин',
-	'dark'          		: 'dark',
-	'light'         		: 'light',
-	'Search'        		: 'Поиск',
-	'Youtube URL'   		: 'Youtube URL',
-	'Title'         		: 'Заголовок',
-	'Insert and Close'		: 'Вставить и Закрыть',
-	'Insert'				: 'Вставить',
-	'Load More'				: 'Load More',
-	'cancel'				: 'отмена'
-});
+tinymce.addI18n("ru",{"Choose YouTube Video":"\u041f\u043e\u0438\u0441\u043a YouTube \u0432\u0438\u0434\u0435\u043e","Insert Youtube video":"\u0412\u0441\u0442\u0430\u0432\u0438\u0442\u044c Youtube \u0432\u0438\u0434\u0435\u043e",width:"\u0428\u0438\u0440\u0438\u043d\u0430",height:"\u0412\u044b\u0441\u043e\u0442\u0430",skin:"\u0421\u043a\u0438\u043d",dark:"dark",light:"light",Search:"\u041f\u043e\u0438\u0441\u043a","Youtube URL":"Youtube URL",Title:"\u0417\u0430\u0433\u043e\u043b\u043e\u0432\u043e\u043a","Insert and Close":"\u0412\u0441\u0442\u0430\u0432\u0438\u0442\u044c \u0438 \u0417\u0430\u043a\u0440\u044b\u0442\u044c",Insert:"\u0412\u0441\u0442\u0430\u0432\u0438\u0442\u044c","Load More":"Load More",cancel:"\u043e\u0442\u043c\u0435\u043d\u0430"});

@@ -11,6 +11,7 @@ module.exports = function(grunt) {
 	const fs = require('fs');
 	const path = require('path');
 	const zl = require('zip-lib');
+	const UglifyJS = require("uglify-js");
 	const downloadNpmPackage = require('download-npm-package');
 	// Длина левого сообщения ( Заголовок до знака -> )
 	const lineWidth = 29;
@@ -213,6 +214,11 @@ module.exports = function(grunt) {
 						force: true
 					});
 					gruntLog('Copy languages ' + lowercase, lngOut, 'ok');
+					// Удаление мобильной темы
+					if(grunt.file.exists(cacheOut + '/tinymce/themes/mobile')) {
+						grunt.file.delete(cacheOut + '/tinymce/themes/mobile');
+						gruntLog('Delete mobile ' + lowercase, cacheOut + '/tinymce/themes/mobile', 'ok');
+					}
 				}).catch((err) => {
 					// Ошибка загрузки
 					// Сразу выходим
@@ -246,19 +252,19 @@ module.exports = function(grunt) {
 
 			// Подготовим плагины
 			// Перезапишем минификацию
-			grunt.file.expandMapping(
-				[`plugins${num}/**/plugin.js`],
-				`plugins${num}`,
-				{
-					flatten: false,
-					rename: function(destBase, destPath) {
-						let inF = destPath;
-						let outF = destPath.replace('plugin.js', 'plugin.min.js');
-						fs.copyFileSync(inF, outF);
-						return destPath.replace('plugin.js', 'plugin.min.js');
-					}
-				}
-			);
+			//grunt.file.expandMapping(
+			//	[`plugins${num}/**/plugin.js`],
+			//	`plugins${num}`,
+			//	{
+			//		flatten: false,
+			//		rename: function(destBase, destPath) {
+			//			let inF = destPath;
+			//			let outF = destPath.replace('plugin.js', 'plugin.min.js');
+			//			fs.copyFileSync(inF, outF);
+			//			return destPath.replace('plugin.js', 'plugin.min.js');
+			//		}
+			//	}
+			//);
 
 			// Далее
 			// Копирование общих плагинов
@@ -287,6 +293,28 @@ module.exports = function(grunt) {
 				options.issues
 			);
 			gruntLog('Copy plugins ' + lowercase, dirOutPlgs, 'ok');
+
+			// Минимизация плагинов и языков plugins${num}
+			// Плагин modxlink перезапишется в версиях больше четвёртой версии
+			grunt.file.recurse(`plugins${num}`, function(abspath, rootdir, subdir, filename){
+				let out, script, result;
+				if(filename=='plugin.js' || /langs$/.test(subdir)){
+					out = `${dirOutPlgs}/${subdir}/` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`);
+					script = grunt.file.read(`${abspath}`).toString();
+					result = UglifyJS.minify(script, {
+						output: {
+							ascii_only: true
+						}
+					});
+					if (!result.error) {
+						grunt.file.write(out, result.code, {encoding: 'utf8'});
+						gruntLog('Uglify js', out, 'ok');
+					}else{
+						console.log(result.error);
+						gruntLog('Uglify js', out, 'fatal');
+					}
+				}
+			});
 
 			// Копирование js-cookie
 			copyFolderRecursiveSync(
@@ -357,7 +385,6 @@ module.exports = function(grunt) {
 			// Копирование основного класса в lib
 			copyFolderRecursiveSync('lib', `dist/${lowercase}/${lowercase}/assets/lib`);
 			gruntLog('Copy lib', `dist/${lowercase}/${lowercase}/assets/lib`, 'ok');
-
 			// Копирование инсталяционного файла плагина
 			copyFolderRecursiveSync(
 				options.install,

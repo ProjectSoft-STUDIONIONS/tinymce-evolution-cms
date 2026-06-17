@@ -17,7 +17,7 @@ if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
  *
  * */
 
-$this->set('plugins', 'autolink save image link codemirror table visualblocks', 'string');
+$this->set('plugins', 'autolink autoresize contextmenu save image modxlink codemirror table visualblocks', 'string');
 
 $this->set('toolbar1', 'undo redo | formatselect | bold strikethrough | alignleft aligncenter alignright | link unlink image | codemirror', 'string');
 $this->set('toolbar2', NULL, 'string');

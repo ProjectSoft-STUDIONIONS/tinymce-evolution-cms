@@ -30,49 +30,49 @@ if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 // @todo: layer-Plugin: Buttons broken
 // @todo: selectall-Button broken
 
-// Отключим кеширование скриптов. Это тест.
+// Отключим кеширование скриптов.
 $this->set('cache_suffix', '?' . date("Ymd-Hi"), 'string');
 
-$this->set('skin',                  'lightgray',                    'string' );     // Set default skin (setting param first time sets its value also as default val)
-$this->set('skin',                  $this->modxParams['skin'] );                    // Overwrite with Modx-setting (if empty, default is used))
+$this->set('skin', 'lightgray', 'string' ); // Set default skin (setting param first time sets its value also as default val)
+$this->set('skin', $this->modxParams['skin'] ); // Overwrite with Modx-setting (if empty, default is used))
 
-$this->set('theme',                 'modern',                       'string' );     // Set default skin (setting param first time sets its value also as default val)
-$this->set('theme',                 $this->modxParams['skintheme'] );               // Overwrite with Modx-setting (if empty, default is used))
+$this->set('theme', 'modern', 'string' ); // Set default skin (setting param first time sets its value also as default val)
+$this->set('theme', $this->modxParams['skintheme'] ); // Overwrite with Modx-setting (if empty, default is used))
 
-$this->set('width',                 $this->pluginParams['width'],   'string' );     // https://www.tinymce.com/docs/configure/editor-appearance/#width
-$this->set('height',                $this->pluginParams['height'],  'string' );     // https://www.tinymce.com/docs/configure/editor-appearance/#height
+$this->set('width', $this->pluginParams['width'], 'string' ); // https://www.tinymce.com/docs/configure/editor-appearance/#width
+$this->set('height', $this->pluginParams['height'], 'string' ); // https://www.tinymce.com/docs/configure/editor-appearance/#height
 
 // @todo: Make optional in Modx-configuration?
-$this->set('menubar',               true,                           'bool' );       // https://www.tinymce.com/docs/configure/editor-appearance/#menubar
-$this->set('statusbar',             true,                           'bool' );       // https://www.tinymce.com/docs/get-started/customize-ui/#hidingthestatusbar
+$this->set('menubar', true, 'bool' ); // https://www.tinymce.com/docs/configure/editor-appearance/#menubar
+$this->set('statusbar', true, 'bool' ); // https://www.tinymce.com/docs/get-started/customize-ui/#hidingthestatusbar
 
-$this->set('document_base_url',     MODX_SITE_URL,                  'string' );     // https://www.tinymce.com/docs/configure/url-handling/#document_base_url
-$this->set('entity_encoding', $this->pluginParams['entityEncoding'],'string');      // https://www.tinymce.com/docs/configure/content-filtering/#encodingtypes
-$this->set('entities',        isset($this->pluginParams['entities']) ? $this->pluginParams['entities'] : '',      'string');      // https://www.tinymce.com/docs/configure/content-filtering/#entities
+$this->set('document_base_url', MODX_SITE_URL, 'string' ); // https://www.tinymce.com/docs/configure/url-handling/#document_base_url
+$this->set('entity_encoding', $this->pluginParams['entityEncoding'], 'string'); // https://www.tinymce.com/docs/configure/content-filtering/#encodingtypes
+$this->set('entities', isset($this->pluginParams['entities']) ? $this->pluginParams['entities'] : '', 'string'); // https://www.tinymce.com/docs/configure/content-filtering/#entities
 
-$this->set('language',              $this->modx->config['manager_language'],       'string', 'en');      // https://www.tinymce.com/docs/configure/localization/#language
+$this->set('language', $this->modx->config['manager_language'], 'string', 'en'); // https://www.tinymce.com/docs/configure/localization/#language
 if($this->lang('lang_code') != 'en')
-    $this->set('language_url',          $this->pluginParams['base_url'].'tinymce/langs/'. $this->lang('lang_code') .'.js', 'string');   // https://www.tinymce.com/docs/configure/localization/#language_url
+    $this->set('language_url', $this->pluginParams['base_url'].'tinymce/langs/'. $this->lang('lang_code') .'.js', 'string'); // https://www.tinymce.com/docs/configure/localization/#language_url
 
-$this->set('schema',                $this->modxParams['schema'],          'string' );     // https://www.tinymce.com/docs/configure/content-filtering/#schema
-$this->set('element_format',        $this->modxParams['element_format'],  'string' );     // https://www.tinymce.com/docs/configure/content-filtering/#element_format
-// $this->set('inline',                true,  'bool' );                             // https://www.tinymce.com/docs/configure/integration-and-setup/#inlineeditingmodeonadivelementwithideditable
+$this->set('schema', $this->modxParams['schema'], 'string' ); // https://www.tinymce.com/docs/configure/content-filtering/#schema
+$this->set('element_format', $this->modxParams['element_format'], 'string' ); // https://www.tinymce.com/docs/configure/content-filtering/#element_format
+// $this->set('inline', true, 'bool' ); // https://www.tinymce.com/docs/configure/integration-and-setup/#inlineeditingmodeonadivelementwithideditable
 
 // Avoid set empty content_css - accepts comma-separated list of multiple css-files
 if( !empty( $modx->config['editor_css_path'] )) {
-    $this->set('content_css', explode(',',$modx->config['editor_css_path']), 'array'); // https://www.tinymce.com/docs/configure/content-appearance/#content_css
+    $this->set('content_css', explode(',', $modx->config['editor_css_path']), 'array'); // https://www.tinymce.com/docs/configure/content-appearance/#content_css
 };
 
 // Load templates and chunks by connector
 $this->set('templates', $this->pluginParams['base_url'].'connector.%lowercase%.templates.php', 'string' ); // https://www.tinymce.com/docs/plugins/template/#templates
 
-$this->set('image_caption',         true,                           'bool' );       // https://www.tinymce.com/docs/plugins/image/#image_caption
-$this->set('image_advtab',          'small',                        'string' );     // https://www.tinymce.com/docs/plugins/image/#image_advtab
-$this->set('image_advtab',          true,                           'bool' );       // https://www.tinymce.com/docs/plugins/image/#image_advtab // replacement for 3.x-plugin advimage
+$this->set('image_caption', true, 'bool' ); // https://www.tinymce.com/docs/plugins/image/#image_caption
+$this->set('image_advtab', 'small', 'string' ); // https://www.tinymce.com/docs/plugins/image/#image_advtab
+$this->set('image_advtab', true, 'bool' ); // https://www.tinymce.com/docs/plugins/image/#image_advtab // replacement for 3.x-plugin advimage
 $this->set('image_class_list', '[{title: "None", value: ""},{title: "Float left", value: "justifyleft"},{title: "Float right", value: "justifyright"},{title: "Image Responsive",value: "img-responsive"}]', 'json' );
 
 // https://www.tinymce.com/docs/plugins/spellchecker/
-$this->set('browser_spellcheck',    ($this->pluginParams['browser_spellcheck'] == 'enabled' ? true : false), 'bool' );
+$this->set('browser_spellcheck', ($this->pluginParams['browser_spellcheck'] == 'enabled' ? true : false), 'bool' );
 
 if($this->pluginParams['paste_as_text'] == 'enabled') {
 	// https://www.tinymce.com/docs/plugins/paste/#paste_as_text
@@ -83,15 +83,15 @@ if($this->pluginParams['paste_as_text'] == 'enabled') {
 }
 
 // @todo: final base-setup like tinymce3 "default"-theme?
-$this->set('plugins', 'anchor visualblocks autolink autosave save advlist fullscreen paste modxlink media contextmenu table image code textcolor', 'string');    // https://www.tinymce.com/docs/get-started/basic-setup/#pluginconfiguration
+$this->set('plugins', 'anchor visualblocks autolink autosave save advlist fullscreen paste modxlink media contextmenu table image code textcolor', 'string'); // https://www.tinymce.com/docs/get-started/basic-setup/#pluginconfiguration
 $this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect fontsizeselect pastetext code | fullscreen help', 'string', false);
 $this->set('toolbar2', 'image media link unlink anchor | alignleft aligncenter alignright | bullist numlist | blockquote outdent indent | table hr | visualblocks styleprops removeformat', 'string', true);
 
 // Bridge does not return NULL, and does not use this->set() itself, so these parameters must be set at least once..
 // Params get translated by bridge because it does not return NULL, so the returned values will be used
-$this->set('style_formats', array(), 'json');   // https://www.tinymce.com/docs/configure/content-formatting/#style_formats
-$this->set('block_formats', '',      'string'); // https://www.tinymce.com/docs/configure/content-formatting/#block_formats
-$this->set('forced_root_block', '',  'string'); // https://www.tinymce.com/docs/configure/content-filtering/#forced_root_block
+$this->set('style_formats', array(), 'json'); // https://www.tinymce.com/docs/configure/content-formatting/#style_formats
+$this->set('block_formats', '', 'string'); // https://www.tinymce.com/docs/configure/content-formatting/#block_formats
+$this->set('forced_root_block', '', 'string'); // https://www.tinymce.com/docs/configure/content-filtering/#forced_root_block
 
 $this->set('setup', 'function(ed) { ed.on("change", function(e) { documentDirty=true; }); }',  'object');
 $this->set('save_onsavecallback', 'function () { documentDirty=false; document.getElementById("stay").value = 2; document.mutate.save.click(); }',  'object');

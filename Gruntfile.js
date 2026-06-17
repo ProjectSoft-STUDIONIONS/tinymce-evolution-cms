@@ -9,11 +9,17 @@ module.exports = async function(grunt) {
 	grunt.initConfig({
 		globalConfig : {},
 		pkg : {},
-		// Удаляем архивы и чистим директорию dist от TinyMCE
 		clean: {
+			// Удаляем архивы и чистим директорию dist от TinyMCE
 			main: [
 				'./*.zip',
 				'./dist/tinymce*',
+			],
+			// Удаляем архивы и чистим директорию dist, cache от TinyMCE
+			cache: [
+				'./*.zip',
+				'./dist/tinymce*',
+				'./cache/tinymce*',
 			]
 		},
 		// Собираем плагины TinyMCE
@@ -26,5 +32,8 @@ module.exports = async function(grunt) {
 			main: {},
 		},
 	});
-	grunt.registerTask('default',	['clean', 'tinymce-evolution']);
+	// По умолчанию запуск задачи default
+	grunt.registerTask('default',	['clean:main', 'tinymce-evolution']);
+	// Отдельная задача запуска очистки директорий cache, dist и архивов.
+	grunt.registerTask('cache',	['clean:cache']);
 }

@@ -29,6 +29,7 @@
 		"load-grunt-tasks": "^5.1.0",
 		"time-grunt": "git+https://github.com/ProjectSoft-STUDIONIONS/time-grunt.git",
 		"tinymce-i18n": "latest",
+		"uglify-js": "3.19.3",
 		"zip-lib": "1.4.0"
 	}
 }

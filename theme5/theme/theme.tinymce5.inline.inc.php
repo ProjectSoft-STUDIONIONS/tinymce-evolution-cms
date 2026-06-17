@@ -18,7 +18,7 @@ if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
  * */
 
 // Подключаем плагины
-$this->set('plugins', 'autolink autoresize save image imagetools modxlink codemirror table visualblocks media', 'string');
+$this->set('plugins', 'autolink autoresize contextmenu save image imagetools modxlink table visualblocks media', 'string');
 
 // Menu Bar
 $this->set('menubar', 'file edit view insert format tools table', 'string' );
@@ -27,7 +27,7 @@ $this->set('menubar', 'file edit view insert format tools table', 'string' );
 $this->set('statusbar', false, 'bool' );
 
 // Первая строка тулбара
-$this->set('toolbar1', 'undo redo | formatselect | bold strikethrough | alignleft aligncenter alignright | link unlink openlink | media image | codemirror', 'string');
+$this->set('toolbar1', 'undo redo | formatselect | bold strikethrough | alignleft aligncenter alignright | link unlink openlink | media image |', 'string');
 
 // Вторая строка тулбара
 $this->set('toolbar2', NULL, 'string');

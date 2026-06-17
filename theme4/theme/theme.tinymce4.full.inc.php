@@ -90,7 +90,7 @@ $this->set('codemirror', '{
 		"lineNumbers": true,
 		"indentUnit": 4,
 		"tabSize": 4,
-		"theme": "cobalt"
+		"theme": "mariana"
 	}
 }', 'object'); // mariana
 
