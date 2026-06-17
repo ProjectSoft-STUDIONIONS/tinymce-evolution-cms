@@ -1,6 +1,6 @@
 {
 	"name": "tinymce-evolution-cms",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Сборка плагинов TinyMCE для EvolutionCMS под различные версии TinyMCE",
 	"license": "GPL-3.0",
 	"author": "ProjectSoft <projectsoft2009@yandex.ru>",
