@@ -8,6 +8,7 @@
  * Author: markwillis82
  * Date: 7/7/15
  * update 64j 8/11/17
+ * Update for EvolutionCMS: ProjectSoft 2026-06-12
  */
 
 // Handles selection from Modx-Ressource-Tree

@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  *
  * Version: 5.10.9 (2023-11-15)
+ *
+ * Update for EvolutionCMS: ProjectSoft 2026-06-12
  */
 (function () {
 	'use strict';

@@ -1,5 +1,7 @@
 /**
  * TinyMCE version 6.8.6 (TBD)
+ *
+ * Update for EvolutionCMS: ProjectSoft 2026-06-12
  */
 
 (function () {

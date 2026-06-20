@@ -307,13 +307,19 @@ module.exports = function(grunt) {
 				if(filename=='plugin.js' || /langs$/.test(subdir)){
 					out = `${dirOutPlgs}/${subdir}/` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`);
 					script = grunt.file.read(`${abspath}`).toString();
+					// Если есть первый комментарий, то добавим в начало к минимизированному.
+					const regex = /(\/\*([\s\S]*?)\*\/)/;
+					let m, comment = "";
+					if ((m = regex.exec(script)) !== null) {
+						comment = `${m[1]}\n`;
+					}
 					result = UglifyJS.minify(script, {
 						output: {
 							ascii_only: true
 						}
 					});
 					if (!result.error) {
-						grunt.file.write(out, result.code, {encoding: 'utf8'});
+						grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
 						gruntLog('Uglify js', out, 'ok');
 					}else{
 						console.log(result.error);
@@ -425,11 +431,12 @@ module.exports = function(grunt) {
 		}
 
 		// Readme
+		/*
 		const regex = /\d{2}-\d{2}-\d{4}/;
 		let readme = grunt.file.read("README.md").toString();
 		let result = readme.replace(/\d{2}-\d{2}-\d{4}/, readmedate);
 		grunt.file.write("README.md", result);
-
+		*/
 		// Окончание работы задачи
 		done();
 	};

@@ -219,11 +219,20 @@ $this->set('paste_as_text', true, 'bool');
 
 // Codemirror Plugin
 $this->set('codemirror', '{
-	"cssFiles": [
-		"lib/codemirror.css",
-		"theme/mariana.css"
-	],
-	"jsFiles": [
+	indentOnInit: true,
+	fullscreen: false,
+	path: "codemirror",
+	config: {
+		mode: "application/x-httpd-php",
+		lineNumbers: true,
+		indentUnit: 4,
+		tabSize: 4,
+		theme: "mariana"
+	},
+	width: 800,
+	height: 600,
+	saveCursorPosition: true,
+	jsFiles: [
 		"mode/php/php.js",
 		"addon/edit/matchbrackets.js",
 		"mode/xml/xml.js",
@@ -232,14 +241,10 @@ $this->set('codemirror', '{
 		"mode/htmlmixed/htmlmixed.js",
 		"addon/selection/active-line.js"
 	],
-	"iframe": "source.php",
-	"config": {
-		"mode": "application/x-httpd-php",
-		"lineNumbers": true,
-		"indentUnit": 4,
-		"tabSize": 4,
-		"theme": "mariana"
-	}
+	cssFiles: [
+		"lib/codemirror.css",
+		"theme/mariana.css"
+	]
 }', 'object'); // mariana
 
 // Старт и сохранение
