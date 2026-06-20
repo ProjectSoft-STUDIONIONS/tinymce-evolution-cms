@@ -431,12 +431,12 @@ module.exports = function(grunt) {
 		}
 
 		// Readme
-		/*
+		/**/
 		const regex = /\d{2}-\d{2}-\d{4}/;
 		let readme = grunt.file.read("README.md").toString();
 		let result = readme.replace(/\d{2}-\d{2}-\d{4}/, readmedate);
 		grunt.file.write("README.md", result);
-		*/
+		/**/
 		// Окончание работы задачи
 		done();
 	};
