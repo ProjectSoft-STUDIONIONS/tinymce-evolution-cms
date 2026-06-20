@@ -76,15 +76,18 @@ module.exports = function(grunt) {
 					".tpl"
 				];
 				let ext = path.extname(outFile).toLowerCase();
+				// Скин директория TinyMCE4
 				let skinsDirectory = 'tinymce/skins';
 				if(extArr.includes(ext)) {
+					// Получаем контент файла
 					let content = fs.readFileSync(target + '/' + outFile, {encoding: 'utf8'});
 					if(typeof version != 'undefined') {
 						let num = version.split(".")[0];
 						if (num > 4){
+							// Скин директрия для версий выше 4-ой меняется
 							skinsDirectory = 'tinymce/skins/ui';
 						}
-
+						// Перезапишем по паттернам
 						content = content
 							.replace(/%lowercase%/g, lowercase)
 							.replace(/%uppercase%/g, uppercase)
@@ -95,6 +98,7 @@ module.exports = function(grunt) {
 							.replace(/%skinsDirectory%/g, skinsDirectory)
 							.replace(/%pkgversion%/g, pkgversion)
 							.replace(/%lastupdate%/g, lastupdate);
+						// Запишем файл
 						fs.writeFileSync(target + '/' + outFile, content, {encoding: 'utf8'});
 					}
 				}
@@ -148,7 +152,7 @@ module.exports = function(grunt) {
 
 	}
 
-	grunt.registerMultiTask('tinymce-evolution', 'TinyMCE for Evolution CMS',async function() {
+	const task = async function() {
 		var options = this.options({
 			directory: 'assets/plugins',
 			src: 'src',
@@ -428,5 +432,9 @@ module.exports = function(grunt) {
 
 		// Окончание работы задачи
 		done();
-	});
+	};
+
+	grunt.registerMultiTask('tinymceevolution', 'TinyMCE for Evolution CMS', task);
+	grunt.registerMultiTask('tinymce_evolution', 'TinyMCE for Evolution CMS', task);
+	grunt.registerMultiTask('tinymce-evolution', 'TinyMCE for Evolution CMS', task);
 }

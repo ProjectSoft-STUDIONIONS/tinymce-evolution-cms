@@ -18,18 +18,19 @@ if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
  * */
 
 // Подключаем плагины
-$this->set('plugins', 'autolink autoresize contextmenu save image modxlink codemirror table visualblocks media', 'string');
+$this->set('plugins', 'autolink autoresize contextmenu save image modxlink table visualblocks media codemirror', 'string');
 
 // Menu Bar
-$this->set('menubar', 'file edit view insert format tools table', 'string' );
+// $this->set('menubar', 'file edit view insert format tools table', 'string' );
+$this->set('menubar', false, 'bool' );
 
-// Status Bar
+// Status Bar отключаем
 $this->set('statusbar', false, 'bool' );
 
 // Первая строка тулбара
-$this->set('toolbar1', 'undo redo | formatselect | bold strikethrough | alignleft aligncenter alignright | link unlink openlink | media image | codemirror', 'string');
+$this->set('toolbar1', 'undo redo | formatselect | bold strikethrough | alignleft aligncenter alignright alignjustify | link unlink openlink | media image | codemirror', 'string');
 
-// Вторая строка тулбара
+// Вторая строка тулбара отключаем
 $this->set('toolbar2', NULL, 'string');
 
 // Третья строка тулбара
@@ -38,6 +39,26 @@ $this->set('toolbar3', NULL, 'string');
 // Четвёртая строка тулбара
 $this->set('toolbar4', NULL, 'string');
 
+// Форматы
+$this->set('formats', '{
+	"alignleft": {
+		"selector": "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,td,th,dl,dt,dd,img,audio,video",
+		"classes": "text-left"
+	},
+	"aligncenter": {
+		"selector": "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,td,th,dl,dt,dd,img,audio,video",
+		"classes": "text-center"
+	},
+	"alignright": {
+		"selector": "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,td,th,dl,dt,dd,img,audio,video",
+		"classes": "text-right"
+	},
+	"alignfull": {
+		"selector": "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,td,th,dl,dt,dd,img,audio,video",
+		"classes": "text-justify"
+	}
+}', 'json');
+$this->set('block_formats', 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Header 4=h4; Header 5=h5; Header 6=h6', 'string');
 // Ресайз редактора
 $this->set('autoresize_bottom_margin', 0, 'number');
 $this->set('autoresize_min_height', 100, 'number');
@@ -73,10 +94,10 @@ $this->set('link_rel_list', '[
 		"title": "Rel noreferrer",
 		"value": "noopener noreferrer nofollow"
 	},
-    {
-    	"title": "Rel external",
-    	"value": "noopener noreferrer nofollow external"
-    }
+	{
+		"title": "Rel external",
+		"value": "noopener noreferrer nofollow external"
+	}
 ]', 'json');
 
 // Codemirror Plugin
@@ -100,7 +121,7 @@ $this->set('codemirror', '{
 		"lineNumbers": true,
 		"indentUnit": 4,
 		"tabSize": 4,
-		"theme": "cobalt"
+		"theme": "mariana"
 	}
 }', 'object'); // mariana
 
