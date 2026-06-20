@@ -1,18 +1,17 @@
-node_modules
-bower_components
-dist/*
-cache/*
-!dist/.*
-!cache/.*
-
-*.zip
-
+/node_modules
+/bower_components
+/dist/*
+/cache/*
+/shields.md
 /tinymce*
 /tinymce.json
-
 /plugins*/.*
 
 *.sublime-workspace
+*.zip
+
+!dist/.*
+!cache/.*
 
 # Потом разблокировать
 /theme
