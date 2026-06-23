@@ -19,7 +19,7 @@ if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 
 // @todo: clean plugins for mini
 
-// $this->set('plugins', 'advlist autolink lists modxlink image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen spellchecker insertdatetime media nonbreaking save table contextmenu directionality emoticons template paste textcolor codesample colorpicker textpattern imagetools paste youtube', 'string');
+// $this->set('plugins', '', 'string');
 $this->set('toolbar1', 'bold italic underline strikethrough', 'string');
 $this->set('toolbar2', 'alignleft aligncenter alignright | undo redo', 'string');
 $this->set('toolbar3', NULL);
@@ -27,8 +27,8 @@ $this->set('toolbar4', NULL);
 
 // Hide bars
 $this->set('menubar',               false,                           'bool' );       // https://www.tinymce.com/docs/configure/editor-appearance/#menubar
-$this->set('statusbar',             false,                           'bool' );       // https://www.tinymce.com/docs/get-started/customize-ui/#hidingthestatusbar
+$this->set('statusbar',             true,                           'bool' );       // https://www.tinymce.com/docs/get-started/customize-ui/#hidingthestatusbar
 
 // Will be overwritten by force() within plugin-code anyhow
-$this->set('height',            '200px',    'string' );
+$this->set('height',            '300px',    'string' );
 $this->set('width',             '100%',    'string' );

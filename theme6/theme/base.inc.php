@@ -83,7 +83,7 @@ if($this->pluginParams['paste_as_text'] == 'enabled') {
 }
 
 // @todo: final base-setup like tinymce3 "default"-theme?
-$this->set('plugins', 'anchor visualblocks autolink autosave save advlist fullscreen paste modxlink media contextmenu table image code textcolor', 'string'); // https://www.tinymce.com/docs/get-started/basic-setup/#pluginconfiguration
+$this->set('plugins', 'anchor visualblocks autolink autosave save advlist modxlink media table image code', 'string'); // https://www.tinymce.com/docs/get-started/basic-setup/#pluginconfiguration
 $this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect fontsizeselect pastetext code | fullscreen help', 'string', false);
 $this->set('toolbar2', 'image media link unlink anchor | alignleft aligncenter alignright | bullist numlist | blockquote outdent indent | table hr | visualblocks styleprops removeformat', 'string', true);
 

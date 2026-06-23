@@ -18,7 +18,7 @@ if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
  * */
 
 // Подключаем плагины
-$this->set('plugins', 'autolink autoresize contextmenu save image modxlink codemirror table visualblocks media', 'string');
+$this->set('plugins', 'autolink autoresize save image modxlink codemirror table visualblocks media', 'string');
 
 // Menu Bar
 $this->set('menubar', 'file edit view insert format tools table', 'string' );
