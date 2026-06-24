@@ -139,6 +139,9 @@ var autoresize = (function () {
 				if (bottomMargin !== false) {
 					dom.setStyles(editor.getBody(), { paddingBottom: bottomMargin });
 				}
+				console.log(editor);
+				// Вот здесь запуск customResize
+				customResize(editor);
 			});
 			editor.on('nodechange setcontent keyup FullscreenStateChanged', function (e) {
 				resize(editor, oldSize);
@@ -151,6 +154,42 @@ var autoresize = (function () {
 				});
 			}
 		};
+
+		// Данная функция только для EvolutionCMS.
+		// На других системах фишка будет работать неправильно.
+		// Добавляется в событие инициализации editor.
+		// Иначе не будет доступен editor.container
+		const customResize = (editor) => {
+			// Определяем контейнер редактора
+			let container = editor.editorContainer;
+			// Добавляем класс к этому контейнеру
+			container.classList.add('mce-tinymce-autoresize');
+
+			let doc = editor.editorManager.DOM.doc,
+				domUtils = tinymce.dom.DOMUtils,
+				/**
+				 * Документ где применяется редактор TinyMCE
+				 *
+				 * head Документа
+				 */
+				head = doc.querySelector('head'),
+				/**
+				 * Стиль
+				 */
+				style;
+			style = doc.createElement('style');
+			//link.rel = "stylesheet";
+			//link.type = "text/css";
+			style.id = domUtils.DOM.uniqueId();
+			style.textContent = `.mce-container-body {position: relative;}`;
+			style.textContent += `.mce-container-body .mce-top-part {top: 0;background-color: #ffffff;position: sticky;padding-top: 2.5em;}`;
+			style.textContent += `.darkness .mce-container-body .mce-top-part {background-color: #202329;}`;
+			style.textContent += `.filemanageropen .mce-container-body .mce-top-part {padding-top: 5em;}`;
+			//link.href = url + '/plugin.min.css?v=' + update;
+			// Добавляем тег на страницу с редактором TinyMCE
+			head.append(style);
+		}
+
 		var Resize = {
 			setup: setup,
 			resize: resize
@@ -169,29 +208,6 @@ var autoresize = (function () {
 				Commands.register(editor, oldSize);
 				Resize.setup(editor, oldSize);
 			}
-			let doc = editor.editorManager.DOM.doc,
-				domUtils = tinymce.dom.DOMUtils,
-				/**
-				 * Документ где применяется редактор TinyMCE
-				 *
-				 * head Документа
-				 */
-				head = doc.querySelector('head'),
-				/**
-				 * Стиль
-				 */
-				style;
-			style = doc.createElement('style');
-			//link.rel = "stylesheet";
-			//link.type = "text/css";
-			style.id = domUtils.DOM.uniqueId();
-			style.textContent = `.mce-container-body {position: relative;}`;
-			style.textContent += `.mce-container-body .mce-top-part {top: 0;background-color: #ffffff;position: sticky;padding-top: 2.9em;}`;
-			style.textContent += `.darkness .mce-container-body .mce-top-part {background-color: #202329;}`;
-			style.textContent += `.filemanageropen .mce-container-body .mce-top-part {padding-top: 5em;}`;
-			//link.href = url + '/plugin.min.css?v=' + update;
-			// Добавляем тег на страницу с редактором TinyMCE
-			head.append(style);
 		});
 		function Plugin () {
 		}

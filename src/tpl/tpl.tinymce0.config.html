@@ -6,11 +6,16 @@
 		display: none !important;
 	}
 </style>
-<script src="/assets/plugins/[+editorKey+]/js/js.cookie.js"></script>
 <script type="text/javascript">
-	let editorCallback = null;
-	let currentFieldId = null;
-	const icon_header = "fa fa-folder-open";
+	if(typeof Cookies != "object") {
+		document.write(decodeURIComponent('%3Cscript%20src%3D%22%2Fassets%2Fplugins%2F[+editorKey+]%2Fjs%2Fjs.cookie.js%22%3E%3C%2Fscript%3E'));
+	}
+</script>
+<!--script src="/assets/plugins/[+editorKey+]/js/js.cookie.js"></script-->
+<script type="text/javascript">
+	var editorCallback = null;
+	var currentFieldId = null;
+	var icon_header = "fa fa-folder-open";
 	function openFileManagerForTinyMCE(field_type, callback, directory = '') {
 		let evoMod = window.modx || window.parent.modx || window.parent.parent.modx;
 		let popup;
@@ -19,13 +24,6 @@
 		let myReq;
 		let intIframe;
 		let popupIframe;
-
-		const width = window.innerWidth * 1;
-		const height = window.innerHeight * 0.6;
-		const screenWidth = window.screen.width;
-		const screenHeight = window.screen.height;
-		const left = (screenWidth - width) / 2;
-		const top = (screenHeight - height) / 2;
 
 		const fieldId = currentFieldId || 'default_field_id';
 
@@ -64,23 +62,27 @@
 			if ( popup ) {
 				let w,
 					h,
-					cw = Cookies.get('KCFINDER_[+editorKey+]_popup_width') || '99%',
-					ch = Cookies.get('KCFINDER_[+editorKey+]_popup_height') || '99%';
+					cw = typeof Cookies == "object" ? Cookies.get('KCFINDER_[+editorKey+]_popup_width') : '99%',
+					ch = typeof Cookies == "object" ? Cookies.get('KCFINDER_[+editorKey+]_popup_height') : '99%';
 				w = parseInt(100 * popup.el.offsetWidth / window.innerWidth) + '%';
 				h = parseInt(100 * popup.el.offsetHeight / window.innerHeight) + '%';
 				if ( w != parseInt(cw) + '%' ) {
-					Cookies.set('KCFINDER_[+editorKey+]_popup_width', parseInt(w), { expires: 7, path: '' });
+					if(typeof Cookies == "object"){
+						Cookies.set('KCFINDER_[+editorKey+]_popup_width', parseInt(w), { expires: 7, path: '' });
+					}
 				}
 				if ( h != parseInt(ch) + '%' ) {
-					Cookies.set('KCFINDER_[+editorKey+]_popup_height', parseInt(h), { expires: 7, path: '' });
+					if(typeof Cookies == "object"){
+						Cookies.set('KCFINDER_[+editorKey+]_popup_height', parseInt(h), { expires: 7, path: '' });
+					}
 				}
 				myReq = requestAnimationFrame(eventResizeHandler);
 			} else {
 				cancelAnimationFrame(myReq);
 			}
 		};
-		pWidth = Cookies.get('KCFINDER_[+editorKey+]_popup_width') || '99%';
-		pHeight = Cookies.get('KCFINDER_[+editorKey+]_popup_height') || '99%';
+		pWidth = typeof Cookies == "object" ? (Cookies.get('KCFINDER_[+editorKey+]_popup_width') || '99%') : '99%';
+		pHeight = typeof Cookies == "object" ? (Cookies.get('KCFINDER_[+editorKey+]_popup_height') || '99%') : '99%';
 		pWidth = parseInt(pWidth) > 99 ? '99%' : pWidth;
 		pHeight = parseInt(pHeight) > 99 ? '99%' : pHeight;
 		// pWidth = '99%';
@@ -148,16 +150,15 @@
 </script>
 <script>
 	/**
-	 * file_browser_callback существует только у TinyMCE4 и, скорее всего, ниже
-	 * В TinyMCE5 и выше параметр file_browser_callback удалён. Поэтому его присутствие безопасно
-	 * Тест. Оставляем только функцию file_picker_callback.
+	 * file_browser_callback существует только у TinyMCE4
+	 * Поэтому берём функцию file_picker_callback.
 	 * По сути file_picker_callback должен работать в TinyMCE-4
 	 */
 	var config_[+editorKey+]_[+themeKey+] = {
 		license_key: 'gpl',
 		[+configString+],
 		file_picker_callback: function (callback, value, meta) {
-			console.log([...arguments]);
+			//console.log([...arguments]);
 			let type = meta.filetype || "file";
 			let field = meta.fieldname || "";
 			let url = (typeof meta.original == "object") ? meta.original.value : "";

@@ -44,26 +44,6 @@
 				processor: 'number',
 				default: 50
 			});
-			let doc = editor.editorManager.DOM.doc,
-				domUtils = tinymce.dom.DOMUtils,
-				/**
-				 * Документ где применяется редактор TinyMCE
-				 *
-				 * head Документа
-				 */
-				head = doc.querySelector('head'),
-				/**
-				 * Стиль
-				*/
-				style = document.createElement('style');
-			style.id = domUtils.DOM.uniqueId();
-			head.append(style);
-			style.textContent = `.tox-tinymce, .tox.tox-tinymce > .tox-editor-container {overflow: unset !important;}`;
-			style.textContent += `.tox.tox-tinymce > .tox-editor-container {align-self: flex-start;min-width: 100%;}`;
-			style.textContent += `.tox:not(.tox-tinymce-inline) .tox-editor-header {padding-top: 5em !important;position: sticky;top: 0;}`;
-			style.textContent += `.filemanageropen .tox:not(.tox-tinymce-inline) .tox-editor-header {padding-top: 5em !important;}`;
-			style.textContent += `.tox:not(.tox-tinymce-inline) .tox-editor-header {background-color: #fff;}`;
-			style.textContent += `.darkness .tox:not(.tox-tinymce-inline) .tox-editor-header {background-color: #202329;}`;
 		};
 		const getMinHeight = option('min_height');
 		const getMaxHeight = option('max_height');
@@ -167,6 +147,8 @@
 				}
 				resize(editor, oldSize, e, getExtraMarginBottom);
 				resizeCounter += 1;
+				// Вот здесь запуск customResize
+				customResize(editor);
 			});
 			editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', e => {
 				if (resizeCounter === 1) {
@@ -187,6 +169,37 @@
 					resize(editor, oldSize, e, getExtraMarginBottom);
 				}
 			});
+		};
+
+		// Данная функция только для EvolutionCMS.
+		// На других системах фишка будет работать неправильно.
+		// Добавляется в событие инициализации editor.
+		// Иначе не будет доступен editor.container
+		const customResize = (editor) => {
+			// Определяем контейнер редактора
+			let container = editor.container;
+			// Добавляем класс к этому контейнеру
+			container.classList.add('tox-tinymce-autoresize');
+			let doc = editor.editorManager.DOM.doc,
+				domUtils = tinymce.dom.DOMUtils,
+				/**
+				 * Документ где применяется редактор TinyMCE
+				 *
+				 * head Документа
+				 */
+				head = doc.querySelector('head'),
+				/**
+				 * Стиль
+				*/
+				style = document.createElement('style');
+			style.id = domUtils.DOM.uniqueId();
+			head.append(style);
+			style.textContent  = `.tox.tox-tinymce.tox-tinymce-autoresize,.tox.tox-tinymce.tox-tinymce-autoresize > .tox-editor-container {overflow: unset !important;}`;
+			style.textContent += `.tox.tox-tinymce.tox-tinymce-autoresize > .tox-editor-container {align-self: flex-start;min-width: 100%;}`;
+			style.textContent += `.tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {padding-top: 2.5em !important;position: sticky;top: 0;}`;
+			style.textContent += `.filemanageropen .tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {padding-top: 5em !important;}`;
+			style.textContent += `.tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {background-color: #fff;}`;
+			style.textContent += `.darkness .tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {background-color: #202329;}`;
 		};
 
 		const register = (editor, oldSize) => {
