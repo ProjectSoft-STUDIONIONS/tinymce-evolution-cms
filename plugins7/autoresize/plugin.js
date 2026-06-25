@@ -176,9 +176,9 @@
 					paddingRight: overflowPadding
 				});
 			}
-			resize(editor, oldSize, e, getExtraMarginBottom);
 			// Вот здесь запуск customResize
 			customResize(editor);
+			resize(editor, oldSize, e, getExtraMarginBottom);
 		});
 		editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', (e) => {
 			resize(editor, oldSize, e, getExtraMarginBottom);

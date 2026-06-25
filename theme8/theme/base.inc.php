@@ -103,6 +103,21 @@ $this->set('mobile', '{
 	toolbar: [ "undo", "bold", "italic", "styleselect" ]
 }',	'json' );
 
+// Вырубаем бренд
+$this->set('branding', false, 'bool');
+// Вырубаем промо
+$this->set('promotion', false, 'bool');
+
+// Вырубаем sandbox_iframes
+// $this->set('sandbox_iframes', false, 'bool');
+// Врубаем sandbox_iframes_exclusions для определённых доменов
+$this->set('sandbox_iframes_exclusions', '[
+	"yandex.ru",
+	"rutube.ru",
+	"youtube.com",
+	"www.youtube.com"
+]', 'json');
+
 // Забираем css файлы из настроек если они есть
 // Добавляем хэшь для отключения кэша скриптов
 try {

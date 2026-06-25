@@ -21,7 +21,7 @@ if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 
 // $this->set('plugins', '', 'string');
 $this->set('toolbar1', 'bold italic underline strikethrough', 'string');
-$this->set('toolbar2', 'alignleft aligncenter alignright | undo redo', 'string');
+$this->set('toolbar2', 'alignleft aligncenter alignright alignjustify | bullist numlist | undo redo', 'string');
 $this->set('toolbar3', NULL);
 $this->set('toolbar4', NULL);
 

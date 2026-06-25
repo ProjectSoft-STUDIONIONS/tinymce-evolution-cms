@@ -204,6 +204,9 @@ module.exports = function(grunt) {
 				dirOut = `dist/${lowercase}/${lowercase}/${options.directory}/${lowercase}`,
 				installOut = `dist/${lowercase}/${lowercase}/install/` + options.directory,
 				cacheOut = `cache/${packge}`;
+			//if(parseInt(num) != 4){
+			//	continue;
+			//}
 			grunt.log.ok([" "]);
 			gruntLog('Initialize', packge, 'init');
 
@@ -431,12 +434,12 @@ module.exports = function(grunt) {
 		}
 
 		// Readme
-		/*
+		/**/
 		const regex = /\d{2}-\d{2}-\d{4}/;
 		let readme = grunt.file.read("README.md").toString();
 		let result = readme.replace(/\d{2}-\d{2}-\d{4}/, readmedate);
 		grunt.file.write("README.md", result);
-		*/
+		/**/
 		// Окончание работы задачи
 		done();
 	};
