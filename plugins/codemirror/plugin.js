@@ -20,7 +20,7 @@
 	let codeSettings =  {};
 	// add plugin
 	tiny.PluginManager.add('codemirror', function(editor, url) {
-		if (tinymce.majorVersion < 5) {
+		if (tinymce.majorVersion < 6) {
 			codeSettings =  editor.settings.codemirror ? Object.assign({}, editor.settings.codemirror) : {};
 		} else {
 			editor.options.register('codemirror', {
@@ -184,4 +184,5 @@
 		}
 	});
 }(document, tinymce));
+
 

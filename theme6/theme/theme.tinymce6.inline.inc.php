@@ -51,7 +51,7 @@ $this->set('iframe_template_callback', '(data) => `<iframe class="embed-responsi
 $this->set('table_resize_bars', false, 'bool');
 
 // Заголовок таблицы
-$this->set('table_header_type', 'thead', 'string');
+$this->set('table_header_type', 'sectionCells', 'string');
 
 // Настройки для изображений
 $this->set('image_dimensions', false, 'bool');

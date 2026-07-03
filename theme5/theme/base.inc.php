@@ -79,7 +79,7 @@ if($this->pluginParams['paste_as_text'] == 'enabled') {
 	$this->set('paste_as_text', true, 'bool' );
 } else {
 	// https://www.tinymce.com/docs/plugins/paste/#paste_word_valid_elements
-	$this->set('paste_word_valid_elements', 'a[href|name],p,b,strong,i,em,h1,h2,h3,h4,h5,h6,table,th,td[colspan|rowspan],tr,thead,tfoot,tbody,br,hr,sub,sup,u', 'string');
+	// $this->set('paste_word_valid_elements', 'a[href|name],p,b,strong,i,em,h1,h2,h3,h4,h5,h6,table,th,td[colspan|rowspan],tr,thead,tfoot,tbody,br,hr,sub,sup,u', 'string');
 }
 
 // @todo: final base-setup like tinymce3 "default"-theme?
@@ -102,6 +102,11 @@ $this->set('mobile', '{
 	plugins: [ "autosave", "lists", "autolink" ],
 	toolbar: [ "undo", "bold", "italic", "styleselect" ]
 }',	'json' );
+
+// Вырубаем бренд
+$this->set('branding', false, 'bool');
+// Вырубаем промо
+$this->set('promotion', false, 'bool');
 
 // Забираем css файлы из настроек если они есть
 // Добавляем хэшь для отключения кэша скриптов

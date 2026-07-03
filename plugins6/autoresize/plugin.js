@@ -200,6 +200,8 @@
 			style.textContent += `.filemanageropen .tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {padding-top: 5em !important;}`;
 			style.textContent += `.tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {background-color: #fff;}`;
 			style.textContent += `.darkness .tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {background-color: #202329;}`;
+			style.textContent += `.tox.tox-fullscreen.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {padding-top: 0em !important;}`;
+			style.textContent += `.filemanageropen .tox.tox-fullscreen.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {padding-top: 0em !important;}`;
 		};
 
 		const register = (editor, oldSize) => {

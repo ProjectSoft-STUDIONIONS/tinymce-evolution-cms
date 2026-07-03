@@ -64,7 +64,7 @@ if( !empty( $modx->config['editor_css_path'] )) {
 };
 
 // Load templates and chunks by connector
-$this->set('templates', $this->pluginParams['base_url'].'connector.%lowercase%.templates.php', 'string' ); // https://www.tinymce.com/docs/plugins/template/#templates
+// $this->set('templates', $this->pluginParams['base_url'].'connector.%lowercase%.templates.php', 'string' ); // https://www.tinymce.com/docs/plugins/template/#templates
 
 $this->set('image_caption', true, 'bool' ); // https://www.tinymce.com/docs/plugins/image/#image_caption
 $this->set('image_advtab', 'small', 'string' ); // https://www.tinymce.com/docs/plugins/image/#image_advtab
@@ -72,14 +72,14 @@ $this->set('image_advtab', true, 'bool' ); // https://www.tinymce.com/docs/plugi
 $this->set('image_class_list', '[{title: "None", value: ""},{title: "Float left", value: "justifyleft"},{title: "Float right", value: "justifyright"},{title: "Image Responsive",value: "img-responsive"}]', 'json' );
 
 // https://www.tinymce.com/docs/plugins/spellchecker/
-$this->set('browser_spellcheck', ($this->pluginParams['browser_spellcheck'] == 'enabled' ? true : false), 'bool' );
+// $this->set('browser_spellcheck', ($this->pluginParams['browser_spellcheck'] == 'enabled' ? true : false), 'bool' );
 
 if($this->pluginParams['paste_as_text'] == 'enabled') {
 	// https://www.tinymce.com/docs/plugins/paste/#paste_as_text
 	$this->set('paste_as_text', true, 'bool' );
 } else {
 	// https://www.tinymce.com/docs/plugins/paste/#paste_word_valid_elements
-	$this->set('paste_word_valid_elements', 'a[href|name],p,b,strong,i,em,h1,h2,h3,h4,h5,h6,table,th,td[colspan|rowspan],tr,thead,tfoot,tbody,br,hr,sub,sup,u', 'string');
+	// $this->set('paste_word_valid_elements', 'a[href|name],p,b,strong,i,em,h1,h2,h3,h4,h5,h6,table,th,td[colspan|rowspan],tr,thead,tfoot,tbody,br,hr,sub,sup,u', 'string');
 }
 
 // @todo: final base-setup like tinymce3 "default"-theme?

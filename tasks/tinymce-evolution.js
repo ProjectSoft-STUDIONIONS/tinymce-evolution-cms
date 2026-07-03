@@ -42,10 +42,11 @@ module.exports = function(grunt) {
 		if (!fs.existsSync(target)) {
 			fs.mkdirSync(target, {recursive: true});
 		}
-
+		// gruntLog('Target:', target);
+		// gruntLog('Source:', source);
 		// Получаем содержимое директории
 		files = fs.readdirSync(source);
-
+		// gruntLog('Files:', files.length);
 		files.forEach(function(file) {
 			let current = fs.lstatSync(source + '/' + file);
 
@@ -287,6 +288,31 @@ module.exports = function(grunt) {
 				lastupdate
 			);
 			gruntLog('Copy plugins', dirOutPlgs, 'ok');
+			grunt.file.recurse(`plugins`, function(abspath, rootdir, subdir, filename){
+				let out, script, result;
+				if(filename=='plugin.js' || /langs$/.test(subdir)){
+					out = `${dirOutPlgs}/${subdir}/` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`);
+					script = grunt.file.read(`${abspath}`).toString();
+					// Если есть первый комментарий, то добавим в начало к минимизированному.
+					const regex = /(\/\*([\s\S]*?)\*\/)/;
+					let m, comment = "";
+					if ((m = regex.exec(script)) !== null) {
+						comment = `${m[1]}\n`;
+					}
+					result = UglifyJS.minify(script, {
+						output: {
+							ascii_only: true
+						}
+					});
+					if (!result.error) {
+						grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
+						gruntLog('Uglify js', out, 'ok');
+					}else{
+						console.log(result.error);
+						gruntLog('Uglify js', out, 'fatal');
+					}
+				}
+			});
 
 			// Копирование плагинов
 			copyFolderRecursiveSync(
@@ -301,6 +327,34 @@ module.exports = function(grunt) {
 				pkg_version,
 				lastupdate
 			);
+			if(num > 4) {
+				// copy css emoticons, ...
+				copyFolderRecursiveSync(
+					`temp_plugin`,
+					dirOutPlgs,
+					lowercase,
+					uppercase,
+					biguppercase,
+					val,
+					options.repository,
+					options.issues,
+					pkg_version,
+					lastupdate
+				);
+				// copy fonts emoticons
+				copyFolderRecursiveSync(
+					`node_modules/noto-color-emoji/src/fonts`,
+					dirOutPlgs + `/emoticons/fonts`,
+					lowercase,
+					uppercase,
+					biguppercase,
+					val,
+					options.repository,
+					options.issues,
+					pkg_version,
+					lastupdate
+				);
+			}
 			gruntLog('Copy plugins ' + lowercase, dirOutPlgs, 'ok');
 
 			// Минимизация плагинов и языков plugins${num}
@@ -426,11 +480,11 @@ module.exports = function(grunt) {
 			gruntLog('Copy install ' + lowercase, installOut + '/' + lowercase + '.tpl', 'ok');
 
 			// Архивирование
-			gruntLog('Archiving', `tinymce-${num}.zip`, 'ok');
+			/*gruntLog('Archiving', `tinymce-${num}.zip`, 'ok');
 			const zip = new zl.Zip();
 			zip.addFolder(`dist/${lowercase}`);
 			await zip.archive(`tinymce-${num}.zip`);
-			gruntLog('End of Archiving', `tinymce-${num}.zip`, 'ok');
+			gruntLog('End of Archiving', `tinymce-${num}.zip`, 'ok');*/
 		}
 
 		// Readme

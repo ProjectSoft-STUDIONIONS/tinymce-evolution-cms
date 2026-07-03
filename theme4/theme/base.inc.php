@@ -103,6 +103,11 @@ $this->set('mobile', '{
 	toolbar: [ "undo", "bold", "italic", "styleselect" ]
 }',	'json' );
 
+// Вырубаем бренд
+$this->set('branding', false, 'bool');
+// Вырубаем промо
+$this->set('promotion', false, 'bool');
+
 // Забираем css файлы из настроек если они есть
 // Добавляем хэшь для отключения кэша скриптов
 try {

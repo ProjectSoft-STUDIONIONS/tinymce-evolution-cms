@@ -21,8 +21,8 @@ if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 // http://archive.tinymce.com/forum/viewtopic.php?pid=115507#p115507
 
 // @todo: Is this list complete for a "full"-theme?
-$this->set('plugins', 'autoresize anchor autolink advlist lists spellchecker pagebreak layer table save hr modxlink image imagetools emoticons insertdatetime preview media searchreplace print code contextmenu paste directionality fullscreen noneditable visualchars textcolor nonbreaking template youtube autosave visualblocks charmap wordcount codesample colorpicker codemirror', 'string');
-$this->set('toolbar1', 'save print newdocument | undo redo | searchreplace | cut copy paste pastetext | visualchars spellchecker | visualblocks code | preview fullscreen | codemirror', 'string');
+$this->set('plugins', 'autoresize anchor autolink advlist lists pagebreak layer table save hr modxlink image imagetools emoticons insertdatetime preview media searchreplace print code contextmenu paste directionality fullscreen noneditable visualchars textcolor nonbreaking template youtube autosave visualblocks charmap wordcount codesample colorpicker codemirror', 'string');
+$this->set('toolbar1', 'save print newdocument | undo redo | searchreplace | cut copy paste pastetext | visualchars visualblocks code codemirror | preview fullscreen', 'string');
 $this->set('toolbar2', 'styleselect formatselect fontselect fontsizeselect | forecolor backcolor', 'string');
 $this->set('toolbar3', 'bold italic underline strikethrough subscript superscript removeformat | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | ltr rtl', 'string');
 $this->set('toolbar4', 'image youtube media | link unlink anchor | table | pagebreak hr | template codesample nonbreaking insertdatetime | charmap emoticons', 'string');
