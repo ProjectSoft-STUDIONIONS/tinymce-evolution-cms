@@ -5,6 +5,8 @@
 (function () {
 	'use strict';
 
+	tinymce.PluginManager.requireLangPack('emoticons');
+
 	var global$1 = tinymce.util.Tools.resolve('tinymce.PluginManager');
 
 		// - css noto-color-emoji
@@ -627,7 +629,7 @@
 			if (pattern.length === 0 || emojiMatches(list[i], lowerCasePattern)) {
 				matches.push({
 					value: list[i].char,
-					text: list[i].title,
+					text: tinymce.translate(list[i].title),
 					icon: list[i].char
 				});
 				if (reachedLimit(matches.length)) {

@@ -9,6 +9,8 @@
 
 *.sublime-workspace
 *.zip
+*.bat
+*.cmd
 
 !dist/.*
 !cache/.*

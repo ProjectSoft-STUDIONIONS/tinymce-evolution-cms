@@ -37,8 +37,6 @@ $rte->setDebug(false);
 
 $rte->pluginParams['customParams'] = !empty($rte->pluginParams['customParams']) ? ','. trim($rte->pluginParams['customParams'], ',') : '';
 
-file_put_contents(dirname(__FILE__) . "/rte.txt", print_r($rte, true));
-
 // Internal Stuff - Don´t touch!
 // Show/Hide interface in Modx- / user-configuration
 $showSettingsInterface = true;

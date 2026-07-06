@@ -1,0 +1,25 @@
+.mce-abs-layout-item.links-search {
+  height: auto;
+  overflow-y: auto;
+  max-height: 130px;
+  padding: unset;
+}
+.mce-abs-layout-item.links-search:empty {
+  display: none;
+}
+.mce-abs-layout-item.links-search > div {
+  border-bottom: 1px solid #c5c5c5;
+  padding: 4px;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-wrap: auto;
+}
+.mce-abs-layout-item.links-search > div:last-child {
+  border-bottom: unset;
+}
+.mce-abs-layout-item.links-search > div:hover {
+  background-color: #39f;
+  color: #fff;
+}

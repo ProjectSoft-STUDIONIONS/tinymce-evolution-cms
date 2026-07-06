@@ -119,6 +119,7 @@ module.exports = function(grunt) {
 		});
 		return temp;
 	}
+
 	const gruntLog = function(title = '', description = '', type = 'ok') {
 		let method = grunt.log.ok,
 			width = lineWidth - String(title).length,
@@ -152,6 +153,32 @@ module.exports = function(grunt) {
 		}
 
 	}
+
+	const minifyJSLangs = function(directory) {
+		try {
+			const items = fs.readdirSync(directory);
+			for (const item of items) {
+				const fullPath = directory + "/" + item;
+				const stat = fs.statSync(fullPath);
+				if (stat.isFile()) {
+					var script = grunt.file.read(`${fullPath}`).toString();
+					var result = UglifyJS.minify(script, {
+						output: {
+							ascii_only: true
+						}
+					});
+					if (!result.error) {
+						grunt.file.write(fullPath, result.code, {encoding: 'utf8'});
+						gruntLog('Uglify js', fullPath, 'ok');
+					}else{
+						gruntLog('Uglify js', out, 'fatal');
+					}
+				}
+			}
+		} catch (err) {
+			gruntLog("ERROR minify", err.message, "fatal");
+		}
+	};
 
 	const task = async function() {
 		var options = this.options({
@@ -341,6 +368,8 @@ module.exports = function(grunt) {
 					pkg_version,
 					lastupdate
 				);
+				// минимизация langs файлов для emoticons
+				minifyJSLangs(`dist/tinymce${num}/tinymce${num}/assets/plugins/tinymce${num}/tinymce/plugins/emoticons/langs`);
 				// copy fonts emoticons
 				copyFolderRecursiveSync(
 					`node_modules/noto-color-emoji/src/fonts`,

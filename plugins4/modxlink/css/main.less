@@ -1,0 +1,35 @@
+.mce {
+	&-abs {
+		&-layout {
+			&-item {
+				&.links {
+					&-search {
+						height: auto;
+						overflow-y: auto;
+						max-height: 130px;
+						padding: unset;
+						&:empty {
+							display: none;
+						}
+						> div {
+							border-bottom: 1px solid #c5c5c5;
+							padding: 4px;
+							cursor: pointer;
+							user-select: none;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							text-wrap: auto;
+							&:last-child {
+								border-bottom: unset;
+							}
+							&:hover {
+								background-color: #39f;
+								color: #fff;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

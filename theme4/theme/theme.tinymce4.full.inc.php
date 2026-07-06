@@ -25,7 +25,7 @@ $this->set('plugins', 'autoresize anchor autolink advlist lists pagebreak layer 
 $this->set('toolbar1', 'save print newdocument | undo redo | searchreplace | cut copy paste pastetext | visualchars visualblocks code codemirror | preview fullscreen', 'string');
 $this->set('toolbar2', 'styleselect formatselect fontselect fontsizeselect | forecolor backcolor', 'string');
 $this->set('toolbar3', 'bold italic underline strikethrough subscript superscript removeformat | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | ltr rtl', 'string');
-$this->set('toolbar4', 'image youtube media | link unlink anchor | table | pagebreak hr | template codesample nonbreaking insertdatetime | charmap emoticons', 'string');
+$this->set('toolbar4', 'image youtube media | link unlink anchor openlink | table | pagebreak hr | template codesample nonbreaking insertdatetime | charmap emoticons', 'string');
 
 
 // Ресайз редактора
