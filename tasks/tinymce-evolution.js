@@ -509,11 +509,11 @@ module.exports = function(grunt) {
 			gruntLog('Copy install ' + lowercase, installOut + '/' + lowercase + '.tpl', 'ok');
 
 			// Архивирование
-			/*gruntLog('Archiving', `tinymce-${num}.zip`, 'ok');
+			gruntLog('Archiving', `tinymce-${num}.zip`, 'ok');
 			const zip = new zl.Zip();
 			zip.addFolder(`dist/${lowercase}`);
 			await zip.archive(`tinymce-${num}.zip`);
-			gruntLog('End of Archiving', `tinymce-${num}.zip`, 'ok');*/
+			gruntLog('End of Archiving', `tinymce-${num}.zip`, 'ok');
 		}
 
 		// Readme
