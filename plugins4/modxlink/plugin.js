@@ -393,7 +393,7 @@
 										// Очищаем блок результатов
 										div.innerHTML = '';
 										// Заполняем результат поиска
-										input.value = item.title;
+										// input.value = item.title;
 									});
 									// Вставляем в блок результатов
 									div.appendChild(resultItem);

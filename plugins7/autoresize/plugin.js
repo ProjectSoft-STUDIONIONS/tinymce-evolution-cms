@@ -208,14 +208,34 @@
 			style = document.createElement('style');
 		style.id = domUtils.DOM.uniqueId();
 		head.append(style);
-		style.textContent  = `.tox.tox-tinymce.tox-tinymce-autoresize,.tox.tox-tinymce.tox-tinymce-autoresize > .tox-editor-container {overflow: unset !important;}`;
-		style.textContent += `.tox.tox-tinymce.tox-tinymce-autoresize > .tox-editor-container {align-self: flex-start;min-width: 100%;}`;
-		style.textContent += `.tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {padding-top: 2.5em !important;position: sticky;top: 0;}`;
-		style.textContent += `.filemanageropen .tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {padding-top: 5em !important;}`;
-		style.textContent += `.tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {background-color: #fff;}`;
-		style.textContent += `.darkness .tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {background-color: #202329;}`;
-		style.textContent += `.tox.tox-fullscreen.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {padding-top: 0em !important;}`;
-		style.textContent += `.filemanageropen .tox.tox-fullscreen.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {padding-top: 0em !important;}`;
+		style.textContent  = `
+.tox.tox-tinymce.tox-tinymce-autoresize,
+.tox.tox-tinymce.tox-tinymce-autoresize > .tox-editor-container {
+	overflow: unset !important;
+}
+.tox.tox-tinymce.tox-tinymce-autoresize > .tox-editor-container {
+	align-self: flex-start;min-width: 100%;
+}
+.tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {
+	padding-top: 2.5em !important;
+	position: sticky;
+	top: 0;
+}
+.filemanageropen .tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {
+	padding-top: 5em !important;
+}
+.tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {
+	/*background-color: #fff;*/
+}
+.darkness .tox.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {
+	/*background-color: #202329;*/
+}
+.tox.tox-fullscreen.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {
+	padding-top: 0em !important;
+}
+.filemanageropen .tox.tox-fullscreen.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {
+	padding-top: 0em !important;
+}`;
 	};
 
 	const register = (editor, oldSize) => {

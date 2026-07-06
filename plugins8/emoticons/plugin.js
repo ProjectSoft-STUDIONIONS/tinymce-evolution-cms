@@ -548,7 +548,7 @@
 			const cats = {};
 			const everything = [];
 			each(emojis, (lib, title) => {
-				console.log(title);
+				//console.log(title);
 				const entry = {
 					// Omitting fitzpatrick_scale
 					title,

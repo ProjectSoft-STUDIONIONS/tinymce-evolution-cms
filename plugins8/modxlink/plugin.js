@@ -35,18 +35,8 @@
 								data.forEach(item => {
 									const resultItem = document.createElement('div');
 									resultItem.textContent = item.pagetitle;
-									resultItem.style.padding = '2px 5px';
-									resultItem.style.cursor = 'pointer';
-									resultItem.style.color = '#333333';
+									resultItem.classList.add('form-control');
 									resultItem.setAttribute('data-id', item.id);
-									resultItem.onmouseover = () => {
-										resultItem.style.backgroundColor = '#eeeeee';
-										resultItem.style.color = '#000000';
-									};
-									resultItem.onmouseout = () => {
-										resultItem.style.backgroundColor = '#ffffff';
-										resultItem.style.color = '#333333';
-									};
 									resultItem.onclick = () => {
 										dialogApi.setData({
 											url: {
@@ -1367,7 +1357,8 @@
 			}],
 			[{
 				type: 'htmlpanel',
-				html: '<div style="position: relative;"><style>#tinymce-plugin-search-results {min-height: 1px;max-height: 100px;overflow-y: auto;margin-top: 0px;position: absolute;min-width: 100%;background-color: #fff;box-shadow: 0 0 3px 0px #888;} #tinymce-plugin-search-results:empty {box-shadow: unset;}</style><div id="tinymce-plugin-search-results"></div></div>'
+				id: 'modxlink-htmlpanel',
+				html: '<div style="position: relative;"><div id="tinymce-plugin-search-results" class="tox-dialog"></div></div>'
 			}],
 			displayText,
 			titleText,
@@ -1409,28 +1400,19 @@
 				label: 'URL',
 				picker_text: 'Browse links'
 			}
-			/*{
-				name: 'url',
-				type: 'FileImagePicker',
-				filetype: 'file',
-				size: 40,
-				autofocus: true,
-				label: 'URL',
-				// id: 'link-href',
-				// onchange: urlChange,
-				// onkeyup: updateText
-			},*/
 		];
 		const displayText = settings.anchor.text.map(() => ({
 			name: 'text',
 			type: 'input',
-			label: 'Text to display'
+			label: 'Text to display',
+			classes: "form-control"
 		})).toArray();
 		const titleText = settings.flags.titleEnabled ? [
 			{
 				name: 'title',
 				type: 'input',
-				label: 'Title'
+				label: 'Title',
+				classes: "form-control"
 			}
 		] : [];
 		const defaultTarget = Optional.from(getDefaultLinkTarget(editor));
@@ -1656,6 +1638,54 @@
 			onAction: () => unlink(editor),
 			onSetup: toggleRequiresLinkState(editor)
 		});
+		// Добавить стили в dom с tinymce
+		var doc = tinymce.DOM.doc;
+		// Выберем все link и оифильтруем по id
+		var arr = [...doc.querySelectorAll('style')].filter(x => x.id == 'modxlink-inline-css');
+			// Если массив пустой вставляем link
+		if(!arr.length) {
+			var linkElm = doc.createElement('style');
+			linkElm.id = 'modxlink-inline-css';
+			doc.getElementsByTagName('head')[0].appendChild(linkElm);
+			linkElm.textContent = `
+.tox input[type=text]:not(.form-control),
+.tox input[type=number]:not(.form-control),
+.tox input[type=date]:not(.form-control),
+.tox input[type=url]:not(.form-control),
+.tox input[type=search]:not(.form-control),
+.tox select:not(.form-control),
+.tox textarea:not(.form-control) {
+	background-color: inherit;
+	color: inherit;
+}
+.tox div[role="presentation"] {
+	margin: 0px !important;
+}
+#tinymce-plugin-search-results {
+	min-height: 1px;
+	max-height: 175px;
+	overflow-y: auto;
+	margin-top: 0px;
+	position: absolute;
+	width: 100%;
+	max-width: 100%;
+}
+#tinymce-plugin-search-results:empty {
+	box-shadow: unset;
+	display: none;
+}
+#tinymce-plugin-search-results > div {
+	padding: 2px 5px;
+	cursor: pointer;
+	/*color: #333;*/
+	box-shadow: 0 0 1px #333;
+}
+#tinymce-plugin-search-results > div:hover {
+	background-color: #3399ff;
+	color: #ffffff;
+}
+			`;
+		}
 	};
 	const setupMenuItems = (editor, openLink) => {
 		editor.ui.registry.addMenuItem('openlink', {

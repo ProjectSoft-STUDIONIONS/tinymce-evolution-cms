@@ -118,6 +118,11 @@
 body {
   --google-font-color-notocoloremoji: colrv1;
 }
-.tox .tox-collection__item-icon {
+.tox .tox-collection__item-icon,
+.tox .tox-listboxfield .tox-listbox--select,
+.tox .tox-textarea,
+.tox .tox-textarea-wrap .tox-textarea:focus,
+.tox .tox-textfield,
+.tox .tox-toolbar-textfield {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", 'Noto Color Emoji', sans-serif;
 }
