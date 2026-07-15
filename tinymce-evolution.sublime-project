@@ -36,6 +36,18 @@
 			"shell": true
 		},
 		{
+			"name": "Сборка проекта verbose",
+			"working_dir": "${project_path}",
+			"cmd": [
+				"start",
+				"/wait",
+				"npm",
+				"run",
+				"build:verbose"
+			],
+			"shell": true
+		},
+		{
 			"name": "Очистить кеш",
 			"working_dir": "${project_path}",
 			"cmd": [

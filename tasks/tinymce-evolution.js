@@ -13,11 +13,18 @@ module.exports = function(grunt) {
 	const zl = require('zip-lib');
 	const UglifyJS = require("uglify-js");
 	const downloadNpmPackage = require('download-npm-package');
+	const { filesize } = require('filesize');
+	const getFolderSize = require("get-folder-size").default;
+
+	const { ZipArchive } = require('archiver');
+
+	// Пауза
+	const sleep = delay => new Promise((resolve) => setTimeout(resolve, delay));
+
 	// Длина левого сообщения ( Заголовок до знака -> )
 	const lineWidth = 29;
-	const copyReplceFiles = function(directory, mask) {
-		//
-	};
+
+	// Рекурсивное копирование директорий с перезаписью файлов под условия
 	const copyFolderRecursiveSync = function (
 			source,
 			target,
@@ -128,27 +135,28 @@ module.exports = function(grunt) {
 			minutes = String(date.getMinutes()).padStart(2, "0"),
 			seconds = String(date.getSeconds()).padStart(2, "0"),
 			milliseconds = String(date.getMilliseconds()).padStart(3, "0"),
-			out_date = `${hours}:${minutes}:${seconds}.${milliseconds}`;
+			out_date = `${hours}:${minutes}:${seconds}.${milliseconds}`,
+			tty = process.stdout.isTTY === true;
 		switch (type) {
 			case "warn":
 				method = grunt.fail.warn;
-				method("\n" + chalk.yellow(title) + String('-> ').padStart(width + 3) + chalk.yellowBright(out_date) + " " + chalk.redBright(description));
+				method("\n" + (tty ? chalk.yellow(title) : title) + String('-> ').padStart(width + 3) + (tty ? chalk.yellowBright(out_date) : out_date) + " " + (tty ? chalk.redBright(description) : description));
 				break;
 			case "fatal":
 				method = grunt.fail.fatal;
-				method("\n" + chalk.redBright(title) + String('-> ').padStart(width + 3) + chalk.yellowBright(out_date) + " " + chalk.redBright(description));
+				method("\n" + (tty ? chalk.redBright(title) : title) + String('-> ').padStart(width + 3) + (tty ? chalk.yellowBright(out_date) : out_date) + " " + (tty ? chalk.redBright(description) : description));
 				break;
 			case "start":
-				method([chalk.yellowBright(title) + String('-> ').padStart(width) + chalk.yellowBright(out_date) + " " + chalk.greenBright(description)]);
+				method([(tty ? chalk.yellowBright(title) : title) + String('-> ').padStart(width) + (tty ? chalk.yellowBright(out_date) : out_date) + " " + (tty ? chalk.greenBright(description) : description)]);
 				break;
 			case "init":
-				method([chalk.cyanBright(title) + String('-> ').padStart(width) + chalk.yellowBright(out_date) + " " + chalk.greenBright(description)]);
+				method([(tty ? chalk.cyanBright(title) : title) + String('-> ').padStart(width) + (tty ? chalk.yellowBright(out_date) : out_date) + " " + (tty ? chalk.greenBright(description) : description)]);
 				break;
 			case "success":
-				method([chalk.magentaBright(title) + String('-> ').padStart(width) + chalk.yellowBright(out_date) + " " + chalk.greenBright(description)]);
+				method([(tty ? chalk.magentaBright(title) : title) + String('-> ').padStart(width) + (tty ? chalk.yellowBright(out_date) : out_date) + " " + (tty ? chalk.greenBright(description) : description)]);
 				break;
 			default:
-				method([chalk.cyan(title) + String('-> ').padStart(width) + chalk.yellowBright(out_date) + " " + chalk.greenBright(description)]);
+				method([(tty ? chalk.cyan(title) : title) + String('-> ').padStart(width) + (tty ? chalk.yellowBright(out_date) : out_date) + " " + (tty ? chalk.greenBright(description) : description)]);
 				break;
 		}
 
@@ -314,8 +322,8 @@ module.exports = function(grunt) {
 				pkg_version,
 				lastupdate
 			);
-			gruntLog('Copy plugins', dirOutPlgs, 'ok');
-			grunt.file.recurse(`plugins`, function(abspath, rootdir, subdir, filename){
+
+			/*grunt.file.recurse(`plugins`, function(abspath, rootdir, subdir, filename){
 				let out, script, result;
 				if(filename=='plugin.js' || /langs$/.test(subdir)){
 					out = `${dirOutPlgs}/${subdir}/` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`);
@@ -333,13 +341,13 @@ module.exports = function(grunt) {
 					});
 					if (!result.error) {
 						grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
-						gruntLog('Uglify js', out, 'ok');
+						gruntLog('Uglify js ok', out, 'ok');
 					}else{
 						console.log(result.error);
-						gruntLog('Uglify js', out, 'fatal');
+						gruntLog('Uglify js err', out, 'fatal');
 					}
 				}
-			});
+			});*/
 
 			// Копирование плагинов
 			copyFolderRecursiveSync(
@@ -369,9 +377,10 @@ module.exports = function(grunt) {
 				lastupdate
 			);
 			if(num > 4) {
+				// v5.x.x - v8.x.x
 				// copy css emoticons, ...
 				copyFolderRecursiveSync(
-					`temp_plugin`,
+					`temp_plugin_major`,
 					dirOutPlgs,
 					lowercase,
 					uppercase,
@@ -398,6 +407,7 @@ module.exports = function(grunt) {
 					lastupdate
 				);
 			} else {
+				// v4.x.x
 				// copy css emoticons, ...
 				copyFolderRecursiveSync(
 					`node_modules/notocoloremoji/assets/plugins/tinymce4/tinymce/plugins`,
@@ -489,9 +499,9 @@ module.exports = function(grunt) {
 			gruntLog('Copy theme ' + lowercase, dirOut, 'ok');
 
 			if(num > 4) {
-				// Файлы подключения плагина
+				// Файлы подключения плагина v5.x.x .... v8.x.x
 				copyFolderRecursiveSync(
-					'src_plugin5',
+					'src_plugin_major',
 					dirOut,
 					lowercase,
 					uppercase,
@@ -503,9 +513,9 @@ module.exports = function(grunt) {
 					lastupdate
 				);
 			} else {
-				// Файлы подключения плагина
+				// Файлы подключения плагина v4.x.x
 				copyFolderRecursiveSync(
-					'src_plugin4',
+					'src_plugin_minor',
 					dirOut,
 					lowercase,
 					uppercase,
@@ -535,15 +545,88 @@ module.exports = function(grunt) {
 				lastupdate
 			);
 			gruntLog('Copy install ' + lowercase, installOut + '/' + lowercase + '.tpl', 'ok');
-
 			// Архивирование
 			gruntLog('Archiving', `tinymce-${num}.zip`, 'ok');
-			const zip = new zl.Zip();
-			zip.addFolder(`dist/${lowercase}`);
-			await zip.archive(`tinymce-${num}.zip`);
+			// Получаем размер директории
+			let dirSize = await getFolderSize.strict(`dist/${lowercase}/${lowercase}`);
+			let output = fs.createWriteStream(`tinymce-${num}.zip`);
+			let arh = new ZipArchive(
+				{
+					zlib: {
+						// Компрессию оставим по умолчанию
+						level: 6
+					},
+					comment: `TinyMCE${num} v${pkg_version} for EvolutionCMS\nAuthor: ${grunt.config.data.pkg.author}\nUpdated: ${lastupdate}`
+				}
+			);
+			output.on("close", function () {
+				if(process.stdout.isTTY === true) {
+					// Очищаем всю строку
+					process.stdout.clearLine(2);
+					// Переместить курсор в начало
+					process.stdout.cursorTo(0);
+				}
+				gruntLog(`Close Stream`, `Ok   `);
+			});
+			output.on("end", function () {
+				gruntLog(`End Stream`, `Data has been drained`);
+			});
+
+			arh.on('progress', (progressData) => {
+				if(process.stdout.isTTY === true) {
+					// Здесь консоль использовать нельзя
+					// Очищаем всю строку
+					process.stdout.clearLine(2);
+					// Переместить курсор в начало
+					process.stdout.cursorTo(0);
+					// ....
+					let title = `Progress`;
+					let width = lineWidth - String(title).length;
+					let percentage = ((progressData.fs.processedBytes / dirSize) * 100).toFixed(0).padStart(3) + '%';
+					process.stdout.write(chalk.green('>>') + ' ' + chalk.magentaBright(title) + String('-> ').padStart(width) + chalk.magentaBright(`Processed:   `) + chalk.yellowBright(percentage));
+				}
+			});
+
+			arh.pipe(output);
+
+			arh.directory(`dist/${lowercase}/${lowercase}`, `${lowercase}`);
+
+			await arh.finalize();
+
+			// Пауза на 300 мс
+			await sleep(300);
+
 			gruntLog('End of Archiving', `tinymce-${num}.zip`, 'ok');
+			await output.end();
+			await output.close((err) => {
+				if (err) {
+					gruntLog(`Flow Error`, 'Error close stream: ' + err.message, 'fatal');
+				} else {
+					//gruntLog(`Stream Close 2`, `Ok`);
+				}
+			});
+			try {
+				let stats = fs.statSync(`tinymce-${num}.zip`);
+				let btz = stats.size;
+				//let fz = (btz / 1024 / 1024).toFixed(2) + ' MB';
+				let fz = filesize(btz, {
+					base: 2,
+					symbols: {
+						KiB: "KB",
+						MiB: "MB",
+					}
+				});
+				gruntLog(`Archive Size`, chalk.yellow(fz));
+
+			} catch(e) {
+				gruntLog(`Archive Size`, e.message, 'fatal');
+			}
+			// Пауза на 1000 мс
+			await sleep(1000);
 		}
 
+		// Пауза на 1000 мс
+		await sleep(1000);
 		// Readme
 		/**/
 		const regex = /\d{2}-\d{2}-\d{4}/;
