@@ -29,7 +29,9 @@
 		"js-cookie": "3.0.8",
 		"load-grunt-tasks": "^5.1.0",
 		"noto-color-emoji": "github:ProjectSoft-STUDIONIONS/noto-color-emoji",
+		"notocoloremoji": "github:ProjectSoft-STUDIONIONS/NotoColorEmoji-TinyMCE",
 		"time-grunt": "github:ProjectSoft-STUDIONIONS/time-grunt",
+		"tinymce-codemirror-evolutioncms": "github:ProjectSoft-STUDIONIONS/tinymce-codemirror-evolutioncms",
 		"tinymce-i18n": "latest",
 		"uglify-js": "3.19.3",
 		"zip-lib": "1.4.0"

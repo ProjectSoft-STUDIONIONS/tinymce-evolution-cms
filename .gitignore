@@ -18,3 +18,5 @@
 # Потом разблокировать
 /theme
 dev-*
+!.gitkeep
+!/plugins/.*

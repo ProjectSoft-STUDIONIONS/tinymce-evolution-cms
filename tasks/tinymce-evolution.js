@@ -354,6 +354,20 @@ module.exports = function(grunt) {
 				pkg_version,
 				lastupdate
 			);
+
+			// Копирование плагинa codemirror
+			copyFolderRecursiveSync(
+				`node_modules/tinymce-codemirror-evolutioncms/plugins`,
+				dirOutPlgs,
+				lowercase,
+				uppercase,
+				biguppercase,
+				val,
+				options.repository,
+				options.issues,
+				pkg_version,
+				lastupdate
+			);
 			if(num > 4) {
 				// copy css emoticons, ...
 				copyFolderRecursiveSync(
@@ -374,6 +388,20 @@ module.exports = function(grunt) {
 				copyFolderRecursiveSync(
 					`node_modules/noto-color-emoji/src/fonts`,
 					dirOutPlgs + `/emoticons/fonts`,
+					lowercase,
+					uppercase,
+					biguppercase,
+					val,
+					options.repository,
+					options.issues,
+					pkg_version,
+					lastupdate
+				);
+			} else {
+				// copy css emoticons, ...
+				copyFolderRecursiveSync(
+					`node_modules/notocoloremoji/assets/plugins/tinymce4/tinymce/plugins`,
+					dirOutPlgs,
 					lowercase,
 					uppercase,
 					biguppercase,

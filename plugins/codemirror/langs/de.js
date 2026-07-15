@@ -1,1 +1,0 @@
-tinymce.addI18n("de",{"The source HTML code of the CodeMirror plugin":"The source HTML code\nof the CodeMirror plugin","Start search":"Suchen","Find next":"Suche n\xe4chstes","Find previous":"Suche vorheriges",Replace:"Ersetzen","Replace all":"Alles ersetzen"});

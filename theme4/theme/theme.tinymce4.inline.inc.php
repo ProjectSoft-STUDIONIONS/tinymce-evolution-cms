@@ -217,36 +217,6 @@ $this->set('visualchars_default_state', true, 'bool');
 // Вставить как текст
 $this->set('paste_as_text', true, 'bool');
 
-// Codemirror Plugin
-$this->set('codemirror', '{
-	indentOnInit: true,
-	fullscreen: false,
-	path: "codemirror",
-	config: {
-		mode: "application/x-httpd-php",
-		lineNumbers: true,
-		indentUnit: 4,
-		tabSize: 4,
-		theme: "mariana"
-	},
-	width: 800,
-	height: 600,
-	saveCursorPosition: true,
-	jsFiles: [
-		"mode/php/php.js",
-		"addon/edit/matchbrackets.js",
-		"mode/xml/xml.js",
-		"mode/javascript/javascript.js",
-		"mode/css/css.js",
-		"mode/htmlmixed/htmlmixed.js",
-		"addon/selection/active-line.js"
-	],
-	cssFiles: [
-		"lib/codemirror.css",
-		"theme/mariana.css"
-	]
-}', 'object'); // mariana
-
 // Старт и сохранение
 $this->set('setup', '(editor) => { editor.on("change", (e) => { documentDirty=true; }); }',  'object');
 $this->set('save_onsavecallback', '() => { documentDirty=false; document.getElementById("stay").value = 2; document.mutate.save.click(); }',  'object');

@@ -108,6 +108,33 @@ $this->set('branding', false, 'bool');
 // Вырубаем промо
 $this->set('promotion', false, 'bool');
 
+// Конфигурвцию codemirror вставляем здесь
+// Codemirror Plugin
+$this->set('codemirror', '{
+	"cssFiles": [
+		"lib/codemirror.css",
+		"theme/mariana.css"
+	],
+	"jsFiles": [
+		"mode/php/php.js",
+		"addon/edit/matchbrackets.js",
+		"mode/xml/xml.js",
+		"mode/javascript/javascript.js",
+		"mode/css/css.js",
+		"mode/htmlmixed/htmlmixed.js",
+		"addon/selection/active-line.js"
+	],
+	"indentOnInit": true,
+	"iframe": "source.php",
+	"config": {
+		"mode": "application/x-httpd-php",
+		"lineNumbers": true,
+		"indentUnit": 4,
+		"tabSize": 4,
+		"theme": "mariana"
+	}
+}', 'object'); // mariana
+
 // Забираем css файлы из настроек если они есть
 // Добавляем хэшь для отключения кэша скриптов
 try {

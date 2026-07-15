@@ -150,27 +150,3 @@ $this->set('visualchars_default_state', true, 'bool');
 // Вставить как текст
 $this->set('paste_as_text', true, 'bool');
 
-// Codemirror Plugin
-$this->set('codemirror', '{
-	"cssFiles": [
-		"lib/codemirror.css",
-		"theme/mariana.css"
-	],
-	"jsFiles": [
-		"mode/php/php.js",
-		"addon/edit/matchbrackets.js",
-		"mode/xml/xml.js",
-		"mode/javascript/javascript.js",
-		"mode/css/css.js",
-		"mode/htmlmixed/htmlmixed.js",
-		"addon/selection/active-line.js"
-	],
-	"iframe": "source.php",
-	"config": {
-		"mode": "application/x-httpd-php",
-		"lineNumbers": true,
-		"indentUnit": 4,
-		"tabSize": 4,
-		"theme": "mariana"
-	}
-}', 'object'); // mariana
