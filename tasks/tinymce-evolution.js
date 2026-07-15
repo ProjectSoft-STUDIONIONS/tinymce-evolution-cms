@@ -175,11 +175,18 @@ module.exports = function(grunt) {
 							ascii_only: true
 						}
 					});
+					let arr = directory.split("/");
+					arr = [
+						arr[arr.length - 2],
+						arr[arr.length - 1]
+					];
+					let out = arr.join("/");
+					// let filename =
 					if (!result.error) {
 						grunt.file.write(fullPath, result.code, {encoding: 'utf8'});
-						gruntLog('Uglify js', fullPath, 'ok');
+						gruntLog('Uglify js ' + item, out, 'ok');
 					}else{
-						gruntLog('Uglify js', out, 'fatal');
+						gruntLog('Uglify js ' + item, out, 'fatal');
 					}
 				}
 			}
@@ -444,10 +451,10 @@ module.exports = function(grunt) {
 					});
 					if (!result.error) {
 						grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
-						gruntLog('Uglify js', out, 'ok');
+						gruntLog(`Uglify js ` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`), `${subdir}`, 'ok');
 					}else{
 						console.log(result.error);
-						gruntLog('Uglify js', out, 'fatal');
+						gruntLog('Uglify js fatal', out, 'fatal');
 					}
 				}
 			});
@@ -546,7 +553,7 @@ module.exports = function(grunt) {
 			);
 			gruntLog('Copy install ' + lowercase, installOut + '/' + lowercase + '.tpl', 'ok');
 			// Архивирование
-			gruntLog('Archiving', `tinymce-${num}.zip`, 'ok');
+			gruntLog('Start of Archiving', `tinymce-${num}.zip`, 'ok');
 			// Получаем размер директории
 			let dirSize = await getFolderSize.strict(`dist/${lowercase}/${lowercase}`);
 			let output = fs.createWriteStream(`tinymce-${num}.zip`);
@@ -566,10 +573,10 @@ module.exports = function(grunt) {
 					// Переместить курсор в начало
 					process.stdout.cursorTo(0);
 				}
-				gruntLog(`Close Stream`, `Ok   `);
+				gruntLog(`Close Stream`, `The Stream Is Closed`);
 			});
 			output.on("end", function () {
-				gruntLog(`End Stream`, `Data has been drained`);
+				gruntLog(`End Stream`, `Data has been drained`, 'fatal');
 			});
 
 			arh.on('progress', (progressData) => {
@@ -593,27 +600,32 @@ module.exports = function(grunt) {
 
 			await arh.finalize();
 
-			// Пауза на 300 мс
-			await sleep(300);
+			// Без паузы просто никак
+			// Пауза на 200 мс
+			await sleep(200);
 
 			gruntLog('End of Archiving', `tinymce-${num}.zip`, 'ok');
+
+			// Закончить запись потока
 			await output.end();
+			// Закрыть поток
 			await output.close((err) => {
 				if (err) {
 					gruntLog(`Flow Error`, 'Error close stream: ' + err.message, 'fatal');
-				} else {
-					//gruntLog(`Stream Close 2`, `Ok`);
 				}
 			});
+			// Вывести размер архива
+			// Обязательно через обработку ошибок
 			try {
 				let stats = fs.statSync(`tinymce-${num}.zip`);
 				let btz = stats.size;
-				//let fz = (btz / 1024 / 1024).toFixed(2) + ' MB';
+				// Под верные данные в Windows.
+				// Под Linux, Mac не тестировалось.
 				let fz = filesize(btz, {
 					base: 2,
 					symbols: {
-						KiB: "KB",
-						MiB: "MB",
+						KiB: "KiloBytes",
+						MiB: "MegaBytes",
 					}
 				});
 				gruntLog(`Archive Size`, chalk.yellow(fz));
@@ -621,12 +633,8 @@ module.exports = function(grunt) {
 			} catch(e) {
 				gruntLog(`Archive Size`, e.message, 'fatal');
 			}
-			// Пауза на 1000 мс
-			await sleep(1000);
 		}
 
-		// Пауза на 1000 мс
-		await sleep(1000);
 		// Readme
 		/**/
 		const regex = /\d{2}-\d{2}-\d{4}/;
