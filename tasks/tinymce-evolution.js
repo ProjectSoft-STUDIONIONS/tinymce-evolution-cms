@@ -10,7 +10,6 @@ module.exports = function(grunt) {
 	const chalk = require('chalk');
 	const fs = require('fs');
 	const path = require('path');
-	const zl = require('zip-lib');
 	const UglifyJS = require("uglify-js");
 	const downloadNpmPackage = require('download-npm-package');
 	const { filesize } = require('filesize');
@@ -234,6 +233,25 @@ module.exports = function(grunt) {
 		}catch(error) {
 			gruntLog('>> Error Download', 'Выявлена ошибка при выполнении сетевого запроса', 'fatal');
 		}
+		// Загрузка tinymce-i18n
+		// Сначало он устанавливался в node_modules, но потом я обнаружил pull которого нет в установленном
+		// Поэтому было принято решение tinymce-i18n скачивать, если нет его в директории cache. Т. е. при очистке кэша
+		if(!fs.existsSync(`cache/tinymce-i18n`)){
+			gruntLog('Start Download', `download npm package tinymce-i18n`, 'init');
+			await downloadNpmPackage({
+				// Тег версии tinymce
+				arg: `tinymce-i18n`,
+				dir: `cache`
+			}).then((rel) => {
+				// Удачная загрузка
+				gruntLog('Success Download', `tinymce-i18n`, 'success');
+				gruntLog('Unzipped', `cache/tinymce-i18n`, 'success');
+			}).catch((err) => {
+				// Ошибка загрузки
+				// Сразу выходим
+				gruntLog('>> Error Download', err, 'warn');
+			});
+		}
 		// Понеслась
 		for (val of versions) {
 			// Директория вывода
@@ -255,7 +273,7 @@ module.exports = function(grunt) {
 
 			// Исходная директория языка
 			let vn = Number(num) == 4 ? '' : num;
-			let lngIn = 'node_modules/tinymce-i18n/langs' + vn;
+			let lngIn = 'cache/tinymce-i18n/langs' + vn;
 			// Конечная директория языка
 			let lngOut = cacheOut + '/tinymce/langs';
 
@@ -587,7 +605,7 @@ module.exports = function(grunt) {
 					// Переместить курсор в начало
 					process.stdout.cursorTo(0);
 					// ....
-					let title = `Progress`;
+					let title = `Archiving Progress`;
 					let width = lineWidth - String(title).length;
 					let percentage = ((progressData.fs.processedBytes / dirSize) * 100).toFixed(0).padStart(3) + '%';
 					process.stdout.write(chalk.green('>>') + ' ' + chalk.magentaBright(title) + String('-> ').padStart(width) + chalk.magentaBright(`Processed:   `) + chalk.yellowBright(percentage));

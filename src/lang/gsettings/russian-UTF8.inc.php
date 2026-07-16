@@ -46,6 +46,6 @@ $_lang['tpl_chunkname'] = 'Название чанка';
 
 $_lang['default'] = 'Default:&nbsp;';
 
-$_lang['theme_site'] = 'Тестовый пример';
+$_lang['theme_site'] = 'Сайт';
 
 $_lang['theme_custom_manager'] = 'Собственная';

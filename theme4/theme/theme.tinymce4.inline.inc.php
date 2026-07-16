@@ -147,7 +147,7 @@ $this->set('table_resize_bars', false, 'bool');
 // Классы изображения
 $this->set('image_class_list', '[
 	{
-		title: "Нет",
+		title: "None",
 		value: ""
 	},
 	{

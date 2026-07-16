@@ -92,7 +92,7 @@ $this->set('invalid_styles', '{
 // Классы изображения
 $this->set('image_class_list', '[
 	{
-		title: "Нет",
+		title: "None",
 		value: ""
 	},
 	{
