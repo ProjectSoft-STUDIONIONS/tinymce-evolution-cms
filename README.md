@@ -1,5 +1,18 @@
 # Сборка плагинов TinyMCE для EvolutionCMS под различные версии TinyMCE
 
-| Автор | Дата реализа | Скачать |
-| --- | --- | --- |
-| Чернышёв Андрей aka ProjectSoft | 18-07-2026 | <p>✔ [![tinymce-4.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-4.zip?style=for-the-badge&label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C%20tinymce-4.zip)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-4.zip)</p><p>✔ [![tinymce-5.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-5.zip?style=for-the-badge&label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C%20tinymce-5.zip)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-5.zip)</p><p>✔ [![tinymce-6.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-6.zip?style=for-the-badge&label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C%20tinymce-6.zip)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-6.zip)</p><p>✔ [![tinymce-7.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-7.zip?style=for-the-badge&label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C%20tinymce-7.zip)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-7.zip)</p><p>✔ [![tinymce-8.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-8.zip?style=for-the-badge&label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C%20tinymce-8.zip)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-8.zip)</p> |
+<table>
+	<thead>
+		<tr>
+			<th>Автор</th>
+			<th>Дата реализа</th>
+			<th>Скачать</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td valign="top">Чернышёв Андрей aka ProjectSoft</td>
+			<td valign="top">18-07-2026</td>
+			<td valign="top">✔ [![tinymce-4.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-4.zip?style=for-the-badge&label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C%20tinymce-4.zip)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-4.zip)<br />✔ [![tinymce-5.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-5.zip?style=for-the-badge&label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C%20tinymce-5.zip)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-5.zip)<br />✔ [![tinymce-6.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-6.zip?style=for-the-badge&label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C%20tinymce-6.zip)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-6.zip)<br />✔ [![tinymce-7.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-7.zip?style=for-the-badge&label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C%20tinymce-7.zip)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-7.zip)<br />✔ [![tinymce-8.zip](https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-8.zip?style=for-the-badge&label=%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C%20tinymce-8.zip)](https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-8.zip)</td>
+		</tr>
+	</tbody>
+</table>
