@@ -11,7 +11,7 @@
 	<tbody>
 		<tr>
 			<td valign="top">
-				<img src="https://avatars.githubusercontent.com/login?user=ProjectSoft-STUDIONIONS&v=4&size=200" alt="Чернышёв Андрей aka ProjectSoft" />
+				<img src="https://avatars.githubusercontent.com/u/8142648?v=4&size=200" alt="Чернышёв Андрей aka ProjectSoft" />
 				<br />
 				Чернышёв Андрей aka ProjectSoft
 			</td>
