@@ -70,43 +70,47 @@ module.exports = function(grunt) {
 					lastupdate
 				);
 			} else {
-				// Перезаписываем имена файлов тем
-				let outFile = file.replace(/tinymce\d+/g, lowercase);
-				fs.copyFileSync(source + '/' + file, target + '/' + outFile);
-				// Перезапись данных в файле
-				// ...
-				// Открыть файл, перезаписать глобальные переменные
-				// Определяем обрабатываемые файлы по расширениям
-				let extArr = [
-					".html",
-					".php",
-					".tpl"
-				];
-				let ext = path.extname(outFile).toLowerCase();
-				// Скин директория TinyMCE4
-				let skinsDirectory = 'tinymce/skins';
-				if(extArr.includes(ext)) {
-					// Получаем контент файла
-					let content = fs.readFileSync(target + '/' + outFile, {encoding: 'utf8'});
-					if(typeof version != 'undefined') {
-						let num = version.split(".")[0];
-						if (num > 4){
-							// Скин директрия для версий выше 4-ой меняется
-							skinsDirectory = 'tinymce/skins/ui';
+				if(file != '.gitkeep') {
+					// Перезаписываем имена файлов тем
+					let outFile = file.replace(/tinymce\d+/g, lowercase);
+					let ext = path.extname(outFile).toLowerCase();
+					if(ext != '.gitkeep') {
+						fs.copyFileSync(source + '/' + file, target + '/' + outFile);
+					}
+					// Перезапись данных в файле
+					// ...
+					// Открыть файл, перезаписать глобальные переменные
+					// Определяем обрабатываемые файлы по расширениям
+					let extArr = [
+						".html",
+						".php",
+						".tpl"
+					];
+					// Скин директория TinyMCE4
+					let skinsDirectory = 'tinymce/skins';
+					if(extArr.includes(ext)) {
+						// Получаем контент файла
+						let content = fs.readFileSync(target + '/' + outFile, {encoding: 'utf8'});
+						if(typeof version != 'undefined') {
+							let num = version.split(".")[0];
+							if (num > 4){
+								// Скин директрия для версий выше 4-ой меняется
+								skinsDirectory = 'tinymce/skins/ui';
+							}
+							// Перезапишем по паттернам
+							content = content
+								.replace(/%lowercase%/g, lowercase)
+								.replace(/%uppercase%/g, uppercase)
+								.replace(/%biguppercase%/g, biguppercase)
+								.replace(/%version%/g, version)
+								.replace(/%repository%/g, repository)
+								.replace(/%issues%/g, issues)
+								.replace(/%skinsDirectory%/g, skinsDirectory)
+								.replace(/%pkgversion%/g, pkgversion)
+								.replace(/%lastupdate%/g, lastupdate);
+							// Запишем файл
+							fs.writeFileSync(target + '/' + outFile, content, {encoding: 'utf8'});
 						}
-						// Перезапишем по паттернам
-						content = content
-							.replace(/%lowercase%/g, lowercase)
-							.replace(/%uppercase%/g, uppercase)
-							.replace(/%biguppercase%/g, biguppercase)
-							.replace(/%version%/g, version)
-							.replace(/%repository%/g, repository)
-							.replace(/%issues%/g, issues)
-							.replace(/%skinsDirectory%/g, skinsDirectory)
-							.replace(/%pkgversion%/g, pkgversion)
-							.replace(/%lastupdate%/g, lastupdate);
-						// Запишем файл
-						fs.writeFileSync(target + '/' + outFile, content, {encoding: 'utf8'});
 					}
 				}
 			}
@@ -159,39 +163,6 @@ module.exports = function(grunt) {
 				break;
 		}
 
-	}
-
-	const minifyJSLangs = function(directory) {
-		try {
-			const items = fs.readdirSync(directory);
-			for (const item of items) {
-				const fullPath = directory + "/" + item;
-				const stat = fs.statSync(fullPath);
-				if (stat.isFile()) {
-					var script = grunt.file.read(`${fullPath}`).toString();
-					var result = UglifyJS.minify(script, {
-						output: {
-							ascii_only: true
-						}
-					});
-					let arr = directory.split("/");
-					arr = [
-						arr[arr.length - 2],
-						arr[arr.length - 1]
-					];
-					let out = arr.join("/");
-					// let filename =
-					if (!result.error) {
-						grunt.file.write(fullPath, result.code, {encoding: 'utf8'});
-						gruntLog('Uglify js ' + item, out, 'ok');
-					}else{
-						gruntLog('Uglify js ' + item, out, 'fatal');
-					}
-				}
-			}
-		} catch (err) {
-			gruntLog("ERROR minify", err.message, "fatal");
-		}
 	};
 
 	const task = async function() {
@@ -252,6 +223,58 @@ module.exports = function(grunt) {
 				gruntLog('>> Error Download', err, 'warn');
 			});
 		}
+		// Здесь минимизация общих локалей для плагинов 4.x.x
+		grunt.file.recurse(`locale_minor`, function(abspath, rootdir, subdir, filename){
+			let output = `locale_minor_mini/${subdir}`;
+			let ext = path.extname(abspath).toLowerCase();
+			if(ext == '.js') {
+				let script = grunt.file.read(`${abspath}`).toString();
+				// Если есть первый комментарий, то добавим в начало к минимизированному.
+				const regex = /(\/\*([\s\S]*?)\*\/)/;
+				let m, comment = "";
+				if ((m = regex.exec(script)) !== null) {
+					comment = `${m[1]}\n`;
+				}
+				let result = UglifyJS.minify(script, {
+					output: {
+						ascii_only: true
+					}
+				});
+				if (!result.error) {
+					grunt.file.write(`${output}/${filename}`, comment + result.code, {encoding: 'utf8'});
+					gruntLog(`Uglify js ${filename}`, `${output}/`, 'ok');
+				}else{
+					console.log(result.error);
+					gruntLog(`Uglify js err ${filename}`, `${output}/`, 'fatal');
+				}
+			}
+		});
+		// Здесь минимизация общих локалей для плагинов старше 4.x.x
+		grunt.file.recurse(`locale_major`, function(abspath, rootdir, subdir, filename){
+			let output = `locale_major_mini/${subdir}`;
+			let ext = path.extname(abspath).toLowerCase();
+			if(ext == '.js') {
+				let script = grunt.file.read(`${abspath}`).toString();
+				// Если есть первый комментарий, то добавим в начало к минимизированному.
+				const regex = /(\/\*([\s\S]*?)\*\/)/;
+				let m, comment = "";
+				if ((m = regex.exec(script)) !== null) {
+					comment = `${m[1]}\n`;
+				}
+				let result = UglifyJS.minify(script, {
+					output: {
+						ascii_only: true
+					}
+				});
+				if (!result.error) {
+					grunt.file.write(`${output}/${filename}`, comment + result.code, {encoding: 'utf8'});
+					gruntLog(`Uglify js ${filename}`, `${output}/`, 'ok');
+				}else{
+					console.log(result.error);
+					gruntLog(`Uglify js err ${filename}`, `${output}/`, 'fatal');
+				}
+			}
+		});
 		// Понеслась
 		for (val of versions) {
 			// Директория вывода
@@ -333,46 +356,8 @@ module.exports = function(grunt) {
 			}
 
 			// Далее
-			// Копирование общих плагинов
+			// Выход плагинов
 			let dirOutPlgs = dirOut + '/tinymce/plugins';
-			copyFolderRecursiveSync(
-				'plugins',
-				dirOutPlgs,
-				lowercase,
-				uppercase,
-				biguppercase,
-				val,
-				options.repository,
-				options.issues,
-				pkg_version,
-				lastupdate
-			);
-
-			/*grunt.file.recurse(`plugins`, function(abspath, rootdir, subdir, filename){
-				let out, script, result;
-				if(filename=='plugin.js' || /langs$/.test(subdir)){
-					out = `${dirOutPlgs}/${subdir}/` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`);
-					script = grunt.file.read(`${abspath}`).toString();
-					// Если есть первый комментарий, то добавим в начало к минимизированному.
-					const regex = /(\/\*([\s\S]*?)\*\/)/;
-					let m, comment = "";
-					if ((m = regex.exec(script)) !== null) {
-						comment = `${m[1]}\n`;
-					}
-					result = UglifyJS.minify(script, {
-						output: {
-							ascii_only: true
-						}
-					});
-					if (!result.error) {
-						grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
-						gruntLog('Uglify js ok', out, 'ok');
-					}else{
-						console.log(result.error);
-						gruntLog('Uglify js err', out, 'fatal');
-					}
-				}
-			});*/
 
 			// Копирование плагинов
 			copyFolderRecursiveSync(
@@ -403,7 +388,33 @@ module.exports = function(grunt) {
 			);
 			if(num > 4) {
 				// v5.x.x - v8.x.x
-				// copy css emoticons, ...
+				// Минификация плагинов temp_plugin_major
+				grunt.file.recurse(`temp_plugin_major`, function(abspath, rootdir, subdir, filename){
+					let out, script, result;
+					if(filename=='plugin.js'/* || /langs$/.test(subdir) */){
+						out = `${dirOutPlgs}/${subdir}/` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`);
+						script = grunt.file.read(`${abspath}`).toString();
+						// Если есть первый комментарий, то добавим в начало к минимизированному.
+						const regex = /(\/\*([\s\S]*?)\*\/)/;
+						let m, comment = "";
+						if ((m = regex.exec(script)) !== null) {
+							comment = `${m[1]}\n`;
+						}
+						result = UglifyJS.minify(script, {
+							output: {
+								ascii_only: true
+							}
+						});
+						if (!result.error) {
+							grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
+							gruntLog(`Uglify js ${filename}`, `${dirOutPlgs}/${subdir}/`, 'ok');
+						}else{
+							console.log(result.error);
+							gruntLog(`Uglify js err ${filename}`, `${dirOutPlgs}/${subdir}/`, 'fatal');
+						}
+					}
+				});
+				// Копирование temp_plugin_major, ...
 				copyFolderRecursiveSync(
 					`temp_plugin_major`,
 					dirOutPlgs,
@@ -416,8 +427,7 @@ module.exports = function(grunt) {
 					pkg_version,
 					lastupdate
 				);
-				// минимизация langs файлов для emoticons
-				minifyJSLangs(`dist/tinymce${num}/tinymce${num}/assets/plugins/tinymce${num}/tinymce/plugins/emoticons/langs`);
+
 				// copy fonts emoticons
 				copyFolderRecursiveSync(
 					`node_modules/noto-color-emoji/src/fonts`,
@@ -431,9 +441,74 @@ module.exports = function(grunt) {
 					pkg_version,
 					lastupdate
 				);
+				// Копирование минифицированных локалей
+				copyFolderRecursiveSync(
+					`locale_major_mini`,
+					dirOutPlgs,
+					lowercase,
+					uppercase,
+					biguppercase,
+					val,
+					options.repository,
+					options.issues,
+					pkg_version,
+					lastupdate
+				);
 			} else {
 				// v4.x.x
-				// copy css emoticons, ...
+				// Копирование плагинов temp_plugin_minor
+				copyFolderRecursiveSync(
+					`temp_plugin_minor`,
+					dirOutPlgs,
+					lowercase,
+					uppercase,
+					biguppercase,
+					val,
+					options.repository,
+					options.issues,
+					pkg_version,
+					lastupdate
+				);
+				// Минификация плагинов temp_plugin_minor
+				grunt.file.recurse(`temp_plugin_minor`, function(abspath, rootdir, subdir, filename){
+					let out, script, result;
+					if(filename=='plugin.js'){
+						out = `${dirOutPlgs}/${subdir}/` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`);
+						script = grunt.file.read(`${abspath}`).toString();
+						// Если есть первый комментарий, то добавим в начало к минимизированному.
+						const regex = /(\/\*([\s\S]*?)\*\/)/;
+						let m, comment = "";
+						if ((m = regex.exec(script)) !== null) {
+							comment = `${m[1]}\n`;
+						}
+						result = UglifyJS.minify(script, {
+							output: {
+								ascii_only: true
+							}
+						});
+						if (!result.error) {
+							grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
+							gruntLog(`Uglify js ${filename}`, `${dirOutPlgs}/${subdir}/`, 'ok');
+						}else{
+							console.log(result.error);
+							gruntLog(`Uglify js err ${filename}`, `${dirOutPlgs}/${subdir}/`, 'fatal');
+						}
+					}
+				});
+				// Копирование минификации локалей плагинов
+				copyFolderRecursiveSync(
+					`locale_minor_mini`,
+					dirOutPlgs,
+					lowercase,
+					uppercase,
+					biguppercase,
+					val,
+					options.repository,
+					options.issues,
+					pkg_version,
+					lastupdate
+				);
+				// Копирование emoticons, ...
 				copyFolderRecursiveSync(
 					`node_modules/notocoloremoji/assets/plugins/tinymce4/tinymce/plugins`,
 					dirOutPlgs,

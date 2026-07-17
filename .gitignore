@@ -6,6 +6,8 @@
 /tinymce*
 /tinymce.json
 /plugins*/.*
+/locale_major_mini/*
+/locale_minor_mini/*
 
 *.sublime-workspace
 *.zip
