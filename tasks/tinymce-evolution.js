@@ -17,6 +17,8 @@ module.exports = function(grunt) {
 
 	const { ZipArchive } = require('archiver');
 
+	const tty = process.stdout.isTTY === true;
+
 	// Пауза
 	const sleep = delay => new Promise((resolve) => setTimeout(resolve, delay));
 
@@ -138,8 +140,7 @@ module.exports = function(grunt) {
 			minutes = String(date.getMinutes()).padStart(2, "0"),
 			seconds = String(date.getSeconds()).padStart(2, "0"),
 			milliseconds = String(date.getMilliseconds()).padStart(3, "0"),
-			out_date = `${hours}:${minutes}:${seconds}.${milliseconds}`,
-			tty = process.stdout.isTTY === true;
+			out_date = `${hours}:${minutes}:${seconds}.${milliseconds}`;
 		switch (type) {
 			case "warn":
 				method = grunt.fail.warn;
@@ -223,6 +224,8 @@ module.exports = function(grunt) {
 				gruntLog('>> Error Download', err, 'warn');
 			});
 		}
+		grunt.log.ok([" "]);
+		grunt.log.ok([(tty ? chalk.cyanBright(`Star Minify Locale`) : `Star Minify Locale`)]);
 		// Здесь минимизация общих локалей для плагинов 4.x.x
 		grunt.file.recurse(`locale_minor`, function(abspath, rootdir, subdir, filename){
 			let output = `locale_minor_mini/${subdir}`;
@@ -275,6 +278,8 @@ module.exports = function(grunt) {
 				}
 			}
 		});
+		grunt.log.ok([(tty ? chalk.cyanBright(`End Minify Locale`) : `End Minify Locale`)]);
+		grunt.log.ok([" "]);
 		// Понеслась
 		for (val of versions) {
 			// Директория вывода
@@ -291,7 +296,6 @@ module.exports = function(grunt) {
 			//if(parseInt(num) != 4){
 			//	continue;
 			//}
-			grunt.log.ok([" "]);
 			gruntLog('Initialize', packge, 'init');
 
 			// Исходная директория языка
@@ -726,6 +730,7 @@ module.exports = function(grunt) {
 			} catch(e) {
 				gruntLog(`Archive Size`, e.message, 'fatal');
 			}
+			grunt.log.ok([" "]);
 		}
 
 		// Readme

@@ -1,1 +1,16 @@
-tinymce.addI18n("de",{"Choose YouTube Video":"YouTube Video suchen","Insert Youtube video":"Einf\xfcgen youtube video",width:"Breite",height:"H\xf6he",skin:"Skin",dark:"dunkel",light:"licht",Search:"Suche","Youtube URL":"Youtube URL",Title:"Titel","Insert and Close":"Einf\xfcgen und Schlie\xdfen",Insert:"Einf\xfcgen","Load More":"Mehr laden",cancel:"stornieren"});
+tinymce.addI18n("de", {
+	"Choose YouTube Video": "YouTube Video suchen",
+	"Insert Youtube video": "Einf\xfcgen youtube video",
+	"width": "Breite",
+	"height": "H\xf6he",
+	"skin": "Skin",
+	"dark": "dunkel",
+	"light": "licht",
+	"Search": "Suche",
+	"Youtube URL": "Youtube URL",
+	"Title": "Titel",
+	"Insert and Close": "Einf\xfcgen und Schlie\xdfen",
+	"Insert": "Einf\xfcgen",
+	"Load More": "Mehr laden",
+	"cancel": "stornieren"
+});

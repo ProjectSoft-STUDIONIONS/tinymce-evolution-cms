@@ -8,11 +8,13 @@
 /plugins*/.*
 /locale_major_mini/*
 /locale_minor_mini/*
+/temp/
 
 *.sublime-workspace
 *.zip
 *.bat
 *.cmd
+/locales.js
 
 !dist/.*
 !cache/.*
