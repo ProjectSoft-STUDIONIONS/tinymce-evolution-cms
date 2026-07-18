@@ -225,7 +225,7 @@ module.exports = function(grunt) {
 			});
 		}
 		grunt.log.ok([" "]);
-		grunt.log.ok([(tty ? chalk.cyanBright(`Star Minify Locale`) : `Star Minify Locale`)]);
+		grunt.log.ok([(tty ? chalk.cyanBright(`The Start Of Minification Of Locales`) : `The Start Of Minification Of Locales`)]);
 		// Здесь минимизация общих локалей для плагинов 4.x.x
 		grunt.file.recurse(`locale_minor`, function(abspath, rootdir, subdir, filename){
 			let output = `locale_minor_mini/${subdir}`;
@@ -278,7 +278,7 @@ module.exports = function(grunt) {
 				}
 			}
 		});
-		grunt.log.ok([(tty ? chalk.cyanBright(`End Minify Locale`) : `End Minify Locale`)]);
+		grunt.log.ok([(tty ? chalk.cyanBright(`The End Of Minification Of Locales`) : `The End Of Minification Of Locales`)]);
 		grunt.log.ok([" "]);
 		// Понеслась
 		for (val of versions) {
@@ -730,6 +730,7 @@ module.exports = function(grunt) {
 			} catch(e) {
 				gruntLog(`Archive Size`, e.message, 'fatal');
 			}
+			gruntLog(`End`, packge, 'init')
 			grunt.log.ok([" "]);
 		}
 
