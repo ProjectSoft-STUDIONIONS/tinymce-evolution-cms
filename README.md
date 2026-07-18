@@ -15,7 +15,7 @@
 				<br />
 				Чернышёв Андрей aka ProjectSoft
 			</td>
-			<td valign="top">18-07-2026</td>
+			<td valign="top">19-07-2026</td>
 			<td valign="top">
 				<a href="https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-4.zip" target="_blank" title="Download tinymce-4.zip">
 					<img src="https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-4.zip?displayAssetName=false&style=for-the-badge&label=%E2%9C%85%20%D0%A1%D0%9A%D0%90%D0%A7%D0%90%D0%A2%D0%AC%20tinymce-4.zip&cacheSeconds=10" alt="tinymce-4.zip" />
