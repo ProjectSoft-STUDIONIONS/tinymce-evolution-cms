@@ -956,7 +956,7 @@ tinymce.addI18n("ru", {
 	"man_in_lotus_position":                  "Мужчина в позе лотоса",
 	"surfing_woman":                          "Серфинг женщина",
 	"surfing_man":                            "Серфинг мужчина",
-	"bath":                                   "Bath",
+	"bath":                                   "Ванна",
 	"basketball_woman":                       "Баскетбол женщина",
 	"basketball_man":                         "Баскетбол мужчина",
 	"weight_lifting_woman":                   "Подъём тяжестей женщина",
