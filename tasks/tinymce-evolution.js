@@ -512,9 +512,11 @@ module.exports = function(grunt) {
 					pkg_version,
 					lastupdate
 				);
+				// Удаляем emoticons
+				grunt.file.delete(`${dirOutPlgs}/emoticons`, { force: true });
 				// Копирование emoticons, ...
 				copyFolderRecursiveSync(
-					`node_modules/notocoloremoji/assets/plugins/tinymce4/tinymce/plugins`,
+					`node_modules/tinymce-emoticons-v4/assets/plugins/tinymce4/tinymce/plugins`,
 					dirOutPlgs,
 					lowercase,
 					uppercase,

@@ -135,6 +135,12 @@ $this->set('codemirror', '{
 	}
 }', 'object'); // mariana
 
+// Авторесайз
+// Переопределяется в других конфигурациях
+$this->set('autoresize_bottom_margin', 0, 'number');
+$this->set('autoresize_min_height', 100, 'number');
+$this->set('autoresize_bottom_margin', 2, 'number');
+
 // Забираем css файлы из настроек если они есть
 // Добавляем хэшь для отключения кэша скриптов
 try {
