@@ -10,12 +10,15 @@ module.exports = function(grunt) {
 	const chalk = require('chalk');
 	const fs = require('fs');
 	const path = require('path');
+	//const util = require('util');
+	//const sleep = util.promisify(setTimeout);
 	const UglifyJS = require("uglify-js");
 	const downloadNpmPackage = require('download-npm-package');
 	const { filesize } = require('filesize');
 	const getFolderSize = require("get-folder-size").default;
 
 	const { ZipArchive } = require('archiver');
+
 
 	const tty = process.stdout.isTTY === true;
 
@@ -458,6 +461,7 @@ module.exports = function(grunt) {
 					pkg_version,
 					lastupdate
 				);
+				await sleep(2000);
 			} else {
 				// v4.x.x
 				// Копирование плагинов temp_plugin_minor
@@ -527,6 +531,7 @@ module.exports = function(grunt) {
 					pkg_version,
 					lastupdate
 				);
+				await sleep(2000);
 			}
 			gruntLog('Copy plugins ' + lowercase, dirOutPlgs, 'ok');
 
