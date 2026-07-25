@@ -9,12 +9,14 @@
 /locale_major_mini/*
 /locale_minor_mini/*
 /temp/
+/test
+/tests
 
 *.sublime-workspace
 *.zip
 *.bat
 *.cmd
-/.env
+# /.env
 /locales.js
 
 !dist/.*

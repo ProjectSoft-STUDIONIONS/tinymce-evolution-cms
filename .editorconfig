@@ -7,6 +7,13 @@ trim_trailing_whitespace = true
 indent_style = tab
 tab_width = 4
 
+[.env]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = tab
+tab_width = 4
+
 [**.yml]
 indent_style = space
 tab_width = 2

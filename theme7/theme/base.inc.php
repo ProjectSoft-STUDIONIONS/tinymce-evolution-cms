@@ -34,16 +34,20 @@ if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 $this->set('license_key', 'gpl', 'string');
 
 // Отключим кеширование скриптов.
-$this->set('cache_suffix', '?' . date("Ymd-Hi"), 'string');
+// $this->set('cache_suffix', '?' . date("Ymd-Hi"), 'string');
 
-$this->set('skin', 'lightgray', 'string' ); // Set default skin (setting param first time sets its value also as default val)
+// Set default skin (setting param first time sets its value also as default val)
+// $this->set('skin', 'lightgray', 'string' );
 $this->set('skin', $this->modxParams['skin'] ); // Overwrite with Modx-setting (if empty, default is used))
 
-$this->set('theme', 'modern', 'string' ); // Set default skin (setting param first time sets its value also as default val)
+// Set default skin (setting param first time sets its value also as default val)
+// $this->set('theme', 'modern', 'string' );
 $this->set('theme', $this->modxParams['skintheme'] ); // Overwrite with Modx-setting (if empty, default is used))
 
-$this->set('width', $this->pluginParams['width'], 'string' ); // https://www.tinymce.com/docs/configure/editor-appearance/#width
-$this->set('height', $this->pluginParams['height'], 'string' ); // https://www.tinymce.com/docs/configure/editor-appearance/#height
+// https://www.tinymce.com/docs/configure/editor-appearance/#width
+$this->set('width', $this->pluginParams['width'], 'string' );
+// https://www.tinymce.com/docs/configure/editor-appearance/#height
+$this->set('height', $this->pluginParams['height'], 'string' );
 
 // @todo: Make optional in Modx-configuration?
 $this->set('menubar', true, 'bool' ); // https://www.tinymce.com/docs/configure/editor-appearance/#menubar

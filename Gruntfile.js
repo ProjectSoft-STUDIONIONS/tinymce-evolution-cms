@@ -1,12 +1,17 @@
 module.exports = async function(grunt) {
-	//process.removeAllListeners('warning');
+	"use strict";
+	process.removeAllListeners('warning');
 
 	const PACK = grunt.file.readJSON('package.json');
 
 	require('time-grunt')(grunt);
-
 	require('load-grunt-tasks')(grunt);
 	grunt.loadTasks('tasks');
+
+	require('dotenv').config();
+
+	var PRODUCTION = ['true', '1', 'yes'].includes(String(process.env.PRODUCTION).trim().toLowerCase());
+	var PRODUCTION_ASSETS = String(process.env.PRODUCTION_ASSETS).trim().toLowerCase() != 'undefined' ? String(process.env.PRODUCTION_ASSETS).trim().toLowerCase() : 'test';
 
 	grunt.initConfig({
 		globalConfig : {},
@@ -32,31 +37,31 @@ module.exports = async function(grunt) {
 						expand: true,
 						cwd: 'dist/tinymce4/tinymce4/assets',
 						src: '**',
-						dest: '../../OSPanel/home/example.local/assets',
+						dest: PRODUCTION_ASSETS,
 					},
 					{
 						expand: true,
 						cwd: 'dist/tinymce5/tinymce5/assets',
 						src: '**',
-						dest: '../../OSPanel/home/example.local/assets',
+						dest: PRODUCTION_ASSETS,
 					},
 					{
 						expand: true,
 						cwd: 'dist/tinymce6/tinymce6/assets',
 						src: '**',
-						dest: '../../OSPanel/home/example.local/assets',
+						dest: PRODUCTION_ASSETS,
 					},
 					{
 						expand: true,
 						cwd: 'dist/tinymce7/tinymce7/assets',
 						src: '**',
-						dest: '../../OSPanel/home/example.local/assets',
+						dest: PRODUCTION_ASSETS,
 					},
 					{
 						expand: true,
 						cwd: 'dist/tinymce8/tinymce8/assets',
 						src: '**',
-						dest: '../../OSPanel/home/example.local/assets',
+						dest: PRODUCTION_ASSETS,
 					},
 				],
 			},
@@ -74,17 +79,9 @@ module.exports = async function(grunt) {
 	});
 
 	var defaultTasks = ['clean:main', 'tinymce-evolution'];
-	require('dotenv').config(
-		{
-			path: '.env',
-			debug: true
-		}
-	);
-
-	const isProduction = ['true', '1', 'yes'].includes(String(process.env.PRODUCTION).trim().toLowerCase());
 
 	// По умолчанию запуск задачи default
-	if(isProduction) {
+	if(PRODUCTION) {
 		defaultTasks.push('copy');
 	}
 

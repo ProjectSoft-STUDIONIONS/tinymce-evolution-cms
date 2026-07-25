@@ -6,6 +6,11 @@ jobs:
   build:
     name: Сборка проекта
     runs-on: ubuntu-latest
+    env:
+      DOTENV_CONFIG_QUIET: "1"
+      DOTENV_CONFIG_DEBUG: "0"
+      PRODUCTION: "0"
+      PRODUCTION_ASSETS: "test"
     strategy:
       matrix:
         node: [24]
@@ -14,7 +19,7 @@ jobs:
     - name: Установка Node.js
       uses: actions/setup-node@v6
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: ${{ matrix.node }}
 
     - name: NPM установка пакетов
       run: |
