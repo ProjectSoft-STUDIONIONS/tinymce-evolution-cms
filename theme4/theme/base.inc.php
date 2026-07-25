@@ -30,6 +30,9 @@ if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 // @todo: layer-Plugin: Buttons broken
 // @todo: selectall-Button broken
 
+// Лицензия
+$this->set('license_key', 'gpl', 'string');
+
 // Отключим кеширование скриптов.
 $this->set('cache_suffix', '?' . date("Ymd-Hi"), 'string');
 
@@ -83,8 +86,8 @@ if($this->pluginParams['paste_as_text'] == 'enabled') {
 }
 
 // @todo: final base-setup like tinymce3 "default"-theme?
-$this->set('plugins', 'anchor visualblocks autolink autosave save advlist lists fullscreen paste media contextmenu table youtube image imagetools code textcolor modxlink', 'string');    // https://www.tinymce.com/docs/get-started/basic-setup/#pluginconfiguration
-$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect fontsizeselect pastetext code | fullscreen help', 'string', false);
+$this->set('plugins', 'anchor visualblocks autolink autosave save advlist lists fullscreen paste media contextmenu table youtube image imagetools code textcolor modxlink codemirror', 'string');    // https://www.tinymce.com/docs/get-started/basic-setup/#pluginconfiguration
+$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect fontsizeselect pastetext code codemirror | fullscreen help', 'string', false);
 $this->set('toolbar2', 'image media youtube link unlink anchor | alignleft aligncenter alignright | bullist numlist | blockquote outdent indent | table hr | visualblocks styleprops removeformat', 'string', true);
 
 // Bridge does not return NULL, and does not use this->set() itself, so these parameters must be set at least once..
@@ -97,11 +100,7 @@ $this->set('setup', 'function(ed) { ed.on("change", function(e) { documentDirty=
 $this->set('save_onsavecallback', 'function () { documentDirty=false; document.getElementById("stay").value = 2; document.mutate.save.click(); }',  'object');
 
 // https://www.tinymce.com/docs/themes/mobile/
-$this->set('mobile', '{
-	theme: "mobile", 
-	plugins: [ "autosave", "lists", "autolink" ],
-	toolbar: [ "undo", "bold", "italic", "styleselect" ]
-}',	'json' );
+$this->set('mobile', 'false',	'bool' );
 
 // Вырубаем бренд
 $this->set('branding', false, 'bool');
@@ -138,7 +137,8 @@ $this->set('codemirror', '{
 // Авторесайз
 // Переопределяется в других конфигурациях
 $this->set('autoresize_min_height', 200, 'number');
-$this->set('autoresize_bottom_margin', 10, 'number');
+$this->set('autoresize_bottom_margin', 20, 'number');
+$this->set('autoresize_on_init', true, 'bool');
 
 // Забираем css файлы из настроек если они есть
 // Добавляем хэшь для отключения кэша скриптов

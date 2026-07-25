@@ -250,7 +250,7 @@ module.exports = function(grunt) {
 					grunt.file.write(`${output}/${filename}`, comment + result.code, {encoding: 'utf8'});
 					gruntLog(`Uglify js ${filename}`, `${output}/`, 'ok');
 				}else{
-					console.log(result.error);
+					//console.log(result.error);
 					gruntLog(`Uglify js err ${filename}`, `${output}/`, 'fatal');
 				}
 			}
@@ -276,7 +276,7 @@ module.exports = function(grunt) {
 					grunt.file.write(`${output}/${filename}`, comment + result.code, {encoding: 'utf8'});
 					gruntLog(`Uglify js ${filename}`, `${output}/`, 'ok');
 				}else{
-					console.log(result.error);
+					//console.log(result.error);
 					gruntLog(`Uglify js err ${filename}`, `${output}/`, 'fatal');
 				}
 			}
@@ -416,7 +416,7 @@ module.exports = function(grunt) {
 							grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
 							gruntLog(`Uglify js ${filename}`, `${dirOutPlgs}/${subdir}/`, 'ok');
 						}else{
-							console.log(result.error);
+							//console.log(result.error);
 							gruntLog(`Uglify js err ${filename}`, `${dirOutPlgs}/${subdir}/`, 'fatal');
 						}
 					}
@@ -498,7 +498,7 @@ module.exports = function(grunt) {
 							grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
 							gruntLog(`Uglify js ${filename}`, `${dirOutPlgs}/${subdir}/`, 'ok');
 						}else{
-							console.log(result.error);
+							//console.log(result.error);
 							gruntLog(`Uglify js err ${filename}`, `${dirOutPlgs}/${subdir}/`, 'fatal');
 						}
 					}
@@ -557,7 +557,7 @@ module.exports = function(grunt) {
 						grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
 						gruntLog(`Uglify js ` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`), `${subdir}`, 'ok');
 					}else{
-						console.log(result.error);
+						//console.log(result.error);
 						gruntLog('Uglify js fatal', out, 'fatal');
 					}
 				}

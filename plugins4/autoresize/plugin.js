@@ -141,7 +141,7 @@ var autoresize = (function () {
 				}
 				console.log(editor);
 				// Вот здесь запуск customResize
-				customResize(editor);
+				customResize(editor, oldSize);
 			});
 			editor.on('nodechange setcontent keyup FullscreenStateChanged', function (e) {
 				resize(editor, oldSize);
@@ -159,7 +159,7 @@ var autoresize = (function () {
 		// На других системах фишка будет работать неправильно.
 		// Добавляется в событие инициализации editor.
 		// Иначе не будет доступен editor.container
-		const customResize = (editor) => {
+		const customResize = (editor, oldSize) => {
 			// Определяем контейнер редактора
 			let container = editor.editorContainer;
 			// Добавляем класс к этому контейнеру
@@ -188,6 +188,9 @@ var autoresize = (function () {
 			//link.href = url + '/plugin.min.css?v=' + update;
 			// Добавляем тег на страницу с редактором TinyMCE
 			head.append(style);
+			wait(editor, oldSize, 20, 100, function () {
+				wait(editor, oldSize, 5, 1000);
+			});
 		}
 
 		var Resize = {

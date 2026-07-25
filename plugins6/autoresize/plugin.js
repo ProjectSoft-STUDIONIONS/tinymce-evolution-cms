@@ -146,7 +146,12 @@
 					});
 				}
 				// Вот здесь запуск customResize
-				customResize(editor);
+				oldSize = Cell({
+					totalHeight: 400,
+					contentHeight: 400,
+					set: false,
+				});
+				customResize(editor, oldSize);
 				resize(editor, oldSize, e, getExtraMarginBottom);
 				resizeCounter += 1;
 			});
@@ -175,7 +180,7 @@
 		// На других системах фишка будет работать неправильно.
 		// Добавляется в событие инициализации editor.
 		// Иначе не будет доступен editor.container
-		const customResize = (editor) => {
+		const customResize = (editor, oldSize) => {
 			// Определяем контейнер редактора
 			let container = editor.container;
 			// Добавляем класс к этому контейнеру
@@ -195,6 +200,9 @@
 			style.id = domUtils.DOM.uniqueId();
 			head.append(style);
 			style.textContent  = `
+.tox.tox-tinymce.tox-tinymce-autoresize {
+	min-height: 400px;
+}
 .tox.tox-tinymce.tox-tinymce-autoresize,
 .tox.tox-tinymce.tox-tinymce-autoresize > .tox-editor-container {
 	overflow: unset !important;
@@ -222,6 +230,7 @@
 .filemanageropen .tox.tox-fullscreen.tox-tinymce-autoresize:not(.tox-tinymce-inline) .tox-editor-header {
 	padding-top: 0em !important;
 }`;
+			resize(editor, oldSize);
 		};
 
 		const register = (editor, oldSize) => {

@@ -150,13 +150,19 @@
 					'min-height': 0
 				});
 				// Вот здесь запуск customResize
-				customResize(editor);
+				oldSize = Cell({
+					totalHeight: 400,
+					contentHeight: 400,
+					set: false,
+				});
+				customResize(editor, oldSize);
 			});
 			editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', function (e) {
 				resize(editor, oldSize, e);
 			});
 			if (shouldAutoResizeOnInit(editor)) {
 				editor.on('init', function () {
+
 					wait(editor, oldSize, 20, 100, function () {
 						wait(editor, oldSize, 5, 1000);
 					});
@@ -168,7 +174,7 @@
 		// На других системах фишка будет работать неправильно.
 		// Добавляется в событие инициализации editor.
 		// Иначе не будет доступен editor.container
-		const customResize = (editor) => {
+		const customResize = (editor, oldSize) => {
 			// Определяем контейнер редактора
 			let container = editor.container;
 			let doc = editor.editorManager.DOM.doc,
@@ -188,6 +194,9 @@
 			// В 5-ом нельзя менят background-color у .tox-editor-header
 			// По сути нужно бы изменить скины
 			style.textContent  = `
+.tox.tox-tinymce.tox-tinymce-autoresize {
+	min-height: 400px;
+}
 .tox.tox-tinymce.tox-tinymce-autoresize,
 .tox.tox-tinymce.tox-tinymce-autoresize > .tox-editor-container {
 	overflow: unset !important;
@@ -217,6 +226,9 @@
 }`;
 			// Добавляем класс к этому контейнеру
 			container.classList.add('tox-tinymce-autoresize');
+			wait(editor, oldSize, 20, 100, function () {
+				wait(editor, oldSize, 5, 1000);
+			});
 		};
 
 		var register = function (editor, oldSize) {

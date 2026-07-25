@@ -30,6 +30,9 @@ if (!defined('MODX_BASE_PATH')) { die('What are you doing? Get out of here!'); }
 // @todo: layer-Plugin: Buttons broken
 // @todo: selectall-Button broken
 
+// Лицензия
+$this->set('license_key', 'gpl', 'string');
+
 // Отключим кеширование скриптов.
 $this->set('cache_suffix', '?' . date("Ymd-Hi"), 'string');
 
@@ -83,8 +86,8 @@ if($this->pluginParams['paste_as_text'] == 'enabled') {
 }
 
 // @todo: final base-setup like tinymce3 "default"-theme?
-$this->set('plugins', 'anchor visualblocks autolink autosave save advlist lists modxlink media table image code', 'string'); // https://www.tinymce.com/docs/get-started/basic-setup/#pluginconfiguration
-$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect fontsizeselect pastetext code | fullscreen help', 'string', false);
+$this->set('plugins', 'anchor visualblocks autolink autosave save advlist lists modxlink media table image code codemirror', 'string'); // https://www.tinymce.com/docs/get-started/basic-setup/#pluginconfiguration
+$this->set('toolbar1', 'undo redo | bold forecolor backcolor strikethrough formatselect fontsizeselect pastetext codemirror code | fullscreen help', 'string', false);
 $this->set('toolbar2', 'image media link unlink anchor | alignleft aligncenter alignright | bullist numlist | blockquote outdent indent | table hr | visualblocks styleprops removeformat', 'string', true);
 
 // Bridge does not return NULL, and does not use this->set() itself, so these parameters must be set at least once..

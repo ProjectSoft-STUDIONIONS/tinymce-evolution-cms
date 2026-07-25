@@ -1,4 +1,6 @@
 module.exports = async function(grunt) {
+	//process.removeAllListeners('warning');
+
 	const PACK = grunt.file.readJSON('package.json');
 
 	require('time-grunt')(grunt);
@@ -22,6 +24,44 @@ module.exports = async function(grunt) {
 				'./cache/tinymce*',
 			]
 		},
+
+		copy: {
+			main: {
+				files: [
+					{
+						expand: true,
+						cwd: 'dist/tinymce4/tinymce4/assets',
+						src: '**',
+						dest: '../../OSPanel/home/example.local/assets',
+					},
+					{
+						expand: true,
+						cwd: 'dist/tinymce5/tinymce5/assets',
+						src: '**',
+						dest: '../../OSPanel/home/example.local/assets',
+					},
+					{
+						expand: true,
+						cwd: 'dist/tinymce6/tinymce6/assets',
+						src: '**',
+						dest: '../../OSPanel/home/example.local/assets',
+					},
+					{
+						expand: true,
+						cwd: 'dist/tinymce7/tinymce7/assets',
+						src: '**',
+						dest: '../../OSPanel/home/example.local/assets',
+					},
+					{
+						expand: true,
+						cwd: 'dist/tinymce8/tinymce8/assets',
+						src: '**',
+						dest: '../../OSPanel/home/example.local/assets',
+					},
+				],
+			},
+		},
+
 		// Собираем плагины TinyMCE
 		'tinymce-evolution': {
 			options: {
@@ -32,8 +72,23 @@ module.exports = async function(grunt) {
 			main: {},
 		},
 	});
+
+	var defaultTasks = ['clean:main', 'tinymce-evolution'];
+	require('dotenv').config(
+		{
+			path: '.env',
+			debug: true
+		}
+	);
+
+	const isProduction = ['true', '1', 'yes'].includes(String(process.env.PRODUCTION).trim().toLowerCase());
+
 	// По умолчанию запуск задачи default
-	grunt.registerTask('default',	['clean:main', 'tinymce-evolution']);
+	if(isProduction) {
+		defaultTasks.push('copy');
+	}
+
+	grunt.registerTask('default', defaultTasks);
 	// Отдельная задача запуска очистки директорий cache, dist и архивов.
 	grunt.registerTask('cache',	['clean:cache']);
 }
