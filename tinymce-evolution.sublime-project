@@ -7,6 +7,7 @@
 		}
 	],
 	"settings":  {
+		"font_face": "JetBrains Mono",
 		"font_size": 16,
 		"tab_size": 4
 	},

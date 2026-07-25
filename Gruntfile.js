@@ -8,10 +8,22 @@ module.exports = async function(grunt) {
 	require('load-grunt-tasks')(grunt);
 	grunt.loadTasks('tasks');
 
-	require('dotenv').config();
+	const envObject = {},
+		toBool = (val) => {
+			if (!val) return false;
+			const v = String(val).trim().toLowerCase();
+			return ['true', '1', 'yes'].includes(v);
+		},
+		getAssetMode = (val) => {
+			if (val === undefined || val === null) return 'test';
+			const trimmed = String(val).trim();
+			return trimmed ? trimmed.toLowerCase() : 'test';
+		};
 
-	var PRODUCTION = ['true', '1', 'yes'].includes(String(process.env.PRODUCTION).trim().toLowerCase());
-	var PRODUCTION_ASSETS = String(process.env.PRODUCTION_ASSETS).trim().toLowerCase() != 'undefined' ? String(process.env.PRODUCTION_ASSETS).trim().toLowerCase() : 'test';
+	require('dotenv').config({ processEnv: envObject });
+
+	const PRODUCTION = toBool(envObject.PRODUCTION);
+	const PRODUCTION_ASSETS = getAssetMode(envObject.PRODUCTION_ASSETS);
 
 	grunt.initConfig({
 		globalConfig : {},
