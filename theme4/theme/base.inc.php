@@ -104,7 +104,7 @@ $this->set('setup', 'function(ed) { ed.on("change", function(e) { documentDirty=
 $this->set('save_onsavecallback', 'function () { documentDirty=false; document.getElementById("stay").value = 2; document.mutate.save.click(); }',  'object');
 
 // https://www.tinymce.com/docs/themes/mobile/
-$this->set('mobile', 'false',	'bool' );
+$this->set('mobile', '{ theme: "mobile",  plugins: [ "autosave", "lists", "autolink" ], toolbar: [ "undo", "bold", "italic", "styleselect" ] }',	'json' );
 
 // Вырубаем бренд
 $this->set('branding', false, 'bool');

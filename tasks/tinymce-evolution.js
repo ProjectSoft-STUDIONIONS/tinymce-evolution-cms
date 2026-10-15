@@ -329,10 +329,10 @@ module.exports = function(grunt) {
 					});
 					gruntLog('Copy languages ' + lowercase, lngOut, 'ok');
 					// Удаление мобильной темы
-					if(grunt.file.exists(cacheOut + '/tinymce/themes/mobile')) {
-						grunt.file.delete(cacheOut + '/tinymce/themes/mobile');
-						gruntLog('Delete mobile ' + lowercase, cacheOut + '/tinymce/themes/mobile', 'ok');
-					}
+					//if(grunt.file.exists(cacheOut + '/tinymce/themes/mobile')) {
+					//	grunt.file.delete(cacheOut + '/tinymce/themes/mobile');
+					//	gruntLog('Delete mobile ' + lowercase, cacheOut + '/tinymce/themes/mobile', 'ok');
+					//}
 				}).catch((err) => {
 					// Ошибка загрузки
 					// Сразу выходим
