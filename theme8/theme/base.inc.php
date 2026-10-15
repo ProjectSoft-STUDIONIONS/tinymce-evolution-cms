@@ -105,7 +105,7 @@ $this->set('save_onsavecallback', 'function () { documentDirty=false; document.g
 
 // https://www.tinymce.com/docs/themes/mobile/
 $this->set('mobile', '{
-	theme: "mobile", 
+	menubar: true,
 	plugins: [ "autosave", "lists", "autolink" ],
 	toolbar: [ "undo", "bold", "italic", "styleselect" ]
 }',	'json' );
