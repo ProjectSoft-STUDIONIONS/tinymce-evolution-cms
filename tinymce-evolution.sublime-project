@@ -8,7 +8,7 @@
 	],
 	"settings":  {
 		"font_face": "JetBrains Mono",
-		"font_size": 16,
+		"font_size": 12,
 		"tab_size": 4
 	},
 	"build_systems": [

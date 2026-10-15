@@ -199,7 +199,7 @@ module.exports = function(grunt) {
 			}
 			let tempJson =  await response.json();
 			let tempDistTags = tempJson["dist-tags"];
-			delete tempDistTags.latest;
+			//delete tempDistTags.latest;
 			let distTags = Object.assign({}, sortKeys(tempDistTags));
 			// Нам просто придётся клонировать объект.
 			distTags = JSON.parse(JSON.stringify(distTags));
@@ -284,6 +284,7 @@ module.exports = function(grunt) {
 		});
 		grunt.log.ok([(tty ? chalk.cyanBright(`The End Of Minification Of Locales`) : `The End Of Minification Of Locales`)]);
 		grunt.log.ok([" "]);
+		grunt.log.ok(versions);
 		// Понеслась
 		for (val of versions) {
 			// Директория вывода
