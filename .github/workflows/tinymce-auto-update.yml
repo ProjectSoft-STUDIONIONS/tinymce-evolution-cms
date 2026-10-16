@@ -40,6 +40,21 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Prepare artifact list (tinymce-*.zip)
+        id: prepare-artifacts
+        run: |
+          # Ищем файлы по маске tinymce-*.zip в текущей директории (или укажи путь, если они в папке)
+          # -maxdepth 1 — чтобы не лезть в подпапки, если не нужно
+          ARTIFACTS=$(find . -maxdepth 1 -type f -name "tinymce-*.zip" | tr '\n' ',' | sed 's/,$//')
+
+          if [ -z "$ARTIFACTS" ]; then
+            echo "❌ Не найдено файлов по маске tinymce-*.zip!"
+            exit 1
+          fi
+
+          echo "Найденные артефакты: $ARTIFACTS"
+          echo "artifacts=$ARTIFACTS" >> $GITHUB_OUTPUT
+
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
@@ -49,3 +64,4 @@ jobs:
             New project version: ${{ steps.check-update.outputs.new-version }}
             Updated tinymce tags were detected and JSON updated.
           tag: "${{ steps.check-update.outputs.new-version }}"
+          artifacts: "${{ steps.prepare-artifacts.outputs.artifacts }}"
