@@ -58,10 +58,15 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          name: "Tinymce auto-update ${{ steps.check-update.outputs.new-version }}"
+          name: "TinyMCE for EvolutionCMS v${{ steps.check-update.outputs.new-version }}"
           body: |
-            Automated release triggered by scheduled check.
             New project version: ${{ steps.check-update.outputs.new-version }}
-            Updated tinymce tags were detected and JSON updated.
+            Updated tinymce tags.
           tag: "${{ steps.check-update.outputs.new-version }}"
           artifacts: "${{ steps.prepare-artifacts.outputs.artifacts }}"
+
+      - name: Commit update README
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update README"
+          branch: main
