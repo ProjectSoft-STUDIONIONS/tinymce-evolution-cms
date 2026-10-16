@@ -66,7 +66,7 @@ async function main() {
 	console.log('Обнаружено обновление tinymce — увеличиваем версию проекта и готовим релиз.');
 
 	// Обновляем tinymce-accepted-tags.json
-	fs.writeFileSync(jsonPath, JSON.stringify(acceptedTags, null, 2), 'utf8');
+	fs.writeFileSync(jsonPath, JSON.stringify(acceptedTags, null, 4), 'utf8');
 
 	// Работаем с package.json: читаем, увеличиваем патч-версию, пишем обратно
 	let pkg;
@@ -82,7 +82,7 @@ async function main() {
 
 	console.log(`Версия проекта: ${oldVersion} → ${newVersion}`);
 	pkg.version = newVersion;
-	fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2), 'utf8');
+	fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 4), 'utf8');
 
 	writeOutput('updated', 'true');
 	writeOutput('new-version', newVersion);  // <--- ЭТО КРИТИЧНО ВАЖНО
