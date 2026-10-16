@@ -184,6 +184,7 @@ module.exports = function(grunt) {
 		var val;
 		var versions = {};
 		let strWidth = 0;
+		var versionsMD = [];
 		var date = new Date(),
 			year = String(date.getFullYear()),
 			month = String(date.getMonth() + 1).padStart(2, "0"),
@@ -301,6 +302,7 @@ module.exports = function(grunt) {
 				dirOut = `dist/${lowercase}/${lowercase}/${options.directory}/${lowercase}`,
 				installOut = `dist/${lowercase}/${lowercase}/install/` + options.directory,
 				cacheOut = `cache/${packge}`;
+			versionsMD.push(`tinymce-${num} = ${val}`);
 			//if(parseInt(num) != 4){
 			//	continue;
 			//}
@@ -754,7 +756,7 @@ module.exports = function(grunt) {
 		hour = String(date.getHours()).padStart(2, "0");
 		minute = String(date.getMinutes()).padStart(2, "0");
 		second = String(date.getSeconds()).padStart(2, "0");
-		readmedate = `${day}-${month}-${year} ${hour}:${minute}:${second}</td>`;
+		readmedate = `${day}-${month}-${year} ${hour}:${minute}:${second}<br/>${versionsMD.join('<br/>')}</td>`;
 		const regex = /\d{2}-\d{2}-\d{4}(?:.+)?/;
 		let readme = grunt.file.read("README.md").toString();
 		let result = readme.replace(regex, readmedate);
