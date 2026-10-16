@@ -27,3 +27,4 @@
 dev-*
 !.gitkeep
 !/plugins/.*
+!/tinymce-accepted-tags.json
