@@ -19,10 +19,10 @@ jobs:
         with:
           node-version: '20'
 
-      # Временная замена для отладки: npm install вместо npm ci
       - name: Install dependencies
         run: npm install
 
+      # Шаг 1: обновляем версии и теги
       - name: Check tinymce tags and update JSON + package.json
         id: check-update
         run: node scripts/check-tinymce-and-update.js
@@ -31,43 +31,30 @@ jobs:
         if: steps.check-update.outputs.updated == 'false'
         run: echo "No updates found. Stopping workflow." && exit 0
 
-      # Первый коммит: версии и теги
-      #- name: Commit updated files
-      #  uses: stefanzweifel/git-auto-commit-action@v5
-      #  with:
-      #    commit_message: "chore: update tinymce accepted tags and bump version"
-      #    branch: main
-
+      # Шаг 2: собираем проект (появляются tinymce-*.zip)
       - name: Build project
         run: npm run build
 
-      # Подготовка списка архивов
+      # Шаг 3: готовим список архивов для релиза
       - name: Prepare artifact list (tinymce-*.zip)
         id: prepare-artifacts
         run: |
-          # Ищем файлы по маске tinymce-*.zip в текущей директории (или укажи путь, если они в папке)
-          # -maxdepth 1 — чтобы не лезть в подпапки, если не нужно
           ARTIFACTS=$(find . -maxdepth 1 -type f -name "tinymce-*.zip" | tr '\n' ',' | sed 's/,$//')
-
           if [ -z "$ARTIFACTS" ]; then
-            echo "❌ Не найдено файлов по маске tinymce-*.zip!"
+            echo "❌ No tinymce-*.zip files found!"
             exit 1
           fi
-
-          echo "Найденные артефакты: $ARTIFACTS"
+          echo "Found artifacts: $ARTIFACTS"
           echo "artifacts=$ARTIFACTS" >> $GITHUB_OUTPUT
 
-      # Перед вторым коммитом делаем fetch, чтобы не было рассинхрона после первого push
-      - name: Sync branch before second commit
-        run: git fetch origin main
-
-      # Второй коммит: обновлённый README (с актуальной датой сборки)
-      - name: Commit update README
+      # Шаг 4: ОДИН общий коммит: версии + README
+      - name: Commit all changes (package.json, JSON, README)
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: update README"
+          commit_message: "chore: update tinymce accepted tags, bump version, update README"
           branch: main
 
+      # Шаг 5: релиз с тегом по версии из package.json (она уже в коммите!)
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
