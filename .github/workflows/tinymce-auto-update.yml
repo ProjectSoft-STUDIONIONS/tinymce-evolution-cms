@@ -31,6 +31,7 @@ jobs:
         if: steps.check-update.outputs.updated == 'false'
         run: echo "No updates found. Stopping workflow." && exit 0
 
+      # Первый коммит: версии и теги
       - name: Commit updated files
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
@@ -40,6 +41,7 @@ jobs:
       - name: Build project
         run: npm run build
 
+      # Подготовка списка архивов
       - name: Prepare artifact list (tinymce-*.zip)
         id: prepare-artifacts
         run: |
@@ -65,6 +67,11 @@ jobs:
           tag: "${{ steps.check-update.outputs.new-version }}"
           artifacts: "${{ steps.prepare-artifacts.outputs.artifacts }}"
 
+      # Перед вторым коммитом делаем fetch, чтобы не было рассинхрона после первого push
+      - name: Sync branch before second commit
+        run: git fetch origin main
+
+      # Второй коммит: обновлённый README (с актуальной датой сборки)
       - name: Commit update README
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
