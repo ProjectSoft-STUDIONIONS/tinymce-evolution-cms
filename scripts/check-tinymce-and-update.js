@@ -85,7 +85,7 @@ async function main() {
 	fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2), 'utf8');
 
 	writeOutput('updated', 'true');
-	writeOutput('new-version', newVersion);
+	writeOutput('new-version', newVersion);  // <--- ЭТО КРИТИЧНО ВАЖНО
 }
 
 // Правильный вывод для GitHub Actions (совместимо с современными раннерами)

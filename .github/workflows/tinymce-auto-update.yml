@@ -43,9 +43,9 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          name: "Tinymce auto-update v${{ steps.check-update.outputs.new-version }}"
+          name: "Tinymce auto-update ${{ steps.check-update.outputs.new-version }}"
           body: |
             Automated release triggered by scheduled check.
             New project version: ${{ steps.check-update.outputs.new-version }}
             Updated tinymce tags were detected and JSON updated.
-          tag: "TinyMCE for EvolutionCMS v${{ steps.check-update.outputs.new-version }}"
+          tag: "${{ steps.check-update.outputs.new-version }}"
