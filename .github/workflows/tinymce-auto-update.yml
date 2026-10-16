@@ -40,7 +40,7 @@ jobs:
         with:
           commit_message: "chore: update tinymce accepted tags and bump version"
           files: "tinymce-accepted-tags.json,package.json"
-          branch: main  # или твоя ветка
+          branch: main
 
       - name: Build project
         run: npm run build
