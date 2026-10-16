@@ -1,10 +1,8 @@
 name: Tinymce Auto-Update & Release
 
-# Запуск по расписанию: раз в месяц (можно поменять на неделю/две недели)
 on:
   schedule:
-    - cron: "0 3 1 * *"  # Каждый 1-й день месяца в 03:00 UTC
-  # Можно также запускать вручную кнопкой "Run workflow"
+    - cron: "0 3 1 * *"
   workflow_dispatch:
 
 jobs:
@@ -14,7 +12,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0          # Важно: нужна полная история для коммита
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Setup Node.js
@@ -22,15 +20,14 @@ jobs:
         with:
           node-version: '20'
 
+      # Временная замена для отладки: npm install вместо npm ci
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
-      # Скрипт проверки и обновления JSON (будет ниже)
-      - name: Check tinymce tags and update JSON
+      - name: Check tinymce tags and update JSON + package.json
         id: check-update
         run: node scripts/check-tinymce-and-update.js
 
-      # Если скрипт ничего не нашёл — останавливаемся
       - name: Exit if no updates
         if: steps.check-update.outputs.updated == 'false'
         run: echo "No updates found. Stopping workflow." && exit 0
@@ -53,5 +50,4 @@ jobs:
             Automated release triggered by scheduled check.
             New project version: ${{ steps.check-update.outputs.new-version }}
             Updated tinymce tags were detected and JSON updated.
-          tag: "v${{ steps.check-update.outputs.new-version }}"
-          artifacts: "dist/**"  # Если нужно прикрепить артефакты сборки
+          tag: "TinyMCE for EvolutionCMS v${{ steps.check-update.outputs.new-version }}"
