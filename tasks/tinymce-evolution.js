@@ -188,8 +188,11 @@ module.exports = function(grunt) {
 			year = String(date.getFullYear()),
 			month = String(date.getMonth() + 1).padStart(2, "0"),
 			day = String(date.getDate()).padStart(2, "0"),
+			hour = String(date.getHours()).padStart(2, "0"),
+			minute = String(date.getMinutes()).padStart(2, "0"),
+			second = String(date.getSeconds()).padStart(2, "0"),
 			lastupdate = `${year}-${month}-${day}`,
-			readmedate = `${day}-${month}-${year}`;
+			readmedate = `${day}-${month}-${year} ${hour}:${minute}:${second}`;
 		gruntLog('Download TinyMCE versions', linkVers, 'start');
 		try {
 			// Получаем свежие версии
@@ -745,9 +748,16 @@ module.exports = function(grunt) {
 
 		// Readme
 		/**/
-		const regex = /\d{2}-\d{2}-\d{4}/;
+		year = String(date.getFullYear());
+		month = String(date.getMonth() + 1).padStart(2, "0");
+		day = String(date.getDate()).padStart(2, "0");
+		hour = String(date.getHours()).padStart(2, "0");
+		minute = String(date.getMinutes()).padStart(2, "0");
+		second = String(date.getSeconds()).padStart(2, "0");
+		readmedate = `${day}-${month}-${year} ${hour}:${minute}:${second}</td>`;
+		const regex = /\d{2}-\d{2}-\d{4}(?:.+)?/;
 		let readme = grunt.file.read("README.md").toString();
-		let result = readme.replace(/\d{2}-\d{2}-\d{4}/, readmedate);
+		let result = readme.replace(regex, readmedate);
 		grunt.file.write("README.md", result);
 		/**/
 		// Окончание работы задачи

@@ -32,6 +32,7 @@ tab_width = 4
 
 [**.json]
 tab_width = 4
+indent_style = space
 
 [**rc]
 tab_width = 4
