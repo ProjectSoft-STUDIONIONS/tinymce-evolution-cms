@@ -1,0 +1,59 @@
+name: Tinymce Auto-Update & Release
+
+# Запуск по расписанию: раз в месяц (можно поменять на неделю/две недели)
+on:
+  schedule:
+    - cron: "0 3 1 * *"  # Каждый 1-й день месяца в 03:00 UTC
+  # Можно также запускать вручную кнопкой "Run workflow"
+  workflow_dispatch:
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # Важно: нужна полная история для коммита
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Скрипт проверки и обновления JSON (будет ниже)
+      - name: Check tinymce tags and update JSON
+        id: check-update
+        run: node scripts/check-tinymce-and-update.js
+
+      # Если скрипт ничего не нашёл — останавливаемся
+      - name: Exit if no updates
+        if: steps.check-update.outputs.updated == 'false'
+        run: echo "No updates found. Stopping workflow." && exit 0
+
+      - name: Commit updated files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update tinymce accepted tags and bump version"
+          files:
+            - tinymce-accepted-tags.json
+            - package.json
+          branch: main  # или твоя ветка
+
+      - name: Build project
+        run: npm run build
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          name: "Tinymce auto-update v${{ steps.check-update.outputs.new-version }}"
+          body: |
+            Automated release triggered by scheduled check.
+            New project version: ${{ steps.check-update.outputs.new-version }}
+            Updated tinymce tags were detected and JSON updated.
+          tag: "v${{ steps.check-update.outputs.new-version }}"
+          artifacts: "dist/**"  # Если нужно прикрепить артефакты сборки
