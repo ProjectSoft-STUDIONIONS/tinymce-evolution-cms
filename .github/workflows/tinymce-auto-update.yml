@@ -57,16 +57,6 @@ jobs:
           echo "Найденные артефакты: $ARTIFACTS"
           echo "artifacts=$ARTIFACTS" >> $GITHUB_OUTPUT
 
-      - name: Create Release
-        uses: ncipollo/release-action@v1
-        with:
-          name: "TinyMCE for EvolutionCMS v${{ steps.check-update.outputs.new-version }}"
-          body: |
-            New project version: ${{ steps.check-update.outputs.new-version }}
-            Updated tinymce tags.
-          tag: "${{ steps.check-update.outputs.new-version }}"
-          artifacts: "${{ steps.prepare-artifacts.outputs.artifacts }}"
-
       # Перед вторым коммитом делаем fetch, чтобы не было рассинхрона после первого push
       - name: Sync branch before second commit
         run: git fetch origin main
@@ -77,3 +67,13 @@ jobs:
         with:
           commit_message: "chore: update README"
           branch: main
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          name: "TinyMCE for EvolutionCMS v${{ steps.check-update.outputs.new-version }}"
+          body: |
+            New project version: ${{ steps.check-update.outputs.new-version }}
+            Updated tinymce tags.
+          tag: "${{ steps.check-update.outputs.new-version }}"
+          artifacts: "${{ steps.prepare-artifacts.outputs.artifacts }}"
