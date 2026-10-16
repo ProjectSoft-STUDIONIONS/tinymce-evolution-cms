@@ -32,11 +32,11 @@ jobs:
         run: echo "No updates found. Stopping workflow." && exit 0
 
       # Первый коммит: версии и теги
-      - name: Commit updated files
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: update tinymce accepted tags and bump version"
-          branch: main
+      #- name: Commit updated files
+      #  uses: stefanzweifel/git-auto-commit-action@v5
+      #  with:
+      #    commit_message: "chore: update tinymce accepted tags and bump version"
+      #    branch: main
 
       - name: Build project
         run: npm run build
