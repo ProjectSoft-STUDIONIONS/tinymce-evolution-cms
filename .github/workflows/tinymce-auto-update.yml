@@ -31,12 +31,14 @@ jobs:
         if: steps.check-update.outputs.updated == 'false'
         run: echo "No updates found. Stopping workflow." && exit 0
 
-      # Шаг 2: собираем проект (появляются tinymce-*.zip)
+      # Шаг 2: собираем проект (только если есть обновления)
       - name: Build project
+        if: steps.check-update.outputs.updated == 'true'
         run: npm run build
 
-      # Шаг 3: готовим список архивов для релиза
+      # Шаг 3: готовим список архивов
       - name: Prepare artifact list (tinymce-*.zip)
+        if: steps.check-update.outputs.updated == 'true'
         id: prepare-artifacts
         run: |
           ARTIFACTS=$(find . -maxdepth 1 -type f -name "tinymce-*.zip" | tr '\n' ',' | sed 's/,$//')
@@ -47,15 +49,17 @@ jobs:
           echo "Found artifacts: $ARTIFACTS"
           echo "artifacts=$ARTIFACTS" >> $GITHUB_OUTPUT
 
-      # Шаг 4: ОДИН общий коммит: версии + README
-      - name: Commit all changes (package.json, JSON, README)
+      # Шаг 4: ОДИН общий коммит
+      - name: Commit all changes
+        if: steps.check-update.outputs.updated == 'true'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: update tinymce accepted tags, bump version, update README"
           branch: main
 
-      # Шаг 5: релиз с тегом по версии из package.json (она уже в коммите!)
+      # Шаг 5: релиз
       - name: Create Release
+        if: steps.check-update.outputs.updated == 'true'
         uses: ncipollo/release-action@v1
         with:
           name: "TinyMCE for EvolutionCMS v${{ steps.check-update.outputs.new-version }}"
