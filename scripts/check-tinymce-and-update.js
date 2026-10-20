@@ -7,7 +7,7 @@ const jsonPath = path.join(__dirname, '..', 'tinymce-accepted-tags.json');
 const pkgPath = path.join(__dirname, '..', 'package.json');
 
 // Здесь меняем если толко выходит новая мажорная версия
-const tags = [4,5,6,7,8];
+const tags = [4,5,6,7];
 
 function compareVersions(a, b) {
 	const partsA = a.split('.').map(Number);
@@ -63,7 +63,7 @@ async function main() {
 			// Здесь проверяем, входит ли наша версия в массив готовых для публикации
 			// Создаётся только одно issue при выходе новой мажорной версии
 			if(!tags.includes(nrl)) {
-				//
+				console.log("Новая мажорная версия ->", currentVersion);
 				major = true;
 				majorVersion = currentVersion;
 			}

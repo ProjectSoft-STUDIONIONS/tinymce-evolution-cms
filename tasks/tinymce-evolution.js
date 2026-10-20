@@ -20,7 +20,7 @@ module.exports = function(grunt) {
 
 	const { ZipArchive } = require('archiver');
 
-	const tags = [4,5,6,7];
+	const tags = [4,5,6,7,8];
 
 
 	const tty = process.stdout.isTTY === true;
