@@ -43,7 +43,7 @@ jobs:
           BODY="⚠️ **Major version mismatch detected**\n\nA new major version of TinyMCE has been released: **v${MAJOR_VERSION}**.\n\nThe current plugin build is **not yet ready** to support this major version.\n\nThis release was created with supported versions only (project version: v${NEW_VERSION}).\n\nWorkflow run: ${RUN_URL}"
 
           # Создаём Issue через GitHub API
-          curl -X POST \
+          curl -s -w "\nStatus: %{http_code}" -X POST \
             -H "Authorization: token ${GITHUB_TOKEN}" \
             -H "Accept: application/vnd.github+json" \
             -H "Content-Type: application/json" \
