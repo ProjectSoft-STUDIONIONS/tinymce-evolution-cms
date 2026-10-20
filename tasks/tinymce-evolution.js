@@ -294,7 +294,7 @@ module.exports = function(grunt) {
 		// Понеслась
 		for (val of versions) {
 			// Директория вывода
-			let num = val.split(".")[0],
+			let num = parseInt(val.split(".")[0]),
 				packge = `tinymce@${val}`,
 				lowercase = `tinymce${num}`,
 				uppercase = `TinyMCE${num}`,
@@ -304,6 +304,8 @@ module.exports = function(grunt) {
 				dirOut = `dist/${lowercase}/${lowercase}/${options.directory}/${lowercase}`,
 				installOut = `dist/${lowercase}/${lowercase}/install/` + options.directory,
 				cacheOut = `cache/${packge}`;
+			console.log(tags);
+			console.log(num);
 			if(tags.includes(num)) {
 				versionsMD.push(`tinymce-${num} = ${val}`);
 				//if(parseInt(num) != 4){
