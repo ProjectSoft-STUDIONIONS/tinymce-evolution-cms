@@ -15,7 +15,7 @@
 				<br />
 				Чернышёв Андрей aka ProjectSoft
 			</td>
-			<td valign="top">20-10-2026 19:08:50<br/>tinymce-4 = 4.9.11<br/>tinymce-5 = 5.10.9<br/>tinymce-6 = 6.8.6<br/>tinymce-7 = 7.9.3<br/>tinymce-8 = 8.10.0</td>
+			<td valign="top">20-10-2026 19:14:09<br/>tinymce-4 = 4.9.11<br/>tinymce-5 = 5.10.9<br/>tinymce-6 = 6.8.6<br/>tinymce-7 = 7.9.3<br/>tinymce-8 = 8.10.0</td>
 			<td valign="top" width="290px" style="width:290px !important;">
 				<a href="https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases/latest/download/tinymce-4.zip" target="_blank" title="Download tinymce-4.zip">
 					<img src="https://img.shields.io/github/downloads/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/tinymce-4.zip?displayAssetName=false&style=for-the-badge&label=%E2%9C%85%20%D0%A1%D0%9A%D0%90%D0%A7%D0%90%D0%A2%D0%AC%20tinymce-4.zip&cacheSeconds=10" alt="tinymce-4.zip" />
