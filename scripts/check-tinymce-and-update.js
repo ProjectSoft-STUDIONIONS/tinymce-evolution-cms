@@ -7,7 +7,7 @@ const jsonPath = path.join(__dirname, '..', 'tinymce-accepted-tags.json');
 const pkgPath = path.join(__dirname, '..', 'package.json');
 
 // Здесь меняем если толко выходит новая мажорная версия
-const tags = [4,5,6,7,8];
+const tags = [4,5,6,7];
 
 function compareVersions(a, b) {
 	const partsA = a.split('.').map(Number);

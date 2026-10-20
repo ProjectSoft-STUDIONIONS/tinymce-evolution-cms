@@ -304,8 +304,6 @@ module.exports = function(grunt) {
 				dirOut = `dist/${lowercase}/${lowercase}/${options.directory}/${lowercase}`,
 				installOut = `dist/${lowercase}/${lowercase}/install/` + options.directory,
 				cacheOut = `cache/${packge}`;
-			console.log(tags);
-			console.log(num);
 			if(tags.includes(num)) {
 				versionsMD.push(`tinymce-${num} = ${val}`);
 				//if(parseInt(num) != 4){
