@@ -105,7 +105,7 @@ async function main() {
 }
 
 // Правильный вывод для GitHub Actions (совместимо с современными раннерами)
-function writeOutput(name, value, major) {
+function writeOutput(name, value) {
 	if (process.env.GITHUB_OUTPUT) {
 		fs.appendFileSync(process.env.GITHUB_OUTPUT, `${name}=${value}\n`, { encoding: 'utf8' });
 	} else {
