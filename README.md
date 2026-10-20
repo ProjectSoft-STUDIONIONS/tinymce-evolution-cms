@@ -40,3 +40,5 @@
 		</tr>
 	</tbody>
 </table>
+<p>Сборка плагинов происходит на стороне GitHub Actions. Поэтому в сборке будут присутствовать самые свежие версии TinyMCE, так как для сборки будут скачены <a href="https://registry.npmjs.org/tinymce" target="_blank">опубликованные стабильные версии</a>.</p>
+<p>Скачивать плагины нужно только с этой страницы по ссылкам выше или через <a href="https://github.com/ProjectSoft-STUDIONIONS/tinymce-evolution-cms/releases" target="_blank">релизы</a>.</p>
