@@ -35,20 +35,13 @@ jobs:
           REPO: ${{ github.repository }}
           MAJOR_VERSION: ${{ steps.check-update.outputs.majorVersion }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          NEW_VERSION: ${{ steps.check-update.outputs.new-version }}
         run: |
           TITLE="Auto-alert: New TinyMCE major version detected (v${MAJOR_VERSION})"
-          BODY=$(cat <<EOF
-⚠️ **Major version mismatch detected**
 
-A new major version of TinyMCE has been released: **v${MAJOR_VERSION}**.
+          # Формируем тело сообщения одной строкой (переносы строк в JSON передаются как \n)
+          BODY="⚠️ **Major version mismatch detected**\n\nA new major version of TinyMCE has been released: **v${MAJOR_VERSION}**.\n\nThe current plugin build is **not yet ready** to support this major version.\n\nThis release was created with supported versions only (project version: v${NEW_VERSION}).\n\nWorkflow run: ${RUN_URL}"
 
-The current plugin build is **not yet ready** to support this major version.
-
-This release was still created with the supported versions only.
-
-Workflow run: ${RUN_URL}
-EOF
-          )
           # Создаём Issue через GitHub API
           curl -X POST \
             -H "Authorization: token ${GITHUB_TOKEN}" \
