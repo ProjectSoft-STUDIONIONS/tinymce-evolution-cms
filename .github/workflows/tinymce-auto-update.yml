@@ -28,22 +28,34 @@ jobs:
         run: node scripts/check-tinymce-and-update.js
 
       # Если есть мажорная версия - созаём Issue
-      - name: Report major version mismatch as Issue
+      - name: Report major version mismatch (via GitHub API)
         if: steps.check-update.outputs.major == 'true'
-        uses: peter-evans/create-issue@v3
-        with:
-          title: "Auto-alert: New TinyMCE major version detected (v${{ steps.check-update.outputs.majorVersion }})"
-          body: |
-            ⚠️ **Major version mismatch detected**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          MAJOR_VERSION: ${{ steps.check-update.outputs.majorVersion }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          TITLE="Auto-alert: New TinyMCE major version detected (v${MAJOR_VERSION})"
+          BODY=$(cat <<EOF
+⚠️ **Major version mismatch detected**
 
-            A new major version of TinyMCE has been released: **v${{ steps.check-update.outputs.majorVersion }}**.
+A new major version of TinyMCE has been released: **v${MAJOR_VERSION}**.
 
-            The current plugin build is **not yet ready** to support this major version.
+The current plugin build is **not yet ready** to support this major version.
 
-            This release was still created with the supported versions only.
+This release was still created with the supported versions only.
 
-            Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          labels: alert, needs-review
+Workflow run: ${RUN_URL}
+EOF
+          )
+          # Создаём Issue через GitHub API
+          curl -X POST \
+            -H "Authorization: token ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Content-Type: application/json" \
+            "https://api.github.com/repos/${REPO}/issues" \
+            -d "{\"title\":\"${TITLE}\",\"body\":\"${BODY}\",\"labels\":[\"alert\",\"needs-review\"]}"
 
       # Если нет обновлений. Выход
       - name: Exit if no updates
