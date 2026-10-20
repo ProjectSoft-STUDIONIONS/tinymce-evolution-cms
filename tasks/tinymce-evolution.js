@@ -20,6 +20,8 @@ module.exports = function(grunt) {
 
 	const { ZipArchive } = require('archiver');
 
+	const tags = [4,5,6,7];
+
 
 	const tty = process.stdout.isTTY === true;
 
@@ -302,110 +304,252 @@ module.exports = function(grunt) {
 				dirOut = `dist/${lowercase}/${lowercase}/${options.directory}/${lowercase}`,
 				installOut = `dist/${lowercase}/${lowercase}/install/` + options.directory,
 				cacheOut = `cache/${packge}`;
-			versionsMD.push(`tinymce-${num} = ${val}`);
-			//if(parseInt(num) != 4){
-			//	continue;
-			//}
-			gruntLog('Initialize', packge, 'init');
+			if(tags.includes(num)) {
+				versionsMD.push(`tinymce-${num} = ${val}`);
+				//if(parseInt(num) != 4){
+				//	continue;
+				//}
+				gruntLog('Initialize', packge, 'init');
 
-			// Исходная директория языка
-			let vn = Number(num) == 4 ? '' : num;
-			let lngIn = 'cache/tinymce-i18n/langs' + vn;
-			// Конечная директория языка
-			let lngOut = cacheOut + '/tinymce/langs';
+				// Исходная директория языка
+				let vn = Number(num) == 4 ? '' : num;
+				let lngIn = 'cache/tinymce-i18n/langs' + vn;
+				// Конечная директория языка
+				let lngOut = cacheOut + '/tinymce/langs';
 
-			if(!fs.existsSync(cacheOut)){
-				// Скачать пакет, скопировать языки
-				// Стартуем загрузку
+				if(!fs.existsSync(cacheOut)){
+					// Скачать пакет, скопировать языки
+					// Стартуем загрузку
 
-				gruntLog('Start Download', `download npm package ${packge}`, 'init');
-				await downloadNpmPackage({
-					// Тег версии tinymce
-					arg: packge,
-					dir: cacheOut
-				}).then((rel) => {
-					// Удачная загрузка
-					gruntLog('Success Download', packge, 'success');
-					gruntLog('Unzipped', cacheOut, 'success');
-					// Копируем с рекурсией языки
-					fs.cpSync(lngIn, lngOut, {
-						recursive: true,
-						force: true
+					gruntLog('Start Download', `download npm package ${packge}`, 'init');
+					await downloadNpmPackage({
+						// Тег версии tinymce
+						arg: packge,
+						dir: cacheOut
+					}).then((rel) => {
+						// Удачная загрузка
+						gruntLog('Success Download', packge, 'success');
+						gruntLog('Unzipped', cacheOut, 'success');
+						// Копируем с рекурсией языки
+						fs.cpSync(lngIn, lngOut, {
+							recursive: true,
+							force: true
+						});
+						gruntLog('Copy languages ' + lowercase, lngOut, 'ok');
+						// Удаление мобильной темы
+						//if(grunt.file.exists(cacheOut + '/tinymce/themes/mobile')) {
+						//	grunt.file.delete(cacheOut + '/tinymce/themes/mobile');
+						//	gruntLog('Delete mobile ' + lowercase, cacheOut + '/tinymce/themes/mobile', 'ok');
+						//}
+					}).catch((err) => {
+						// Ошибка загрузки
+						// Сразу выходим
+						gruntLog('>> Error Download', err, 'warn');
 					});
-					gruntLog('Copy languages ' + lowercase, lngOut, 'ok');
-					// Удаление мобильной темы
-					//if(grunt.file.exists(cacheOut + '/tinymce/themes/mobile')) {
-					//	grunt.file.delete(cacheOut + '/tinymce/themes/mobile');
-					//	gruntLog('Delete mobile ' + lowercase, cacheOut + '/tinymce/themes/mobile', 'ok');
-					//}
-				}).catch((err) => {
-					// Ошибка загрузки
-					// Сразу выходим
-					gruntLog('>> Error Download', err, 'warn');
-				});
-			}
-
-			// Вот здесь уже копирование всего в исходники плагинов
-			// Копируем с рекурсией TinyMCE
-			fs.cpSync(cacheOut, dirOut, {
-				recursive: true,
-				force: true
-			});
-			gruntLog('Copy source ' + lowercase, dirOut, 'ok');
-			// Удаляем ненужные файлы
-			let tempFiles = [
-				path.join(dirOut, 'tinymce', "bower.json"),
-				path.join(dirOut, 'tinymce', "changelog.txt"),
-				path.join(dirOut, 'tinymce', "CHANGELOG.md"),
-				path.join(dirOut, 'tinymce', "composer.json"),
-				path.join(dirOut, 'tinymce', "notices.txt"),
-				path.join(dirOut, 'tinymce', "package.json"),
-				path.join(dirOut, 'tinymce', "readme.md"),
-			];
-			//var tmpFile;
-			for(var tmpFile of tempFiles) {
-				if(grunt.file.exists(tmpFile)) {
-					grunt.file.delete(tmpFile, {});
 				}
-			}
 
-			// Далее
-			// Выход плагинов
-			let dirOutPlgs = dirOut + '/tinymce/plugins';
+				// Вот здесь уже копирование всего в исходники плагинов
+				// Копируем с рекурсией TinyMCE
+				fs.cpSync(cacheOut, dirOut, {
+					recursive: true,
+					force: true
+				});
+				gruntLog('Copy source ' + lowercase, dirOut, 'ok');
+				// Удаляем ненужные файлы
+				let tempFiles = [
+					path.join(dirOut, 'tinymce', "bower.json"),
+					path.join(dirOut, 'tinymce', "changelog.txt"),
+					path.join(dirOut, 'tinymce', "CHANGELOG.md"),
+					path.join(dirOut, 'tinymce', "composer.json"),
+					path.join(dirOut, 'tinymce', "notices.txt"),
+					path.join(dirOut, 'tinymce', "package.json"),
+					path.join(dirOut, 'tinymce', "readme.md"),
+				];
+				//var tmpFile;
+				for(var tmpFile of tempFiles) {
+					if(grunt.file.exists(tmpFile)) {
+						grunt.file.delete(tmpFile, {});
+					}
+				}
 
-			// Копирование плагинов
-			copyFolderRecursiveSync(
-				`plugins${num}`,
-				dirOutPlgs,
-				lowercase,
-				uppercase,
-				biguppercase,
-				val,
-				options.repository,
-				options.issues,
-				pkg_version,
-				lastupdate
-			);
+				// Далее
+				// Выход плагинов
+				let dirOutPlgs = dirOut + '/tinymce/plugins';
 
-			// Копирование плагинa codemirror
-			copyFolderRecursiveSync(
-				`node_modules/tinymce-codemirror-evolutioncms/plugins`,
-				dirOutPlgs,
-				lowercase,
-				uppercase,
-				biguppercase,
-				val,
-				options.repository,
-				options.issues,
-				pkg_version,
-				lastupdate
-			);
-			if(num > 4) {
-				// v5.x.x - v8.x.x
-				// Минификация плагинов temp_plugin_major
-				grunt.file.recurse(`temp_plugin_major`, function(abspath, rootdir, subdir, filename){
+				// Копирование плагинов
+				copyFolderRecursiveSync(
+					`plugins${num}`,
+					dirOutPlgs,
+					lowercase,
+					uppercase,
+					biguppercase,
+					val,
+					options.repository,
+					options.issues,
+					pkg_version,
+					lastupdate
+				);
+
+				// Копирование плагинa codemirror
+				copyFolderRecursiveSync(
+					`node_modules/tinymce-codemirror-evolutioncms/plugins`,
+					dirOutPlgs,
+					lowercase,
+					uppercase,
+					biguppercase,
+					val,
+					options.repository,
+					options.issues,
+					pkg_version,
+					lastupdate
+				);
+				if(num > 4) {
+					// v5.x.x - v8.x.x
+					// Минификация плагинов temp_plugin_major
+					grunt.file.recurse(`temp_plugin_major`, function(abspath, rootdir, subdir, filename){
+						let out, script, result;
+						if(filename=='plugin.js'/* || /langs$/.test(subdir) */){
+							out = `${dirOutPlgs}/${subdir}/` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`);
+							script = grunt.file.read(`${abspath}`).toString();
+							// Если есть первый комментарий, то добавим в начало к минимизированному.
+							const regex = /(\/\*([\s\S]*?)\*\/)/;
+							let m, comment = "";
+							if ((m = regex.exec(script)) !== null) {
+								comment = `${m[1]}\n`;
+							}
+							result = UglifyJS.minify(script, {
+								output: {
+									ascii_only: true
+								}
+							});
+							if (!result.error) {
+								grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
+								gruntLog(`Uglify js ${filename}`, `${dirOutPlgs}/${subdir}/`, 'ok');
+							}else{
+								//console.log(result.error);
+								gruntLog(`Uglify js err ${filename}`, `${dirOutPlgs}/${subdir}/`, 'fatal');
+							}
+						}
+					});
+					// Копирование temp_plugin_major, ...
+					copyFolderRecursiveSync(
+						`temp_plugin_major`,
+						dirOutPlgs,
+						lowercase,
+						uppercase,
+						biguppercase,
+						val,
+						options.repository,
+						options.issues,
+						pkg_version,
+						lastupdate
+					);
+
+					// copy fonts emoticons
+					copyFolderRecursiveSync(
+						`node_modules/noto-color-emoji/src/fonts`,
+						dirOutPlgs + `/emoticons/fonts`,
+						lowercase,
+						uppercase,
+						biguppercase,
+						val,
+						options.repository,
+						options.issues,
+						pkg_version,
+						lastupdate
+					);
+					// Копирование минифицированных локалей
+					copyFolderRecursiveSync(
+						`locale_major_mini`,
+						dirOutPlgs,
+						lowercase,
+						uppercase,
+						biguppercase,
+						val,
+						options.repository,
+						options.issues,
+						pkg_version,
+						lastupdate
+					);
+					await sleep(2000);
+				} else {
+					// v4.x.x
+					// Копирование плагинов temp_plugin_minor
+					copyFolderRecursiveSync(
+						`temp_plugin_minor`,
+						dirOutPlgs,
+						lowercase,
+						uppercase,
+						biguppercase,
+						val,
+						options.repository,
+						options.issues,
+						pkg_version,
+						lastupdate
+					);
+					// Минификация плагинов temp_plugin_minor
+					grunt.file.recurse(`temp_plugin_minor`, function(abspath, rootdir, subdir, filename){
+						let out, script, result;
+						if(filename=='plugin.js'){
+							out = `${dirOutPlgs}/${subdir}/` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`);
+							script = grunt.file.read(`${abspath}`).toString();
+							// Если есть первый комментарий, то добавим в начало к минимизированному.
+							const regex = /(\/\*([\s\S]*?)\*\/)/;
+							let m, comment = "";
+							if ((m = regex.exec(script)) !== null) {
+								comment = `${m[1]}\n`;
+							}
+							result = UglifyJS.minify(script, {
+								output: {
+									ascii_only: true
+								}
+							});
+							if (!result.error) {
+								grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
+								gruntLog(`Uglify js ${filename}`, `${dirOutPlgs}/${subdir}/`, 'ok');
+							}else{
+								//console.log(result.error);
+								gruntLog(`Uglify js err ${filename}`, `${dirOutPlgs}/${subdir}/`, 'fatal');
+							}
+						}
+					});
+					// Копирование минификации локалей плагинов
+					copyFolderRecursiveSync(
+						`locale_minor_mini`,
+						dirOutPlgs,
+						lowercase,
+						uppercase,
+						biguppercase,
+						val,
+						options.repository,
+						options.issues,
+						pkg_version,
+						lastupdate
+					);
+					// Удаляем emoticons
+					grunt.file.delete(`${dirOutPlgs}/emoticons`, { force: true });
+					// Копирование emoticons, ...
+					copyFolderRecursiveSync(
+						`node_modules/tinymce-emoticons-v4/assets/plugins/tinymce4/tinymce/plugins`,
+						dirOutPlgs,
+						lowercase,
+						uppercase,
+						biguppercase,
+						val,
+						options.repository,
+						options.issues,
+						pkg_version,
+						lastupdate
+					);
+					await sleep(2000);
+				}
+				gruntLog('Copy plugins ' + lowercase, dirOutPlgs, 'ok');
+
+				// Минимизация плагинов и языков plugins${num}
+				// Плагин modxlink перезапишется в версиях больше четвёртой версии
+				grunt.file.recurse(`plugins${num}`, function(abspath, rootdir, subdir, filename){
 					let out, script, result;
-					if(filename=='plugin.js'/* || /langs$/.test(subdir) */){
+					if(filename=='plugin.js' || /langs$/.test(subdir)){
 						out = `${dirOutPlgs}/${subdir}/` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`);
 						script = grunt.file.read(`${abspath}`).toString();
 						// Если есть первый комментарий, то добавим в начало к минимизированному.
@@ -421,31 +565,18 @@ module.exports = function(grunt) {
 						});
 						if (!result.error) {
 							grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
-							gruntLog(`Uglify js ${filename}`, `${dirOutPlgs}/${subdir}/`, 'ok');
+							gruntLog(`Uglify js ` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`), `${subdir}`, 'ok');
 						}else{
 							//console.log(result.error);
-							gruntLog(`Uglify js err ${filename}`, `${dirOutPlgs}/${subdir}/`, 'fatal');
+							gruntLog('Uglify js fatal', out, 'fatal');
 						}
 					}
 				});
-				// Копирование temp_plugin_major, ...
-				copyFolderRecursiveSync(
-					`temp_plugin_major`,
-					dirOutPlgs,
-					lowercase,
-					uppercase,
-					biguppercase,
-					val,
-					options.repository,
-					options.issues,
-					pkg_version,
-					lastupdate
-				);
 
-				// copy fonts emoticons
+				// Копирование js-cookie
 				copyFolderRecursiveSync(
-					`node_modules/noto-color-emoji/src/fonts`,
-					dirOutPlgs + `/emoticons/fonts`,
+					'node_modules/js-cookie/dist',
+					dirOut + "/js",
 					lowercase,
 					uppercase,
 					biguppercase,
@@ -455,10 +586,13 @@ module.exports = function(grunt) {
 					pkg_version,
 					lastupdate
 				);
-				// Копирование минифицированных локалей
+				gruntLog('Copy js-cookie', dirOut + "/js", 'ok');
+
+				// Копирование файлов из src директории
+				let pathFiles = options.src;
 				copyFolderRecursiveSync(
-					`locale_major_mini`,
-					dirOutPlgs,
+					options.src,
+					dirOut,
 					lowercase,
 					uppercase,
 					biguppercase,
@@ -468,13 +602,12 @@ module.exports = function(grunt) {
 					pkg_version,
 					lastupdate
 				);
-				await sleep(2000);
-			} else {
-				// v4.x.x
-				// Копирование плагинов temp_plugin_minor
+				gruntLog('Copy src ' + lowercase, dirOut, 'ok');
+
+				// Копирование тем
 				copyFolderRecursiveSync(
-					`temp_plugin_minor`,
-					dirOutPlgs,
+					`theme${num}`,
+					dirOut,
 					lowercase,
 					uppercase,
 					biguppercase,
@@ -484,268 +617,141 @@ module.exports = function(grunt) {
 					pkg_version,
 					lastupdate
 				);
-				// Минификация плагинов temp_plugin_minor
-				grunt.file.recurse(`temp_plugin_minor`, function(abspath, rootdir, subdir, filename){
-					let out, script, result;
-					if(filename=='plugin.js'){
-						out = `${dirOutPlgs}/${subdir}/` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`);
-						script = grunt.file.read(`${abspath}`).toString();
-						// Если есть первый комментарий, то добавим в начало к минимизированному.
-						const regex = /(\/\*([\s\S]*?)\*\/)/;
-						let m, comment = "";
-						if ((m = regex.exec(script)) !== null) {
-							comment = `${m[1]}\n`;
-						}
-						result = UglifyJS.minify(script, {
-							output: {
-								ascii_only: true
-							}
-						});
-						if (!result.error) {
-							grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
-							gruntLog(`Uglify js ${filename}`, `${dirOutPlgs}/${subdir}/`, 'ok');
-						}else{
-							//console.log(result.error);
-							gruntLog(`Uglify js err ${filename}`, `${dirOutPlgs}/${subdir}/`, 'fatal');
-						}
+				gruntLog('Copy theme ' + lowercase, dirOut, 'ok');
+
+				if(num > 4) {
+					// Файлы подключения плагина v5.x.x .... v8.x.x
+					copyFolderRecursiveSync(
+						'src_plugin_major',
+						dirOut,
+						lowercase,
+						uppercase,
+						biguppercase,
+						val,
+						options.repository,
+						options.issues,
+						pkg_version,
+						lastupdate
+					);
+				} else {
+					// Файлы подключения плагина v4.x.x
+					copyFolderRecursiveSync(
+						'src_plugin_minor',
+						dirOut,
+						lowercase,
+						uppercase,
+						biguppercase,
+						val,
+						options.repository,
+						options.issues,
+						pkg_version,
+						lastupdate
+					);
+				}
+
+				// Копирование основного класса в lib
+				copyFolderRecursiveSync('lib', `dist/${lowercase}/${lowercase}/assets/lib`);
+				gruntLog('Copy lib', `dist/${lowercase}/${lowercase}/assets/lib`, 'ok');
+				// Копирование инсталяционного файла плагина
+				copyFolderRecursiveSync(
+					options.install,
+					installOut,
+					lowercase,
+					uppercase,
+					biguppercase,
+					val,
+					options.repository,
+					options.issues,
+					pkg_version,
+					lastupdate
+				);
+				gruntLog('Copy install ' + lowercase, installOut + '/' + lowercase + '.tpl', 'ok');
+				// Архивирование
+				gruntLog('Start of Archiving', `tinymce-${num}.zip`, 'ok');
+				// Получаем размер директории
+				let dirSize = await getFolderSize.strict(`dist/${lowercase}/${lowercase}`);
+				let output = fs.createWriteStream(`tinymce-${num}.zip`);
+				let arh = new ZipArchive(
+					{
+						zlib: {
+							// Компрессию оставим по умолчанию
+							level: 6
+						},
+						comment: `TinyMCE${num} v${pkg_version} for EvolutionCMS\nAuthor: ${grunt.config.data.pkg.author}\nUpdated: ${lastupdate}`
+					}
+				);
+				output.on("close", function () {
+					if(process.stdout.isTTY === true) {
+						// Очищаем всю строку
+						process.stdout.clearLine(2);
+						// Переместить курсор в начало
+						process.stdout.cursorTo(0);
+					}
+					gruntLog(`Close Stream`, `The Stream Is Closed`);
+				});
+				output.on("end", function () {
+					gruntLog(`End Stream`, `Data has been drained`, 'fatal');
+				});
+
+				arh.on('progress', (progressData) => {
+					if(process.stdout.isTTY === true) {
+						// Здесь консоль использовать нельзя
+						// Очищаем всю строку
+						process.stdout.clearLine(2);
+						// Переместить курсор в начало
+						process.stdout.cursorTo(0);
+						// ....
+						let title = `Archiving Progress`;
+						let width = lineWidth - String(title).length;
+						let percentage = ((progressData.fs.processedBytes / dirSize) * 100).toFixed(0).padStart(3) + '%';
+						process.stdout.write(chalk.green('>>') + ' ' + chalk.magentaBright(title) + String('-> ').padStart(width) + chalk.magentaBright(`Processed:   `) + chalk.yellowBright(percentage));
 					}
 				});
-				// Копирование минификации локалей плагинов
-				copyFolderRecursiveSync(
-					`locale_minor_mini`,
-					dirOutPlgs,
-					lowercase,
-					uppercase,
-					biguppercase,
-					val,
-					options.repository,
-					options.issues,
-					pkg_version,
-					lastupdate
-				);
-				// Удаляем emoticons
-				grunt.file.delete(`${dirOutPlgs}/emoticons`, { force: true });
-				// Копирование emoticons, ...
-				copyFolderRecursiveSync(
-					`node_modules/tinymce-emoticons-v4/assets/plugins/tinymce4/tinymce/plugins`,
-					dirOutPlgs,
-					lowercase,
-					uppercase,
-					biguppercase,
-					val,
-					options.repository,
-					options.issues,
-					pkg_version,
-					lastupdate
-				);
-				await sleep(2000);
-			}
-			gruntLog('Copy plugins ' + lowercase, dirOutPlgs, 'ok');
 
-			// Минимизация плагинов и языков plugins${num}
-			// Плагин modxlink перезапишется в версиях больше четвёртой версии
-			grunt.file.recurse(`plugins${num}`, function(abspath, rootdir, subdir, filename){
-				let out, script, result;
-				if(filename=='plugin.js' || /langs$/.test(subdir)){
-					out = `${dirOutPlgs}/${subdir}/` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`);
-					script = grunt.file.read(`${abspath}`).toString();
-					// Если есть первый комментарий, то добавим в начало к минимизированному.
-					const regex = /(\/\*([\s\S]*?)\*\/)/;
-					let m, comment = "";
-					if ((m = regex.exec(script)) !== null) {
-						comment = `${m[1]}\n`;
+				arh.pipe(output);
+
+				arh.directory(`dist/${lowercase}/${lowercase}`, `${lowercase}`);
+
+				await arh.finalize();
+
+				// Без паузы просто никак
+				// Пауза на 200 мс
+				await sleep(200);
+
+				gruntLog('End of Archiving', `tinymce-${num}.zip`, 'ok');
+
+				// Закончить запись потока
+				await output.end();
+				// Закрыть поток
+				await output.close((err) => {
+					if (err) {
+						gruntLog(`Flow Error`, 'Error close stream: ' + err.message, 'fatal');
 					}
-					result = UglifyJS.minify(script, {
-						output: {
-							ascii_only: true
+				});
+				// Вывести размер архива
+				// Обязательно через обработку ошибок
+				try {
+					let stats = fs.statSync(`tinymce-${num}.zip`);
+					let btz = stats.size;
+					// Под верные данные в Windows.
+					// Под Linux, Mac не тестировалось.
+					let fz = filesize(btz, {
+						base: 2,
+						symbols: {
+							KiB: "KiloBytes",
+							MiB: "MegaBytes",
 						}
 					});
-					if (!result.error) {
-						grunt.file.write(out, comment + result.code, {encoding: 'utf8'});
-						gruntLog(`Uglify js ` + (filename == 'plugin.js' ? `plugin.min.js` : `${filename}`), `${subdir}`, 'ok');
-					}else{
-						//console.log(result.error);
-						gruntLog('Uglify js fatal', out, 'fatal');
-					}
+					gruntLog(`Archive Size`, chalk.yellow(fz));
+
+				} catch(e) {
+					gruntLog(`Archive Size`, e.message, 'fatal');
 				}
-			});
-
-			// Копирование js-cookie
-			copyFolderRecursiveSync(
-				'node_modules/js-cookie/dist',
-				dirOut + "/js",
-				lowercase,
-				uppercase,
-				biguppercase,
-				val,
-				options.repository,
-				options.issues,
-				pkg_version,
-				lastupdate
-			);
-			gruntLog('Copy js-cookie', dirOut + "/js", 'ok');
-
-			// Копирование файлов из src директории
-			let pathFiles = options.src;
-			copyFolderRecursiveSync(
-				options.src,
-				dirOut,
-				lowercase,
-				uppercase,
-				biguppercase,
-				val,
-				options.repository,
-				options.issues,
-				pkg_version,
-				lastupdate
-			);
-			gruntLog('Copy src ' + lowercase, dirOut, 'ok');
-
-			// Копирование тем
-			copyFolderRecursiveSync(
-				`theme${num}`,
-				dirOut,
-				lowercase,
-				uppercase,
-				biguppercase,
-				val,
-				options.repository,
-				options.issues,
-				pkg_version,
-				lastupdate
-			);
-			gruntLog('Copy theme ' + lowercase, dirOut, 'ok');
-
-			if(num > 4) {
-				// Файлы подключения плагина v5.x.x .... v8.x.x
-				copyFolderRecursiveSync(
-					'src_plugin_major',
-					dirOut,
-					lowercase,
-					uppercase,
-					biguppercase,
-					val,
-					options.repository,
-					options.issues,
-					pkg_version,
-					lastupdate
-				);
+				gruntLog(`End`, packge, 'init')
+				grunt.log.ok([" "]);
 			} else {
-				// Файлы подключения плагина v4.x.x
-				copyFolderRecursiveSync(
-					'src_plugin_minor',
-					dirOut,
-					lowercase,
-					uppercase,
-					biguppercase,
-					val,
-					options.repository,
-					options.issues,
-					pkg_version,
-					lastupdate
-				);
+				continue;
 			}
-
-			// Копирование основного класса в lib
-			copyFolderRecursiveSync('lib', `dist/${lowercase}/${lowercase}/assets/lib`);
-			gruntLog('Copy lib', `dist/${lowercase}/${lowercase}/assets/lib`, 'ok');
-			// Копирование инсталяционного файла плагина
-			copyFolderRecursiveSync(
-				options.install,
-				installOut,
-				lowercase,
-				uppercase,
-				biguppercase,
-				val,
-				options.repository,
-				options.issues,
-				pkg_version,
-				lastupdate
-			);
-			gruntLog('Copy install ' + lowercase, installOut + '/' + lowercase + '.tpl', 'ok');
-			// Архивирование
-			gruntLog('Start of Archiving', `tinymce-${num}.zip`, 'ok');
-			// Получаем размер директории
-			let dirSize = await getFolderSize.strict(`dist/${lowercase}/${lowercase}`);
-			let output = fs.createWriteStream(`tinymce-${num}.zip`);
-			let arh = new ZipArchive(
-				{
-					zlib: {
-						// Компрессию оставим по умолчанию
-						level: 6
-					},
-					comment: `TinyMCE${num} v${pkg_version} for EvolutionCMS\nAuthor: ${grunt.config.data.pkg.author}\nUpdated: ${lastupdate}`
-				}
-			);
-			output.on("close", function () {
-				if(process.stdout.isTTY === true) {
-					// Очищаем всю строку
-					process.stdout.clearLine(2);
-					// Переместить курсор в начало
-					process.stdout.cursorTo(0);
-				}
-				gruntLog(`Close Stream`, `The Stream Is Closed`);
-			});
-			output.on("end", function () {
-				gruntLog(`End Stream`, `Data has been drained`, 'fatal');
-			});
-
-			arh.on('progress', (progressData) => {
-				if(process.stdout.isTTY === true) {
-					// Здесь консоль использовать нельзя
-					// Очищаем всю строку
-					process.stdout.clearLine(2);
-					// Переместить курсор в начало
-					process.stdout.cursorTo(0);
-					// ....
-					let title = `Archiving Progress`;
-					let width = lineWidth - String(title).length;
-					let percentage = ((progressData.fs.processedBytes / dirSize) * 100).toFixed(0).padStart(3) + '%';
-					process.stdout.write(chalk.green('>>') + ' ' + chalk.magentaBright(title) + String('-> ').padStart(width) + chalk.magentaBright(`Processed:   `) + chalk.yellowBright(percentage));
-				}
-			});
-
-			arh.pipe(output);
-
-			arh.directory(`dist/${lowercase}/${lowercase}`, `${lowercase}`);
-
-			await arh.finalize();
-
-			// Без паузы просто никак
-			// Пауза на 200 мс
-			await sleep(200);
-
-			gruntLog('End of Archiving', `tinymce-${num}.zip`, 'ok');
-
-			// Закончить запись потока
-			await output.end();
-			// Закрыть поток
-			await output.close((err) => {
-				if (err) {
-					gruntLog(`Flow Error`, 'Error close stream: ' + err.message, 'fatal');
-				}
-			});
-			// Вывести размер архива
-			// Обязательно через обработку ошибок
-			try {
-				let stats = fs.statSync(`tinymce-${num}.zip`);
-				let btz = stats.size;
-				// Под верные данные в Windows.
-				// Под Linux, Mac не тестировалось.
-				let fz = filesize(btz, {
-					base: 2,
-					symbols: {
-						KiB: "KiloBytes",
-						MiB: "MegaBytes",
-					}
-				});
-				gruntLog(`Archive Size`, chalk.yellow(fz));
-
-			} catch(e) {
-				gruntLog(`Archive Size`, e.message, 'fatal');
-			}
-			gruntLog(`End`, packge, 'init')
-			grunt.log.ok([" "]);
 		}
 
 		// Readme

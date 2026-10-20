@@ -6,6 +6,9 @@ const packageName = 'tinymce';
 const jsonPath = path.join(__dirname, '..', 'tinymce-accepted-tags.json');
 const pkgPath = path.join(__dirname, '..', 'package.json');
 
+// Здесь меняем если толко выходит новая мажорная версия
+const tags = [4,5,6,7,8];
+
 function compareVersions(a, b) {
 	const partsA = a.split('.').map(Number);
 	const partsB = b.split('.').map(Number);
@@ -42,18 +45,28 @@ async function main() {
 	if (!res.ok) throw new Error(`HTTP ${res.status}`);
 	const data = await res.json();
 	const currentTags = data['dist-tags'] || {};
-
+	// Если обновление
 	let anyUpdate = false;
-
+	// Если новое мажорное
+	let major = false;
+	let majorVersion = '';
 	// Проверяем все теги: если хоть один изменился — это повод для релиза
 	for (const [tag, currentVersion] of Object.entries(currentTags)) {
 		const acceptedVersion = acceptedTags[tag];
-
+		const nrl = parseInt(currentVersion.split('.')[0]);
 		// Если тега раньше не было ИЛИ версия выросла — считаем, что есть обновление
 		if (!acceptedVersion || compareVersions(currentVersion, acceptedVersion) > 0) {
 			console.log(`[UPDATE] Тег "${tag}": было "${acceptedVersion}" → стало "${currentVersion}"`);
 			acceptedTags[tag] = currentVersion; // Обновляем JSON с принятыми тегами
+			// Новая версия
 			anyUpdate = true;
+			// Здесь проверяем, входит ли наша версия в массив готовых для публикации
+			// Создаётся только одно issue при выходе новой мажорной версии
+			if(!tags.includes(nrl)) {
+				//
+				major = true;
+				majorVersion = currentVersion;
+			}
 		}
 	}
 
@@ -86,10 +99,13 @@ async function main() {
 
 	writeOutput('updated', 'true');
 	writeOutput('new-version', newVersion);  // <--- ЭТО КРИТИЧНО ВАЖНО
+	// Если есть новые мажорные версии
+	writeOutput('major', major ? 'true' : 'false');
+	writeOutput('majorVersion', majorVersion);
 }
 
 // Правильный вывод для GitHub Actions (совместимо с современными раннерами)
-function writeOutput(name, value) {
+function writeOutput(name, value, major) {
 	if (process.env.GITHUB_OUTPUT) {
 		fs.appendFileSync(process.env.GITHUB_OUTPUT, `${name}=${value}\n`, { encoding: 'utf8' });
 	} else {
